@@ -1,0 +1,159 @@
+<template>
+  <div class="base-table">
+    <div class="base-table__form"></div>
+    <!-- <template> -->
+    <div class="base-table__toolbar">
+      <span class="base-table__toolbar__title"> 自定义内容 </span>
+      <!-- 右侧 -->
+      <div class="base-table__header__toolbar">
+        <span>
+          <el-tooltip content="刷新" placement="top">
+            <i class="el-icon-refresh"></i>
+          </el-tooltip>
+        </span>
+      </div>
+    </div>
+    <!-- </template> -->
+    <!-- <div class="base-table__toolbar"></div> -->
+    <el-table
+      :data="tableData"
+      style="width: 100%"
+      loading
+      border
+      class="base-table__tables"
+    >
+      <template>
+        <el-table-column
+          :prop="item.index"
+          header-align="center"
+          align="center"
+          :label="item.title"
+          v-for="item of registerTable"
+          :key="item.index"
+          v-bind="item.attr"
+        >
+          <template slot-scope="scope">
+            <!-- 直接展示 -->
+            <template v-if="!item.options">
+              {{ scope.row[item.index] }}
+            </template>
+            <!-- 条件展示 -->
+            <template>
+              <template v-if="item.type === 'radio'">
+                <el-switch
+                  :value="handleFilterData(scope.row[item.index], item.options)"
+                  @change="handleSwitch(scope.row, item.index, item.options)"
+                >
+                </el-switch>
+              </template>
+              <template v-if="item.type !== 'radio' && item.options">
+                {{ handleFilterData(scope.row[item.index], item.options) }}
+              </template>
+            </template>
+          </template>
+        </el-table-column>
+      </template>
+      <slot name="baseTable"> </slot>
+    </el-table>
+    <template>
+      <div class="base-table__Pagination">
+        <el-pagination
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="1000"
+        >
+        </el-pagination>
+      </div>
+    </template>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {};
+  },
+  props: {
+    tableData: {
+      required: true,
+      type: Array,
+    },
+    registerTable: {
+      required: true,
+      type: Array,
+    },
+  },
+  computed: {
+    handleFilterData() {
+      return (index, data) => {
+        let result = data.filter((item) => {
+          return item.value === index;
+        });
+        if (result && result[0]) {
+          return result[0].label;
+        }
+        return;
+      };
+    },
+  },
+  methods: {
+    /**
+     * @param row 行数据
+     * @param index 索引
+     * @param arr 数组
+     */
+    handleSwitch(row, index, arr) {
+      console.log(arr);
+      for (let i = 0; i < arr.length; i++) {
+        if (row[index] !== arr[i].value) {
+          console.log(row[index]);
+          console.log(arr[i].value);
+          row[index] = arr[i].value;
+        }
+      }
+
+      // return true;
+      // console.log(val);
+      // val = 1;
+      // this.handleFilterData(1, 2, "false");
+    },
+  },
+};
+</script>
+
+<style lang='scss' scoped>
+.base-table {
+  &__toolbar {
+    min-height: 40px;
+    line-height: 40px;
+  }
+  &__header__toolbar {
+    float: right;
+    span {
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 20px;
+    }
+  }
+
+  &__Pagination {
+    margin: 20px 0;
+    text-align: right;
+    .el-table th > .cell {
+    }
+  }
+}
+</style>
+
+<style lang='scss'>
+.base-table__tables {
+  th {
+    color: #000;
+    font-weight: 500;
+  }
+  td {
+    color: rgba(0, 0, 0, 0.85) !important;
+  }
+}
+</style>
+
