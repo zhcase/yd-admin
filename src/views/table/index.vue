@@ -3,7 +3,8 @@
     <BasicTable
       :tableData="tableData"
       :registerTable="table1"
-      :baseTableOptions="options"
+      :basicTableOptions="options"
+      @changePagination="handleChangePage"
     >
       <template #baseTable>
         <el-table-column align="center" label="操作">
@@ -45,7 +46,11 @@ export default {
     return {
       list: null,
       listLoading: true,
-      options: {},
+      options: {
+        paginationProps: {
+          total: 0,
+        },
+      },
       tableData: [
         {
           date: "2016-05-03",
@@ -127,7 +132,7 @@ export default {
           options: [
             {
               label: false,
-              value: 2,
+              value: 1,
             },
             { label: true, value: 0 },
           ],
@@ -150,11 +155,16 @@ export default {
     this.fetchData();
   },
   methods: {
+    handleChangePage(val) {
+      console.log(val);
+    },
     fetchData() {
       this.listLoading = true;
       getList().then((response) => {
         console.log(response);
-        this.list = response.rows;
+        this.list = response;
+        this.options.paginationProps.total = response.total;
+        // this.list = response.rows;
         this.tableData = response.rows;
         this.listLoading = false;
       });
