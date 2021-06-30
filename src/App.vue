@@ -6,6 +6,14 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
 }
 </script>
+
+<style lang="scss">
+@import '~@/styles/index.scss'; // 后续删
+
+#app {
+  height: 100%;
+}
+</style>
