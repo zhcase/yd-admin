@@ -14,7 +14,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    config.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjQzNjg3NWViLWRiYTctNDE2Ni05NTU4LTZmMTY1NjQ0NDMyZSJ9.UU3Woa9uQ6a11vuTVv8CpaRRC_kh23fD3pkTT6Y4A7oTVPiTgqNh6OqQM7b-UBpPzBtGsh4KURKZtstlc2BZEA'
+    config.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjZiZjg3ZTU3LTRlYWQtNDQ5Yy1hOGJjLThkYzcwYzQ5NDAxNCJ9.-hcr6XzHqxRWGnxq4C9d9yU4PyModkxSCp5M6XMFh6q0-zAThzVsKNK6J_mrDreI0iBrMtYFr_O2jYLip1ZEvQ'
     if (store.getters.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key

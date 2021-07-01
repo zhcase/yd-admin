@@ -5,6 +5,8 @@
       :registerTable="table1"
       :basicTableOptions="options"
       @changePagination="handleChangePage"
+      @changeSwitch="changeSwitch"
+      @getTableData="fetchData"
     >
       <template #baseTable>
         <el-table-column align="center" label="操作">
@@ -125,6 +127,7 @@ export default {
           title: "管理员手机号",
           index: "phone",
         },
+
         {
           title: "用户状态",
           index: "payStatus",
@@ -148,6 +151,10 @@ export default {
             { label: "普通会员", value: 0 },
           ],
         },
+        {
+          title: "操作",
+          slot: "baseTable",
+        },
       ],
     };
   },
@@ -155,6 +162,10 @@ export default {
     this.fetchData();
   },
   methods: {
+    changeSwitch(val, cab) {
+      console.log(val);
+      cab(true);
+    },
     handleChangePage(val) {
       console.log(val);
     },

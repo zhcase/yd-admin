@@ -1,14 +1,16 @@
 <template>
   <div class="base-table">
     <div class="base-table__form"></div>
-    <!-- <template> -->
+
     <div class="base-table__toolbar">
-      <span class="base-table__toolbar__title"> 自定义内容 </span>
+      <span class="base-table__toolbar__title">
+        <template> 自定义内容</template>
+      </span>
       <!-- 右侧 -->
       <div class="base-table__header__toolbar">
         <span>
           <el-tooltip content="刷新" placement="top">
-            <i class="el-icon-refresh"></i>
+            <i class="el-icon-refresh" @click="handleRefresh"></i>
           </el-tooltip>
         </span>
       </div>
@@ -20,13 +22,14 @@
       border
       class="base-table__tables"
     >
-      <template>
+      <template v-for="item of registerTable">
+        <slot v-if="item.slot" :name="item.slot"> </slot>
         <el-table-column
+          v-else
           :prop="item.index"
           header-align="center"
           align="center"
           :label="item.title"
-          v-for="item of registerTable"
           :key="item.index"
           v-bind="item.attr"
         >
@@ -51,7 +54,6 @@
           </template>
         </el-table-column>
       </template>
-      <slot name="baseTable"> </slot>
     </el-table>
     <template v-if="basicTableOptions.paginationProps">
       <div class="base-table__Pagination">
@@ -120,6 +122,9 @@ export default {
     });
   },
   methods: {
+    handleRefresh() {
+      this.$emit("getTableData");
+    },
     //每页 ${val} 条
     handleSizeChange(val) {
       this.paginationConfig.pageSize = val;
@@ -137,13 +142,17 @@ export default {
      * @param arr 数组
      */
     handleSwitch(row, index, arr) {
-      for (let i = 0; i < arr.length; i++) {
-        if (row[index] !== arr[i].value) {
-          setTimeout(() => {
-            row[index] = arr[i].value;
-          });
+      this.$emit("changeSwitch", row, (res) => {
+        if (res) {
+          for (let i = 0; i < arr.length; i++) {
+            if (row[index] !== arr[i].value) {
+              setTimeout(() => {
+                row[index] = arr[i].value;
+              });
+            }
+          }
         }
-      }
+      });
     },
   },
 };
