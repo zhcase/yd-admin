@@ -13,12 +13,10 @@
         </span>
       </div>
     </div>
-    <!-- </template> -->
-    <!-- <div class="base-table__toolbar"></div> -->
+
     <el-table
       :data="tableData"
       style="width: 100%"
-      loading
       border
       class="base-table__tables"
     >
@@ -55,12 +53,16 @@
       </template>
       <slot name="baseTable"> </slot>
     </el-table>
-    <template>
+    <template v-if="basicTableOptions.paginationProps">
       <div class="base-table__Pagination">
         <el-pagination
           background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="paginationConfig.currentPage"
+          :page-size="paginationConfig.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="1000"
+          :total="basicTableOptions.paginationProps.total || 0"
         >
         </el-pagination>
       </div>
@@ -71,7 +73,12 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      paginationConfig: {
+        currentPage: 1,
+        pageSize: 10,
+      },
+    };
   },
   props: {
     tableData: {
@@ -81,6 +88,10 @@ export default {
     registerTable: {
       required: true,
       type: Array,
+    },
+    basicTableOptions: {
+      required: false,
+      type: Object,
     },
   },
   computed: {
@@ -96,26 +107,43 @@ export default {
       };
     },
   },
+  watch: {
+    basicTableOptions(val) {
+      console.log(val);
+    },
+  },
+  mounted() {
+    this.$nextTick(() => {
+      if (this.basicTableOptions.paginationConfig) {
+        this.paginationConfig = this.basicTableOptions.paginationConfig;
+      }
+    });
+  },
   methods: {
+    //每页 ${val} 条
+    handleSizeChange(val) {
+      this.paginationConfig.pageSize = val;
+      this.$emit("changePagination", this.paginationConfig);
+    },
+
+    //当前页: ${val}
+    handleCurrentChange(val) {
+      this.paginationConfig.currentPage = val;
+      this.$emit("changePagination", this.paginationConfig);
+    },
     /**
      * @param row 行数据
      * @param index 索引
      * @param arr 数组
      */
     handleSwitch(row, index, arr) {
-      console.log(arr);
       for (let i = 0; i < arr.length; i++) {
         if (row[index] !== arr[i].value) {
-          console.log(row[index]);
-          console.log(arr[i].value);
-          row[index] = arr[i].value;
+          setTimeout(() => {
+            row[index] = arr[i].value;
+          });
         }
       }
-
-      // return true;
-      // console.log(val);
-      // val = 1;
-      // this.handleFilterData(1, 2, "false");
     },
   },
 };
