@@ -1,6 +1,43 @@
 <template>
   <div class="base-table">
-    <div class="base-table__form"></div>
+    <div class="base-table__form">
+      <el-form
+        ref="form"
+        :model="form"
+        label-width="120px"
+        size="small"
+        class="base-table__form__content"
+      >
+        <el-col
+          :span="8"
+          :xs="24"
+          v-for="(item, index) of formSchema"
+          :key="index"
+        >
+          <FormMap :schema="item" ref="formData" />
+        </el-col>
+      </el-form>
+      <div class="base-table__form-actions">
+        <span class="content">
+          <el-button size="small" @click="handleFormReset">重 置</el-button>
+          <el-button type="primary" size="small" @click="handleQuery"
+            >查 询</el-button
+          >
+          <el-button
+            type="text"
+            @click="changeFormVisible"
+            v-if="$refs.form && $refs.form.$children.length > 3"
+            >{{ formVisible ? "展开" : "收起" }}
+            <i
+              :class="{
+                'el-icon-arrow-down': formVisible,
+                'el-icon-arrow-up': !formVisible,
+              }"
+            ></i
+          ></el-button>
+        </span>
+      </div>
+    </div>
 
     <div class="base-table__toolbar">
       <span class="base-table__toolbar__title">
@@ -73,9 +110,17 @@
 </template>
 
 <script>
+import { logger } from "_runjs@4.3.2@runjs/lib/common";
+import FormMap from "./FormMap.vue";
 export default {
+  components: {
+    FormMap,
+  },
   data() {
     return {
+      form: {},
+      formVisible: false,
+      // 分页
       paginationConfig: {
         currentPage: 1,
         pageSize: 10,
@@ -83,20 +128,32 @@ export default {
     };
   },
   props: {
+    // table 数据
     tableData: {
       required: true,
       type: Array,
+      default: [],
     },
+    // table 索引与title
     registerTable: {
       required: true,
       type: Array,
+      default: [],
     },
+    // table 配置
     basicTableOptions: {
       required: false,
       type: Object,
     },
+    formSchema: {
+      required: true,
+      type: Array,
+    },
   },
   computed: {
+    /**
+     * 过滤返回选中数据
+     */
     handleFilterData() {
       return (index, data) => {
         let result = data.filter((item) => {
@@ -115,6 +172,8 @@ export default {
     },
   },
   mounted() {
+    console.log(this.formSchema);
+    this.changeFormVisible();
     this.$nextTick(() => {
       if (this.basicTableOptions.paginationConfig) {
         this.paginationConfig = this.basicTableOptions.paginationConfig;
@@ -122,6 +181,42 @@ export default {
     });
   },
   methods: {
+    // 查询
+    handleQuery() {
+      let form = {};
+      for (let i = 0; i < this.$refs.formData.length; i++) {
+        if (Object.keys(this.$refs.formData[i].form).length > 0) {
+          form = { ...form, ...this.$refs.formData[i].form };
+        } else {
+          let formKeys = this.$refs.formData[i].schema.field;
+          form[formKeys] = "";
+        }
+      }
+    },
+    // 重置
+    handleFormReset() {
+      console.log(this.$refs.formData[0].form);
+      for (let i = 0; i < this.$refs.formData.length; i++) {
+        this.$refs.formData[i].form = {};
+      }
+    },
+    /**
+     * 改变Form 显示隐藏
+     **/
+    changeFormVisible() {
+      // console.log(this.$refs.form.$children[3].$el);
+      this.formVisible = !this.formVisible;
+      if (this.formVisible) {
+        for (let i = 3; i < this.$refs.form.$children.length; i++) {
+          this.$refs.form.$children[i].$el.style = "display:none";
+        }
+      } else {
+        for (let i = 3; i < this.$refs.form.$children.length; i++) {
+          this.$refs.form.$children[i].$el.style = "display:block";
+        }
+      }
+    },
+    // 刷新
     handleRefresh() {
       this.$emit("getTableData");
     },
@@ -160,6 +255,23 @@ export default {
 
 <style lang='scss' scoped>
 .base-table {
+  &__form {
+    height: auto;
+    overflow: hidden;
+    /* border-bottom: 10px solid #eee; */
+    &__content {
+      height: auto;
+      overflow: hidden;
+    }
+    .base-table__form-actions {
+      padding-bottom: 10px;
+      .content {
+        float: right;
+      }
+      height: auto;
+      overflow: hidden;
+    }
+  }
   &__toolbar {
     min-height: 40px;
     line-height: 40px;

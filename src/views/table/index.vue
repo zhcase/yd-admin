@@ -4,6 +4,7 @@
       :tableData="tableData"
       :registerTable="table1"
       :basicTableOptions="options"
+      :formSchema="schemas"
       @changePagination="handleChangePage"
       @changeSwitch="changeSwitch"
       @getTableData="fetchData"
@@ -53,6 +54,87 @@ export default {
           total: 0,
         },
       },
+      schemas: [
+        {
+          field: "field",
+          component: "Input",
+          label: "字段1",
+          colProps: {
+            span: 8,
+          },
+          defaultValue: "1",
+          componentProps: {
+            placeholder: "自定义placeholder",
+            onChange: (e) => {
+              console.log(e);
+            },
+          },
+        },
+        {
+          field: "field1",
+          component: "Select",
+          label: "字段1",
+          colProps: {
+            span: 8,
+          },
+          defaultValue: "1",
+          componentProps: {
+            placeholder: "自定义placeholder",
+            options: [
+              {
+                value: "选项1",
+                label: "黄金糕",
+              },
+              {
+                value: "选项2",
+                label: "双皮奶",
+              },
+              {
+                value: "选项3",
+                label: "蚵仔煎",
+              },
+              {
+                value: "选项4",
+                label: "龙须面",
+              },
+              {
+                value: "选项5",
+                label: "北京烤鸭",
+              },
+            ],
+          },
+        },
+        {
+          field: "field2",
+          component: "Input",
+          label: "字段1",
+          colProps: {
+            span: 8,
+          },
+          defaultValue: "1",
+          componentProps: {
+            placeholder: "自定义placeholder",
+            onChange: (e) => {
+              console.log(e);
+            },
+          },
+        },
+        {
+          field: "field3",
+          component: "Input",
+          label: "字段1",
+          colProps: {
+            span: 8,
+          },
+          defaultValue: "1",
+          componentProps: {
+            placeholder: "自定义placeholder",
+            onChange: (e) => {
+              console.log(e);
+            },
+          },
+        },
+      ],
       tableData: [
         {
           date: "2016-05-03",
