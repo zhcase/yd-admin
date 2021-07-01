@@ -1,9 +1,9 @@
 <template>
-  <section class="app-main">
+  <el-main class="scroll-bar">
     <transition name="fade-transform" mode="out-in">
-      <router-view :key="key" />
+      <router-view class="page-container" :key="key" />
     </transition>
-  </section>
+  </el-main>
 </template>
 
 <script>

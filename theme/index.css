@@ -8839,7 +8839,7 @@
   position: relative;
   margin: 0;
   padding-left: 0;
-  background-color: #FFFFFF; }
+  background-color: #303133; }
   .el-menu::before,
   .el-menu::after {
     display: table;
@@ -8956,7 +8956,7 @@
   height: 56px;
   line-height: 56px;
   font-size: 14px;
-  color: #303133;
+  color: #b3b3b3;
   padding: 0 20px;
   list-style: none;
   cursor: pointer;
@@ -8972,7 +8972,7 @@
     color: #909399; }
   .el-menu-item:hover, .el-menu-item:focus {
     outline: none;
-    background-color: #e6eff8; }
+    background-color: #303133; }
   .el-menu-item.is-disabled {
     opacity: 0.25;
     cursor: not-allowed;
@@ -8996,7 +8996,7 @@
     height: 56px;
     line-height: 56px;
     font-size: 14px;
-    color: #303133;
+    color: #b3b3b3;
     padding: 0 20px;
     list-style: none;
     cursor: pointer;
@@ -9012,13 +9012,13 @@
       color: #909399; }
     .el-submenu__title:hover, .el-submenu__title:focus {
       outline: none;
-      background-color: #e6eff8; }
+      background-color: #303133; }
     .el-submenu__title.is-disabled {
       opacity: 0.25;
       cursor: not-allowed;
       background: none !important; }
     .el-submenu__title:hover {
-      background-color: #e6eff8; }
+      background-color: #303133; }
   .el-submenu .el-menu {
     border: none; }
   .el-submenu .el-menu-item {
@@ -51784,7 +51784,7 @@
 /* Break-point
 --------------------------*/
 .el-header {
-  padding: 0 20px;
+  padding: 0 16px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   -ms-flex-negative: 0;
@@ -52205,7 +52205,7 @@
   overflow: auto;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  padding: 20px; }
+  padding: 16px; }
 
 /* BEM support Func
  -------------------------- */
@@ -52470,7 +52470,7 @@
 /* Break-point
 --------------------------*/
 .el-footer {
-  padding: 0 20px;
+  padding: 0 16px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   -ms-flex-negative: 0;

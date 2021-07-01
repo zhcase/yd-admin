@@ -1,30 +1,38 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+  <div class="page-dashboard">
+    <div class="temp-block">
+      <div class="name">{{ name }}</div>
+      <div class="slogan">欢迎进入{{ title }}</div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import defaultSettings from '@/settings'
 
 export default {
   name: 'Dashboard',
   computed: {
-    ...mapGetters([
-      'name'
-    ])
-  }
+    ...mapGetters(['name']),
+  },
+  data() {
+    return {
+      title: defaultSettings.title,
+    }
+  },
 }
 </script>
 
-<style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
+<style lang="scss">
+.page-dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .temp-block {
+    .slogan {
+      font-size: 24px;
+    }
   }
 }
 </style>

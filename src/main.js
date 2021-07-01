@@ -5,6 +5,7 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
+import '@/assets/iconfont/iconfont.css'
 import "../theme/index.css"
 import "@/assets/scss/index.scss"
 

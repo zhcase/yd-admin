@@ -1,7 +1,7 @@
 <template>
-  <div :class="{'has-logo':showLogo}">
+  <el-aside class="app-aside" :class="{ 'has-logo': showLogo }">
     <logo v-if="showLogo" :collapse="isCollapse" />
-    <el-scrollbar wrap-class="scrollbar-wrapper">
+    <el-scrollbar>
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
@@ -9,10 +9,15 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
+        <sidebar-item
+          v-for="route in routes"
+          :key="route.path"
+          :item="route"
+          :base-path="route.path"
+        />
       </el-menu>
     </el-scrollbar>
-  </div>
+  </el-aside>
 </template>
 
 <script>
@@ -23,9 +28,7 @@ import Logo from './comp/Logo'
 export default {
   components: { SidebarItem, Logo },
   computed: {
-    ...mapGetters([
-      'sidebar'
-    ]),
+    ...mapGetters(['sidebar']),
     routes() {
       return this.$router.options.routes
     },
@@ -43,7 +46,7 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
-    }
-  }
+    },
+  },
 }
 </script>

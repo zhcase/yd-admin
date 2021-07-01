@@ -17,15 +17,11 @@ export default {
     const vnodes = []
 
     if (icon) {
-      if (icon.includes('el-icon')) {
-        vnodes.push(<i class={[icon, 'sub-el-icon']} />)
-      } else {
-        vnodes.push(<svg-icon icon-class={icon}/>)
-      }
+      vnodes.push(<i class={[icon, 'iconfont']} />)
     }
 
     if (title) {
-      vnodes.push(<span slot='title'>{(title)}</span>)
+      vnodes.push(<span class="menu-item__title" slot='title'>{(title)}</span>)
     }
     return vnodes
   }
