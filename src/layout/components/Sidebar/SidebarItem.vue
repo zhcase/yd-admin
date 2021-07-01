@@ -3,14 +3,14 @@
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
+          <MenuItem :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
         </el-menu-item>
       </app-link>
     </template>
 
     <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template slot="title">
-        <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
+        <MenuItem v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
       </template>
       <sidebar-item
         v-for="child in item.children"
@@ -27,14 +27,12 @@
 <script>
 import path from 'path'
 import { isExternal } from '@/utils/validate'
-import Item from './Item'
-import AppLink from './Link'
-import FixiOSBug from './FixiOSBug'
+import MenuItem from './comp/MenuItem'
+import AppLink from './comp/Link'
 
 export default {
   name: 'SidebarItem',
-  components: { Item, AppLink },
-  mixins: [FixiOSBug],
+  components: { MenuItem, AppLink },
   props: {
     // route object
     item: {
@@ -55,6 +53,16 @@ export default {
     // TODO: refactor with render function
     this.onlyOneChild = null
     return {}
+  },
+  computed: {
+    device() {
+      return this.$store.state.app.device
+    }
+  },
+  mounted() {
+    // In order to fix the click on menu on the ios device will trigger the mouseleave bug
+    // https://github.com/PanJiaChen/vue-element-admin/issues/1135
+    this.fixBugIniOS()
   },
   methods: {
     hasOneShowingChild(children = [], parent) {
@@ -89,6 +97,18 @@ export default {
         return this.basePath
       }
       return path.resolve(this.basePath, routePath)
+    },
+    fixBugIniOS() {
+      const $subMenu = this.$refs.subMenu
+      if ($subMenu) {
+        const handleMouseleave = $subMenu.handleMouseleave
+        $subMenu.handleMouseleave = (e) => {
+          if (this.device === 'mobile') {
+            return
+          }
+          handleMouseleave(e)
+        }
+      }
     }
   }
 }
