@@ -38,7 +38,7 @@ export default {
   padding-left: 20px;
   height: 50px;
   line-height: 50px;
-  background: $--color-text-primary;
+  background: $--menu-background-color;
   overflow: hidden;
 
   & .sidebar-logo-link {

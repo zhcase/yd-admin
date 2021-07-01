@@ -1,5 +1,5 @@
 .app-aside {
-  background-color: $--color-text-primary;
+  background-color: $--menu-background-color;
   &.el-aside {
     width: 54px!important;
     display: flex;
@@ -9,6 +9,21 @@
   .iconfont {
     margin-right: 4px;
     transition: color .3s;
+  }
+
+  .el-submenu {
+    .el-menu,
+    :not(.is-active) {
+      .el-submenu__title,
+      &.el-menu-item {
+        background-color: #0c2135;
+      }
+    }
+  }
+
+  .el-menu-item {
+    height: 50px;
+    line-height: 50px;
   }
 
   .el-menu--collapse {
