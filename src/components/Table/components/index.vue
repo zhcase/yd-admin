@@ -44,76 +44,79 @@
       </div>
     </div>
 
-    <div class="base-table__toolbar">
-      <span class="base-table__toolbar__title">
-        <slot name="toolbarLeft"> 自定义内容</slot>
-      </span>
-      <!-- 右侧 -->
-      <div class="base-table__header__toolbar">
-        <span>
-          <el-tooltip content="刷新" placement="top">
-            <i class="el-icon-refresh" @click="handleRefresh"></i>
-          </el-tooltip>
+    <div class="base-table-wrapper">
+      <div class="base-table__toolbar">
+        <span class="base-table__toolbar__title">
+          <slot name="toolbarLeft"> 自定义内容</slot>
         </span>
+        <!-- 右侧 -->
+        <div class="base-table__header__toolbar">
+          <span>
+            <el-tooltip content="刷新" placement="top">
+              <i class="el-icon-refresh" @click="handleRefresh"></i>
+            </el-tooltip>
+          </span>
+        </div>
       </div>
-    </div>
 
-    <el-table
-      :data="tableData"
-      style="width: 100%"
-      v-bind="basicTableOptions.basicTableProps"
-      v-on="basicTableOptions.basicTableProps"
-      border
-      class="base-table__tables"
-    >
-      <template v-for="item of registerTable">
-        <slot v-if="item.slot" :name="item.slot"> </slot>
-        <el-table-column
-          v-else
-          :prop="item.index"
-          header-align="center"
-          align="center"
-          :type="item.type"
-          :label="item.title"
-          :key="item.index"
-          v-bind="item.attr"
-        >
-          <template slot-scope="scope">
-            <!-- 直接展示 -->
-            <template v-if="!item.options">
-              {{ scope.row[item.index] }}
-            </template>
-            <!-- 条件展示 -->
-            <template>
-              <template v-if="item.type === 'radio'">
-                <el-switch
-                  :value="handleFilterData(scope.row[item.index], item.options)"
-                  @change="handleSwitch(scope.row, item.index, item.options)"
-                >
-                </el-switch>
+      <el-table
+        :data="tableData"
+        height="100%"
+        :stripe="true"
+        v-bind="basicTableOptions.basicTableProps"
+        v-on="basicTableOptions.basicTableProps"
+        border
+        class="base-table__tables"
+      >
+        <template v-for="item of registerTable">
+          <slot v-if="item.slot" :name="item.slot"> </slot>
+          <el-table-column
+            v-else
+            :prop="item.index"
+            header-align="center"
+            align="center"
+            :type="item.type"
+            :label="item.title"
+            :key="item.index"
+            v-bind="item.attr"
+          >
+            <template slot-scope="scope">
+              <!-- 直接展示 -->
+              <template v-if="!item.options">
+                {{ scope.row[item.index] }}
               </template>
-              <template v-if="item.type !== 'radio' && item.options">
-                {{ handleFilterData(scope.row[item.index], item.options) }}
+              <!-- 条件展示 -->
+              <template>
+                <template v-if="item.type === 'radio'">
+                  <el-switch
+                    :value="handleFilterData(scope.row[item.index], item.options)"
+                    @change="handleSwitch(scope.row, item.index, item.options)"
+                  >
+                  </el-switch>
+                </template>
+                <template v-if="item.type !== 'radio' && item.options">
+                  {{ handleFilterData(scope.row[item.index], item.options) }}
+                </template>
               </template>
             </template>
-          </template>
-        </el-table-column>
+          </el-table-column>
+        </template>
+      </el-table>
+      <template v-if="basicTableOptions.paginationProps">
+        <div class="base-table__pagination">
+          <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="paginationConfig.currentPage"
+            :page-size="paginationConfig.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="basicTableOptions.paginationProps.total || 0"
+          >
+          </el-pagination>
+        </div>
       </template>
-    </el-table>
-    <template v-if="basicTableOptions.paginationProps">
-      <div class="base-table__Pagination">
-        <el-pagination
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="paginationConfig.currentPage"
-          :page-size="paginationConfig.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="basicTableOptions.paginationProps.total || 0"
-        >
-        </el-pagination>
-      </div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -280,14 +283,14 @@ export default {
 
 <style lang='scss' scoped>
 .base-table {
-  .base-table__form {
-    background-color: #fff;
-    padding: 15px;
-  }
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   &__form {
     height: auto;
     overflow: hidden;
-    /* border-bottom: 10px solid #eee; */
+    padding: 10px;
+    background-color: #fff;
     &__content {
       height: auto;
       overflow: hidden;
@@ -301,13 +304,17 @@ export default {
       overflow: hidden;
     }
   }
-  &__toolbar {
-    border-top: 10px solid #f5f7fa;
-    min-height: 40px;
-    padding: 0 10px;
-    line-height: 40px;
+
+  &-wrapper {
+    flex: 1;
+    margin-top: 16px;
+    padding: 10px;
     background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
+
   &__header__toolbar {
     float: right;
     span {
@@ -316,12 +323,14 @@ export default {
       font-size: 20px;
     }
   }
+  
+  &__tables {
+    margin-top: 10px;
+  }
 
-  &__Pagination {
-    padding: 20px 0;
+  &__pagination {
+    margin-top: 10px;
     text-align: right;
-    .el-table th > .cell {
-    }
   }
 }
 </style>
@@ -331,7 +340,9 @@ export default {
   th {
     color: #000;
     font-weight: 500;
+    background-color: #FAFAFA;
   }
+
   td {
     color: rgba(0, 0, 0, 0.85) !important;
   }
