@@ -782,10 +782,10 @@ $--steps-padding: 20px !default;
 /// fontSize||Font|1
 $--menu-item-font-size: $--font-size-base !default;
 /// color||Color|0
-$--menu-item-font-color: mix($--color-black, $--color-white, 30%) !default;
+$--menu-item-font-color: rgba(255, 255, 255, 0.7) !default;
 /// color||Color|0
-$--menu-background-color: $--color-text-primary !default;
-$--menu-item-hover-fill: $--color-text-primary !default;
+$--menu-background-color: #001529 !default;
+$--menu-item-hover-fill: #001529 !default;
 
 /* Rate
 --------------------------*/
@@ -893,7 +893,7 @@ $--footer-padding: 0 16px !default;
 
 /* Main
 --------------------------*/
-$--main-padding: 16px !default;
+$--main-padding: 0 !default;
 
 /* Timeline
 --------------------------*/

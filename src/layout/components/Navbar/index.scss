@@ -33,30 +33,32 @@
 
     .right-menu-item {
       display: inline-block;
-      padding: 0 8px;
+      padding: 0 10px;
       height: 100%;
-      font-size: 18px;
-      color: #5a5e66;
-      vertical-align: text-bottom;
+      cursor: pointer;
+      &:hover {
+        background-color: #f6f6f6;
+      }
     }
 
     .avatar-container {
-      margin-right: 30px;
-
       .avatar-wrapper {
-        margin-top: 5px;
         position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
 
         .user-avatar {
-          cursor: pointer;
+          width: 32px;
+          height: 32px;
+        }
+
+        .user-name {
+          margin-left: 5px;
         }
 
         .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+          margin-left: 5px;
         }
       }
     }
