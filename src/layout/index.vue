@@ -51,6 +51,7 @@ export default {
     height: 100%;
   }
   .el-main {
+    height: 100%;
     background-color: $--background-color-base;
   }
 </style>

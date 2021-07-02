@@ -61,7 +61,6 @@ export default {
         basicTableProps: {
           name: 2323,
           ref: "multipleTable",
-          maxHeight: "550",
           select: (e) => {
             console.log(e);
           },
