@@ -78,6 +78,7 @@
             :label="item.title"
             :key="item.index"
             v-bind="item.attr"
+            {item.attr}
           >
             <template slot-scope="scope">
               <!-- 直接展示 -->

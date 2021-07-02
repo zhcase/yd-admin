@@ -22,8 +22,8 @@
         >
       </template>
       <template #baseTable>
-        <el-table-column align="center" label="操作">
-          <template slot-scope="scope">
+        <el-table-column align="center" label="操作" fixed="right">
+          <template>
             <el-button type="text" icon="el-icon-edit">修改</el-button>
             <el-button type="text" icon="el-icon-delete">删除</el-button>
             <el-button type="text" icon="el-icon-plus">添加</el-button>
@@ -228,6 +228,10 @@ export default {
         {
           title: "管理员账号",
           index: "author",
+          attr: {
+            "show-overflow-tooltip": true,
+            width: 200,
+          },
         },
         {
           title: "title",
@@ -257,7 +261,6 @@ export default {
           ],
         },
         {
-          title: "操作",
           slot: "baseTable",
         },
       ],
