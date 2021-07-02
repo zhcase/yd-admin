@@ -38,13 +38,11 @@ export default {
       //   }
       // }, 300);
       return (
-        <el-form-item label={schema.label}>
-          <el-input
-            v-model={this.form[schema.field]}
-            value={schema.defaultValue}
-            {...{ attrs: attr }}
-          ></el-input>
-        </el-form-item>
+        <el-input
+          v-model={this.form[schema.field]}
+          value={schema.defaultValue}
+          {...{ attrs: attr }}
+        ></el-input>
       );
     },
     // select
@@ -52,36 +50,32 @@ export default {
       let attr = schema.componentProps;
 
       return (
-        <el-form-item label={schema.label}>
-          <el-select
-            v-model={this.form[schema.field]}
-            {...{ attrs: attr }}
-            label=""
-            style="width:100%"
-          >
-            {attr.options.map((item) => (
-              <el-option
-                label={item.label}
-                value={item.value}
-                key={item.value}
-              ></el-option>
-            ))}
-          </el-select>
-        </el-form-item>
+        <el-select
+          v-model={this.form[schema.field]}
+          {...{ attrs: attr }}
+          label=""
+          style="width:100%"
+        >
+          {attr.options.map((item) => (
+            <el-option
+              label={item.label}
+              value={item.value}
+              key={item.value}
+            ></el-option>
+          ))}
+        </el-select>
       );
     },
     createDaterange(schema) {
       let attr = schema.componentProps;
       return (
-        <el-form-item label={schema.label}>
-          <el-date-picker
-            type="daterange"
-            range-separator="至"
-            v-model={this.form[schema.field]}
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          ></el-date-picker>
-        </el-form-item>
+        <el-date-picker
+          type="daterange"
+          range-separator="至"
+          v-model={this.form[schema.field]}
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
       );
     },
   },

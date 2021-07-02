@@ -11,7 +11,9 @@
       @getTableData="fetchData"
     >
       <template #form1>
-        <el-input v-model="form1" />
+        <el-form-item label="标题3">
+          <el-input v-model="form1" />
+        </el-form-item>
       </template>
       <template #toolbarLeft>
         <el-button size="mini" @click="handleEdit([tableData[1], tableData[2]])"
@@ -88,6 +90,7 @@ export default {
         },
         {
           slot: "form1",
+          field: "field11",
         },
         {
           field: "field1",
@@ -214,35 +217,31 @@ export default {
       ],
       table1: [
         {
-          type: "selection",
-        },
-        {
-          title: "公司名称",
-          index: "companyName",
+          title: "id",
+          index: "id",
           attr: {
             width: 200,
           },
         },
         {
           title: "管理员账号",
-          index: "account",
+          index: "author",
         },
         {
-          title: "管理员手机号",
-          index: "phone",
+          title: "title",
+          index: "title",
         },
 
         {
           title: "用户状态",
-          index: "payStatus",
-          type: "radio",
-          options: [
-            {
-              label: false,
-              value: 1,
-            },
-            { label: true, value: 0 },
-          ],
+          index: "status",
+          // options: [
+          //   {
+          //     label: false,
+          //     value: 1,
+          //   },
+          //   { label: true, value: 0 },
+          // ],
         },
         {
           title: "付费状态",
@@ -280,10 +279,10 @@ export default {
     fetchData() {
       this.listLoading = true;
       getList().then((response) => {
-        this.list = response;
-        this.options.paginationProps.total = response.total;
-        this.tableData = response.rows;
-        this.listLoading = false;
+        this.tableData = response.data.items;
+        this.options.paginationProps.total = response.data.total;
+        // this.tableData = response.rows;
+        // this.listLoading = false;
       });
     },
   },

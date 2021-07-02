@@ -15,8 +15,11 @@
           :key="index"
           ref="formData"
         >
-          <slot :name="item.slot" v-if="item.slot"></slot>
-          <FormMap :schema="item" ref="" v-else />
+          <slot :name="item.slot" :schema="item" v-if="item.slot"></slot>
+
+          <el-form-item :label="item.label" v-else>
+            <FormMap :schema="item" ref="" />
+          </el-form-item>
         </el-col>
       </el-form>
       <div class="base-table__form-actions">
@@ -194,16 +197,26 @@ export default {
     // 查询
     handleQuery() {
       let form = {};
-      console.log(this.$refs.formData);
+      console.log(this.$refs.formData[0].schema);
+      console.log(this.$refs.formData[1].$children);
       for (let i = 0; i < this.$refs.formData.length; i++) {
-        if (Object.keys(this.$refs.formData[i].form).length > 0) {
-          form = { ...form, ...this.$refs.formData[i].form };
+        console.log();
+        if (this.$refs.formData[i].$children[0].form) {
+          if (
+            Object.keys(this.$refs.formData[i].$children[0].form).length > 0
+          ) {
+            form = { ...form, ...this.$refs.formData[i].$children[0].form };
+          } else {
+            let formKeys = this.$refs.formData[i].$children[0].schema.field;
+            form[formKeys] = "";
+          }
         } else {
-          let formKeys = this.$refs.formData[i].schema.field;
-          form[formKeys] = "";
+          let formModel = this.$refs.formData[i].$children[0].$vnode.data.model;
+          form[formModel.expression] = formModel.value;
         }
       }
-      console.log(this.$refs.formData);
+
+      console.log(form);
     },
     // 重置
     handleFormReset() {
