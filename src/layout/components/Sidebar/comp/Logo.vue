@@ -1,19 +1,16 @@
 <template>
-  <div class="sidebar-logo-container" :class="{ collapse: collapse }">
-    <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-      <img v-if="logo" :src="logo" class="sidebar-logo" />
-      <h1 v-else class="sidebar-title">{{ title }}</h1>
-    </router-link>
-    <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-      <img v-if="logo" :src="logo" class="sidebar-logo" />
-      <h1 class="sidebar-title">{{ title }}</h1>
-    </router-link>
+  <div class="app-aside__logo" :class="{ collapse: collapse }" @click="goHome">
+    <div class="logo">
+      <img v-if="logo" :src="logo" />
+    </div>
+    <div class="title">{{ title }}</div>
   </div>
 </template>
 
 <script>
 import defaultSettings from '@/settings'
 import logo from '@/assets/images/logo.png'
+import router from '@/router'
 
 export default {
   name: 'SidebarLogo',
@@ -29,46 +26,39 @@ export default {
       logo: logo,
     }
   },
+  methods: {
+    goHome() {
+      router.push('/')
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-.sidebar-logo-container {
-  position: relative;
-  padding-left: 20px;
+.app-aside__logo {
+  padding-left: 10px;
   height: 50px;
   line-height: 50px;
+  display: flex;
+  align-items: center;
   background: $--menu-background-color;
   overflow: hidden;
+  .logo {
+    width: 32px;
+    height: 32px;
+  }
 
-  & .sidebar-logo-link {
-    height: 100%;
-    width: 100%;
-
-    & .sidebar-logo {
-      width: 32px;
-      height: 32px;
-      vertical-align: middle;
-      margin-right: 12px;
-    }
-
-    & .sidebar-title {
-      display: inline-block;
-      margin: 0;
-      color: #fff;
-      font-weight: 600;
-      line-height: 50px;
-      font-size: 14px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-      vertical-align: middle;
-    }
+  .title {
+    margin-left: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: $--color-white;
+    transition: all .5s;
   }
 
   &.collapse {
-    padding-left: 0px;
-    text-align: center;
-    .sidebar-logo {
-      margin-right: 0px;
+    .title {
+      display: none;
     }
   }
 }
