@@ -9,6 +9,7 @@
       @changePagination="handleChangePage"
       @changeSwitch="changeSwitch"
       @getTableData="fetchData"
+      @resetForm="resetForm"
     >
       <template #form1>
         <el-form-item label="标题3">
@@ -23,13 +24,9 @@
       <template #baseTable>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini">Edit</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-              >Delete</el-button
-            >
+            <el-button type="text" icon="el-icon-edit">修改</el-button>
+            <el-button type="text" icon="el-icon-delete">删除</el-button>
+            <el-button type="text" icon="el-icon-plus">添加</el-button>
           </template>
         </el-table-column>
       </template>
@@ -216,6 +213,12 @@ export default {
       ],
       table1: [
         {
+          type: "selection",
+          attr: {
+            width: 50,
+          },
+        },
+        {
           title: "id",
           index: "id",
           attr: {
@@ -264,6 +267,9 @@ export default {
     this.fetchData();
   },
   methods: {
+    resetForm() {
+      this.form1 = "";
+    },
     handleEdit(row) {
       console.log(this.$refs.table.$refs.multipleTable);
       console.log(this.$refs.table.$refs.multipleTable.setCurrentRow(row));

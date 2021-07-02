@@ -1,6 +1,6 @@
 <template>
   <div class="base-table">
-    <div class="base-table__form">
+    <div class="base-table__form" v-if="basicTableOptions.paginationProps">
       <el-form
         ref="form"
         :model="form"
@@ -16,9 +16,8 @@
           ref="formData"
         >
           <slot :name="item.slot" :schema="item" v-if="item.slot"></slot>
-
           <el-form-item :label="item.label" v-else>
-            <FormMap :schema="item" ref="" />
+            <FormMap :schema="item" />
           </el-form-item>
         </el-col>
       </el-form>
@@ -89,7 +88,9 @@
               <template>
                 <template v-if="item.type === 'radio'">
                   <el-switch
-                    :value="handleFilterData(scope.row[item.index], item.options)"
+                    :value="
+                      handleFilterData(scope.row[item.index], item.options)
+                    "
                     @change="handleSwitch(scope.row, item.index, item.options)"
                   >
                   </el-switch>
@@ -154,11 +155,7 @@ export default {
     basicTableOptions: {
       required: false,
       type: Object,
-      default: {
-        basicTableProps: {
-          maxHeight: "450",
-        },
-      },
+      default: {},
     },
     formSchema: {
       required: true,
@@ -200,21 +197,21 @@ export default {
     // 查询
     handleQuery() {
       let form = {};
-      console.log(this.$refs.formData[0].schema);
-      console.log(this.$refs.formData[1].$children);
+      let t = "";
       for (let i = 0; i < this.$refs.formData.length; i++) {
-        console.log();
-        if (this.$refs.formData[i].$children[0].form) {
-          if (
-            Object.keys(this.$refs.formData[i].$children[0].form).length > 0
-          ) {
-            form = { ...form, ...this.$refs.formData[i].$children[0].form };
+        t = this.$refs.formData[i].$children[0].$children[1];
+        if (t.form) {
+          if (Object.keys(t.form).length > 0) {
+            form = {
+              ...form,
+              ...t.form,
+            };
           } else {
-            let formKeys = this.$refs.formData[i].$children[0].schema.field;
+            let formKeys = t.schema.field;
             form[formKeys] = "";
           }
         } else {
-          let formModel = this.$refs.formData[i].$children[0].$vnode.data.model;
+          let formModel = t.$vnode.data.model;
           form[formModel.expression] = formModel.value;
         }
       }
@@ -223,9 +220,18 @@ export default {
     },
     // 重置
     handleFormReset() {
-      console.log(this.$refs.formData[0].form);
       for (let i = 0; i < this.$refs.formData.length; i++) {
-        this.$refs.formData[i].form = {};
+        let t = this.$refs.formData[i].$children[0].$children[1];
+
+        // if(t.form=='undefined')
+        if (t.form) {
+          t.form = {};
+        } else {
+          // console.log(t);
+          this.$emit("resetForm");
+          // t.form = "";
+          // t.value = "";
+        }
       }
     },
     /**
@@ -323,7 +329,7 @@ export default {
       font-size: 20px;
     }
   }
-  
+
   &__tables {
     margin-top: 10px;
   }
@@ -340,7 +346,7 @@ export default {
   th {
     color: #000;
     font-weight: 500;
-    background-color: #FAFAFA;
+    background-color: #fafafa;
   }
 
   td {
