@@ -6,9 +6,7 @@ import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
-NProgress.configure({
-  showSpinner: false
-}) // NProgress Configuration
+NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
 
@@ -18,20 +16,17 @@ router.beforeEach(async (to, from, next) => {
 
   // set page title
   document.title = getPageTitle(to.meta.title)
+
   // determine whether the user has logged in
   const hasToken = getToken()
-  next()
-  return
+
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
-      next({
-        path: '/'
-      })
+      next({ path: '/' })
       NProgress.done()
     } else {
       const hasGetUserInfo = store.getters.name
-
       if (hasGetUserInfo) {
         next()
       } else {

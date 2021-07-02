@@ -7,9 +7,10 @@
     />
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
+      <el-dropdown class="avatar-container right-menu-item">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar" />
+          <span class="user-name">{{ name }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -44,7 +45,7 @@ export default {
     Hamburger,
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar']),
+    ...mapGetters(['sidebar', 'avatar', 'name']),
   },
   methods: {
     toggleSideBar() {
