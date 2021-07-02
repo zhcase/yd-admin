@@ -5,16 +5,23 @@
       :registerTable="table1"
       :basicTableOptions="options"
       :formSchema="schemas"
+      ref="table"
       @changePagination="handleChangePage"
       @changeSwitch="changeSwitch"
       @getTableData="fetchData"
     >
+      <template #form1>
+        <el-input v-model="form1" />
+      </template>
+      <template #toolbarLeft>
+        <el-button size="mini" @click="handleEdit([tableData[1], tableData[2]])"
+          >Edit</el-button
+        >
+      </template>
       <template #baseTable>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >Edit</el-button
-            >
+            <el-button size="mini">Edit</el-button>
             <el-button
               size="mini"
               type="danger"
@@ -48,8 +55,17 @@ export default {
   data() {
     return {
       list: null,
+      form1: "",
       listLoading: true,
       options: {
+        basicTableProps: {
+          name: 2323,
+          ref: "multipleTable",
+          maxHeight: "550",
+          select: (e) => {
+            console.log(e);
+          },
+        },
         paginationProps: {
           total: 0,
         },
@@ -69,6 +85,9 @@ export default {
               console.log(e);
             },
           },
+        },
+        {
+          slot: "form1",
         },
         {
           field: "field1",
@@ -195,6 +214,9 @@ export default {
       ],
       table1: [
         {
+          type: "selection",
+        },
+        {
           title: "公司名称",
           index: "companyName",
           attr: {
@@ -244,6 +266,10 @@ export default {
     this.fetchData();
   },
   methods: {
+    handleEdit(row) {
+      console.log(this.$refs.table.$refs.multipleTable);
+      console.log(this.$refs.table.$refs.multipleTable.setCurrentRow(row));
+    },
     changeSwitch(val, cab) {
       console.log(val);
       cab(true);
@@ -254,10 +280,8 @@ export default {
     fetchData() {
       this.listLoading = true;
       getList().then((response) => {
-        console.log(response);
         this.list = response;
         this.options.paginationProps.total = response.total;
-        // this.list = response.rows;
         this.tableData = response.rows;
         this.listLoading = false;
       });

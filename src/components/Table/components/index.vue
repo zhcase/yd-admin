@@ -13,8 +13,10 @@
           :xs="24"
           v-for="(item, index) of formSchema"
           :key="index"
+          ref="formData"
         >
-          <FormMap :schema="item" ref="formData" />
+          <slot :name="item.slot" v-if="item.slot"></slot>
+          <FormMap :schema="item" ref="" v-else />
         </el-col>
       </el-form>
       <div class="base-table__form-actions">
@@ -41,7 +43,7 @@
 
     <div class="base-table__toolbar">
       <span class="base-table__toolbar__title">
-        <template> 自定义内容</template>
+        <slot name="toolbarLeft"> 自定义内容</slot>
       </span>
       <!-- 右侧 -->
       <div class="base-table__header__toolbar">
@@ -56,6 +58,8 @@
     <el-table
       :data="tableData"
       style="width: 100%"
+      v-bind="basicTableOptions.basicTableProps"
+      v-on="basicTableOptions.basicTableProps"
       border
       class="base-table__tables"
     >
@@ -66,6 +70,7 @@
           :prop="item.index"
           header-align="center"
           align="center"
+          :type="item.type"
           :label="item.title"
           :key="item.index"
           v-bind="item.attr"
@@ -110,7 +115,6 @@
 </template>
 
 <script>
-import { logger } from "_runjs@4.3.2@runjs/lib/common";
 import FormMap from "./FormMap.vue";
 export default {
   components: {
@@ -144,12 +148,18 @@ export default {
     basicTableOptions: {
       required: false,
       type: Object,
+      default: {
+        basicTableProps: {
+          maxHeight: "450",
+        },
+      },
     },
     formSchema: {
       required: true,
       type: Array,
     },
   },
+
   computed: {
     /**
      * 过滤返回选中数据
@@ -184,6 +194,7 @@ export default {
     // 查询
     handleQuery() {
       let form = {};
+      console.log(this.$refs.formData);
       for (let i = 0; i < this.$refs.formData.length; i++) {
         if (Object.keys(this.$refs.formData[i].form).length > 0) {
           form = { ...form, ...this.$refs.formData[i].form };
@@ -192,6 +203,7 @@ export default {
           form[formKeys] = "";
         }
       }
+      console.log(this.$refs.formData);
     },
     // 重置
     handleFormReset() {
@@ -255,6 +267,10 @@ export default {
 
 <style lang='scss' scoped>
 .base-table {
+  .base-table__form {
+    background-color: #fff;
+    padding: 15px;
+  }
   &__form {
     height: auto;
     overflow: hidden;
@@ -263,8 +279,8 @@ export default {
       height: auto;
       overflow: hidden;
     }
+
     .base-table__form-actions {
-      padding-bottom: 10px;
       .content {
         float: right;
       }
@@ -273,8 +289,11 @@ export default {
     }
   }
   &__toolbar {
+    border-top: 10px solid #f5f7fa;
     min-height: 40px;
+    padding: 0 10px;
     line-height: 40px;
+    background-color: #fff;
   }
   &__header__toolbar {
     float: right;
@@ -286,7 +305,7 @@ export default {
   }
 
   &__Pagination {
-    margin: 20px 0;
+    padding: 20px 0;
     text-align: right;
     .el-table th > .cell {
     }
