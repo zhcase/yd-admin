@@ -1,6 +1,6 @@
 <template>
   <div class="base-table">
-    <div class="base-table__form" v-if="basicTableOptions.paginationProps">
+    <div class="base-table__form" v-if="formSchema.length > 0">
       <el-form
         ref="form"
         :model="form"
@@ -66,6 +66,7 @@
       <el-table
         :data="tableData"
         :stripe="true"
+        height="100%"
         v-bind="basicTableOptions.basicTableProps"
         v-on="basicTableOptions.basicTableProps"
         border
@@ -155,7 +156,9 @@ export default {
     registerTable: {
       required: true,
       type: Array,
-      default: [],
+      default: () => {
+        return [];
+      },
     },
     // table 配置
     basicTableOptions: {
@@ -164,8 +167,11 @@ export default {
       default: {},
     },
     formSchema: {
-      required: true,
+      required: false,
       type: Array,
+      default: () => {
+        return [];
+      },
     },
   },
 
@@ -199,47 +205,51 @@ export default {
     handleQuery() {
       let form = {};
       let t = "";
-      for (let i = 0; i < this.$refs.formData.length; i++) {
-        t = this.$refs.formData[i].$children[0].$children[1];
-        if (t.form) {
-          if (Object.keys(t.form).length > 0) {
-            form = {
-              ...form,
-              ...t.form,
-            };
+      console.log(this.$refs.formData);
+      if (this.$refs.formData) {
+        for (let i = 0; i < this.$refs.formData.length; i++) {
+          t =
+            this.$refs.formData[i].$children[0] &&
+            this.$refs.formData[i].$children[0].$children[1];
+          if (t && t.form) {
+            if (Object.keys(t.form).length > 0) {
+              form = {
+                ...form,
+                ...t.form,
+              };
+            } else {
+              let formKeys = t.schema.field;
+              form[formKeys] = "";
+            }
           } else {
-            let formKeys = t.schema.field;
-            form[formKeys] = "";
+            if (t) {
+              let formModel = t.$vnode.data.model;
+              form[formModel.expression] = formModel.value;
+            }
           }
-        } else {
-          let formModel = t.$vnode.data.model;
-          form[formModel.expression] = formModel.value;
         }
       }
-
       let paramsObj = {
         pageSize: this.paginationConfig.pageSize,
         pageNumber: this.paginationConfig.currentPage,
       };
-      let paramsForm = form;
-      // console.log(paramsObj, ...paramsForm);
+      let paramsForm = this.formDataParams(form);
       let parmas = { ...paramsObj, ...paramsForm };
-      console.log(parmas);
-      // let paramsPagation = this.createTableParams(paramsObj);
-      // let params = paramsForm + paramsPagation;
       this.basicTableOptions.api(parmas).then((res) => {
-        this.tableData = res.rows;
-        this.paginationConfig.total = res.total;
+        this.tableData = res.data.items;
+        this.paginationConfig.total = res.data.total;
       });
     },
     // 重置
     handleFormReset() {
-      for (let i = 0; i < this.$refs.formData.length; i++) {
-        let t = this.$refs.formData[i].$children[0].$children[1];
-        if (t.form) {
-          t.form = {};
-        } else {
-          this.$emit("resetForm");
+      if (this.$refs.formData) {
+        for (let i = 0; i < this.$refs.formData.length; i++) {
+          let t = this.$refs.formData[i].$children[0].$children[1];
+          if (t.form) {
+            t.form = {};
+          } else {
+            this.$emit("resetForm");
+          }
         }
       }
       this.$nextTick(() => {
@@ -251,13 +261,15 @@ export default {
      **/
     changeFormVisible() {
       this.formVisible = !this.formVisible;
-      if (this.formVisible) {
-        for (let i = 3; i < this.$refs.form.$children.length; i++) {
-          this.$refs.form.$children[i].$el.style = "display:none";
-        }
-      } else {
-        for (let i = 3; i < this.$refs.form.$children.length; i++) {
-          this.$refs.form.$children[i].$el.style = "display:block";
+      if (this.$refs.form) {
+        if (this.formVisible) {
+          for (let i = 3; i < this.$refs.form.$children.length; i++) {
+            this.$refs.form.$children[i].$el.style = "display:none";
+          }
+        } else {
+          for (let i = 3; i < this.$refs.form.$children.length; i++) {
+            this.$refs.form.$children[i].$el.style = "display:block";
+          }
         }
       }
     },
@@ -308,10 +320,11 @@ export default {
       });
     },
     // utils 参数 临时放置！！！！ 后期 移utils
-    createTableParams(obj) {
-      let params = "";
+    formDataParams(obj) {
+      let params = {};
       for (let key in obj) {
-        params += key + "=" + obj[key] + "&";
+        params[key] = obj[key].replace(/(^\s*)|(\s*$)/g, "");
+
         // params+=obj
       }
       return params;

@@ -6,6 +6,11 @@
       :formSchema="schemas"
     >
       <template #form1>
+        <el-form-item label="自定义">
+          <el-input v-model="form1" />
+        </el-form-item>
+      </template>
+      <!-- <template #form1>
         <el-form-item label="标题3">
           <el-input v-model="form1" />
         </el-form-item>
@@ -23,7 +28,16 @@
             <el-button type="text" icon="el-icon-plus">添加</el-button>
           </template>
         </el-table-column>
-      </template>
+      </template> -->
+      <!-- <template #action>
+        <el-table-column align="center" label="操作" fixed="right">
+          <template>
+            <el-button type="text" icon="el-icon-edit">修改</el-button>
+            <el-button type="text" icon="el-icon-delete">删除</el-button>
+            <el-button type="text" icon="el-icon-plus">添加</el-button>
+          </template>
+        </el-table-column>
+      </template> -->
     </BasicTable>
   </div>
 </template>
@@ -35,25 +49,19 @@ export default {
   components: {
     BasicTable,
   },
-
   data() {
     return {
-      list: null,
+      // list: null,
       form1: "",
-      listLoading: true,
+      // listLoading: true,
       options: {
-        api: getList,
-        basicTableProps: {
-          name: 2323,
-          height: "auto",
-          ref: "multipleTable",
-          select: (e) => {
-            console.log(e);
-          },
-        },
-        paginationProps: {
-          total: 0,
-        },
+        api: getList, // 调用接口地址
+        paginationProps: {},
+        // basicTableProps: {
+        //   select: (e) => {
+        //     console.log(e);
+        //   },
+        // },
       },
       // 头部表单配置生成
       schemas: [
@@ -67,11 +75,9 @@ export default {
           defaultValue: "1",
           componentProps: {
             placeholder: "自定义placeholder",
-            onChange: (e) => {
-              console.log(e);
-            },
           },
         },
+        // ],
         {
           slot: "form1",
           field: "field11",
@@ -95,18 +101,6 @@ export default {
                 value: "选项2",
                 label: "双皮奶",
               },
-              {
-                value: "选项3",
-                label: "蚵仔煎",
-              },
-              {
-                value: "选项4",
-                label: "龙须面",
-              },
-              {
-                value: "选项5",
-                label: "北京烤鸭",
-              },
             ],
           },
         },
@@ -120,9 +114,6 @@ export default {
           defaultValue: "1",
           componentProps: {
             placeholder: "自定义placeholder",
-            onChange: (e) => {
-              console.log(e);
-            },
           },
         },
         {
@@ -165,7 +156,13 @@ export default {
         {
           label: "用户状态",
           value: "status",
-
+          options: [
+            {
+              label: "删除",
+              value: "deleted",
+            },
+            { label: "发表", value: "published" },
+          ],
           // options: [
           //   {
           //     label: false,
@@ -174,44 +171,34 @@ export default {
           //   { label: true, value: 0 },
           // ],
         },
-        {
-          label: "付费状态",
-          value: "chargingStatus",
-          options: [
-            {
-              label: "高级会员",
-              value: 1,
-            },
-            { label: "普通会员", value: 0 },
-          ],
-        },
-        {
-          slot: "baseTable",
-          attr: {
-            fixed: "right",
-          },
-        },
+        // {
+        //   slot: "action",
+        // },
+
+        // {
+        //   slot: "baseTable",
+        //   attr: {
+        //     fixed: "right",
+        //   },
+        // },
       ],
     };
   },
   methods: {
     // 重置自定义表单
-    resetForm() {
-      this.form1 = "";
-    },
-    handleEdit(row) {
-      console.log(this.$refs.table.$refs.multipleTable);
-      console.log(this.$refs.table.$refs.multipleTable.setCurrentRow(row));
-    },
+    // resetForm() {
+    //   this.form1 = "";
+    // },
+    // handleEdit(row) {
+    //   console.log(this.$refs.table.$refs.multipleTable);
+    //   console.log(this.$refs.table.$refs.multipleTable.setCurrentRow(row));
+    // },
     // 改变表格switch
-    changeSwitch(val, cab) {
-      console.log(val);
-      cab(true);
-    },
+    // changeSwitch(val, cab) {
+    //   console.log(val);
+    //   cab(true);
+    // },
     // 当分页改变的时候将会被触发
-    handleChangePage(val) {
-      console.log(val);
-    },
   },
 };
 </script>
