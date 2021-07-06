@@ -58,9 +58,13 @@
         </div>
       </div>
 
+      <!-- :height="
+          basicTableOptions.basicTableProps.height
+            ? basicTableOptions.basicTableProps.height
+            : '100%'
+        " -->
       <el-table
         :data="tableData"
-        height="100%"
         :stripe="true"
         v-bind="basicTableOptions.basicTableProps"
         v-on="basicTableOptions.basicTableProps"
@@ -71,33 +75,31 @@
           <slot v-if="item.slot" :name="item.slot"> </slot>
           <el-table-column
             v-else
-            :prop="item.index"
+            :prop="item.value"
             header-align="center"
             align="center"
-            :type="item.type"
-            :label="item.title"
-            :key="item.index"
-            v-bind="item.attr"
-            {item.attr}
+            :key="item.value"
+            v-bind="item"
           >
+            <!-- {item.attr} -->
             <template slot-scope="scope">
               <!-- 直接展示 -->
               <template v-if="!item.options">
-                {{ scope.row[item.index] }}
+                {{ scope.row[item.value] }}
               </template>
               <!-- 条件展示 -->
               <template>
                 <template v-if="item.type === 'radio'">
                   <el-switch
                     :value="
-                      handleFilterData(scope.row[item.index], item.options)
+                      handleFilterData(scope.row[item.value], item.options)
                     "
-                    @change="handleSwitch(scope.row, item.index, item.options)"
+                    @change="handleSwitch(scope.row, item.value, item.options)"
                   >
                   </el-switch>
                 </template>
                 <template v-if="item.type !== 'radio' && item.options">
-                  {{ handleFilterData(scope.row[item.index], item.options) }}
+                  {{ handleFilterData(scope.row[item.value], item.options) }}
                 </template>
               </template>
             </template>
@@ -113,7 +115,7 @@
             :current-page="paginationConfig.currentPage"
             :page-size="paginationConfig.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="basicTableOptions.paginationProps.total || 0"
+            :total="paginationConfig.total || 0"
           >
           </el-pagination>
         </div>
@@ -132,20 +134,23 @@ export default {
     return {
       form: {},
       formVisible: false,
+      tableData: [],
+
       // 分页
       paginationConfig: {
         currentPage: 1,
         pageSize: 10,
+        total: 0,
       },
     };
   },
   props: {
     // table 数据
-    tableData: {
-      required: true,
-      type: Array,
-      default: [],
-    },
+    // tableData: {
+    //   required: true,
+    //   type: Array,
+    //   default: [],
+    // },
     // table 索引与title
     registerTable: {
       required: true,
@@ -186,13 +191,8 @@ export default {
     },
   },
   mounted() {
-    console.log(this.formSchema);
+    this.handleQuery();
     this.changeFormVisible();
-    this.$nextTick(() => {
-      if (this.basicTableOptions.paginationConfig) {
-        this.paginationConfig = this.basicTableOptions.paginationConfig;
-      }
-    });
   },
   methods: {
     // 查询
@@ -217,29 +217,39 @@ export default {
         }
       }
 
-      console.log(form);
+      let paramsObj = {
+        pageSize: this.paginationConfig.pageSize,
+        pageNumber: this.paginationConfig.currentPage,
+      };
+      let paramsForm = form;
+      // console.log(paramsObj, ...paramsForm);
+      let parmas = { ...paramsObj, ...paramsForm };
+      console.log(parmas);
+      // let paramsPagation = this.createTableParams(paramsObj);
+      // let params = paramsForm + paramsPagation;
+      this.basicTableOptions.api(parmas).then((res) => {
+        this.tableData = res.rows;
+        this.paginationConfig.total = res.total;
+      });
     },
     // 重置
     handleFormReset() {
       for (let i = 0; i < this.$refs.formData.length; i++) {
         let t = this.$refs.formData[i].$children[0].$children[1];
-
-        // if(t.form=='undefined')
         if (t.form) {
           t.form = {};
         } else {
-          // console.log(t);
           this.$emit("resetForm");
-          // t.form = "";
-          // t.value = "";
         }
       }
+      this.$nextTick(() => {
+        this.handleQuery();
+      });
     },
     /**
      * 改变Form 显示隐藏
      **/
     changeFormVisible() {
-      // console.log(this.$refs.form.$children[3].$el);
       this.formVisible = !this.formVisible;
       if (this.formVisible) {
         for (let i = 3; i < this.$refs.form.$children.length; i++) {
@@ -253,18 +263,31 @@ export default {
     },
     // 刷新
     handleRefresh() {
+      this.handleQuery();
       this.$emit("getTableData");
     },
     //每页 ${val} 条
     handleSizeChange(val) {
       this.paginationConfig.pageSize = val;
-      this.$emit("changePagination", this.paginationConfig);
+      this.paginationConfig.currentPage = 1;
+
+      this.handleQuery();
+
+      /**
+       * 分页注释改版
+       */
+      // this.$emit("changePagination", this.paginationConfig);
     },
 
     //当前页: ${val}
     handleCurrentChange(val) {
       this.paginationConfig.currentPage = val;
-      this.$emit("changePagination", this.paginationConfig);
+
+      this.handleQuery();
+      /**
+       * 分页注释改版
+       */
+      // this.$emit("changePagination", this.paginationConfig);
     },
     /**
      * @param row 行数据
@@ -283,6 +306,15 @@ export default {
           }
         }
       });
+    },
+    // utils 参数 临时放置！！！！ 后期 移utils
+    createTableParams(obj) {
+      let params = "";
+      for (let key in obj) {
+        params += key + "=" + obj[key] + "&";
+        // params+=obj
+      }
+      return params;
     },
   },
 };

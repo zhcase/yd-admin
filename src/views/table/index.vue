@@ -1,15 +1,9 @@
 <template>
   <div class="app-container">
     <BasicTable
-      :tableData="tableData"
       :registerTable="table1"
       :basicTableOptions="options"
       :formSchema="schemas"
-      ref="table"
-      @changePagination="handleChangePage"
-      @changeSwitch="changeSwitch"
-      @getTableData="fetchData"
-      @resetForm="resetForm"
     >
       <template #form1>
         <el-form-item label="标题3">
@@ -41,24 +35,17 @@ export default {
   components: {
     BasicTable,
   },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
-  },
+
   data() {
     return {
       list: null,
       form1: "",
       listLoading: true,
       options: {
+        api: getList,
         basicTableProps: {
           name: 2323,
+          height: "auto",
           ref: "multipleTable",
           select: (e) => {
             console.log(e);
@@ -68,6 +55,7 @@ export default {
           total: 0,
         },
       },
+      // 头部表单配置生成
       schemas: [
         {
           field: "field",
@@ -153,94 +141,31 @@ export default {
           },
         },
       ],
-      tableData: [
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-08",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-06",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-        {
-          date: "2016-05-07",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: "上海市普陀区金沙江路 1518 弄",
-          zip: 200333,
-        },
-      ],
+
+      // table 索引
       table1: [
         {
-          type: "selection",
-          attr: {
-            width: 50,
-          },
+          label: "id",
+          value: "id",
+          width: 200,
         },
         {
-          title: "id",
-          index: "id",
-          attr: {
-            width: 200,
-          },
+          label: "管理员账号",
+          value: "author",
+          "show-overflow-tooltip": true,
+          width: 200,
         },
         {
-          title: "管理员账号",
-          index: "author",
-          attr: {
-            "show-overflow-tooltip": true,
-            width: 200,
-          },
-        },
-        {
-          title: "title",
-          index: "title",
+          label: "title",
+          value: "title",
+          "show-overflow-tooltip": true,
+          width: 200,
         },
 
         {
-          title: "用户状态",
-          index: "status",
+          label: "用户状态",
+          value: "status",
+
           // options: [
           //   {
           //     label: false,
@@ -250,8 +175,8 @@ export default {
           // ],
         },
         {
-          title: "付费状态",
-          index: "chargingStatus",
+          label: "付费状态",
+          value: "chargingStatus",
           options: [
             {
               label: "高级会员",
@@ -262,14 +187,15 @@ export default {
         },
         {
           slot: "baseTable",
+          attr: {
+            fixed: "right",
+          },
         },
       ],
     };
   },
-  created() {
-    this.fetchData();
-  },
   methods: {
+    // 重置自定义表单
     resetForm() {
       this.form1 = "";
     },
@@ -277,21 +203,14 @@ export default {
       console.log(this.$refs.table.$refs.multipleTable);
       console.log(this.$refs.table.$refs.multipleTable.setCurrentRow(row));
     },
+    // 改变表格switch
     changeSwitch(val, cab) {
       console.log(val);
       cab(true);
     },
+    // 当分页改变的时候将会被触发
     handleChangePage(val) {
       console.log(val);
-    },
-    fetchData() {
-      this.listLoading = true;
-      getList().then((response) => {
-        this.tableData = response.data.items;
-        this.options.paginationProps.total = response.data.total;
-        // this.tableData = response.rows;
-        // this.listLoading = false;
-      });
     },
   },
 };
