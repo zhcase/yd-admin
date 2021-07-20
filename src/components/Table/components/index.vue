@@ -58,11 +58,6 @@
         </div>
       </div>
 
-      <!-- :height="
-          basicTableOptions.basicTableProps.height
-            ? basicTableOptions.basicTableProps.height
-            : '100%'
-        " -->
       <el-table
         :data="tableData"
         :stripe="true"

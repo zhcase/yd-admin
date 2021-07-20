@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
     <BasicTable :registerTable="table1" :basicTableOptions="options">
+      <template #action>
+        <el-table-column align="center" label="操作" fixed="right" width="300">
+          <template>
+            <el-button type="text" icon="el-icon-edit">修改</el-button>
+            <el-button type="text" icon="el-icon-delete">删除</el-button>
+            <el-button type="text" icon="el-icon-plus">添加</el-button>
+          </template>
+        </el-table-column>
+      </template>
     </BasicTable>
   </div>
 </template>
@@ -28,7 +37,7 @@ export default {
           label: "管理员账号",
           value: "author",
           "show-overflow-tooltip": true,
-          width: 200,
+          width: 500,
         },
         {
           label: "title",
@@ -47,6 +56,10 @@ export default {
             },
             { label: "发表", value: "published" },
           ],
+        },
+        {
+          label: "操作",
+          slot: "action",
         },
       ],
     };

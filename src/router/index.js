@@ -65,8 +65,35 @@ export const constantRoutes = [
       {
         path: 'table',
         name: 'Table',
+        meta: { title: 'Table' },
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table' }
+
+        children: [
+          {
+            path: 'basic',
+            name: 'basicTable',
+            component: () => import('@/views/table/basicTable'),
+            meta: { title: '基础示例', icon: 'icon-table' }
+          },
+          {
+            path: 'fetchTable',
+            component: () => import('@/views/table/fetchTable.vue'),
+            name: 'FetchTable',
+            meta: { title: '远程加载示例' }
+          },
+          {
+            path: 'fixedColumn',
+            component: () => import('@/views/table/fixedColumn.vue'),
+            name: 'FixedColumn',
+            meta: { title: '固定列' }
+          },
+          {
+            path: 'formTable',
+            component: () => import('@/views/table/formTable.vue'),
+            name: 'FormTable',
+            meta: { title: '开启搜索区域' }
+          },
+        ]
       },
       {
         path: 'tree',
