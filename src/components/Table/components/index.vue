@@ -46,7 +46,7 @@
     <div class="base-table-wrapper">
       <div class="base-table__toolbar">
         <span class="base-table__toolbar__title">
-          <slot name="toolbarLeft"> 自定义内容</slot>
+          <slot name="toolbarLeft"> {{ title }}</slot>
         </span>
         <!-- 右侧 -->
         <div class="base-table__header__toolbar">
@@ -141,6 +141,9 @@ export default {
     };
   },
   props: {
+    title: {
+      type: String,
+    },
     // table 数据
     // tableData: {
     //   required: true,

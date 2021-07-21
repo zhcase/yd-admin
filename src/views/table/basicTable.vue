@@ -1,6 +1,10 @@
 <template>
   <div class="app-container">
-    <BasicTable :registerTable="table1" :basicTableOptions="options">
+    <BasicTable
+      :registerTable="table1"
+      :basicTableOptions="options"
+      title="基础示例"
+    >
     </BasicTable>
   </div>
 </template>
