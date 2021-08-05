@@ -1,3 +1,10 @@
+<!--
+ * @Author: zeHua
+ * @Date: 2021-07-01 11:47:50
+ * @LastEditors: zeHua
+ * @LastEditTime: 2021-07-23 09:19:58
+ * @FilePath: /yd-admin/src/components/Table/components/FormMap.vue
+-->
 <script type='jsx'>
 export default {
   data() {
@@ -12,8 +19,6 @@ export default {
     schema: {},
   },
   render() {
-    // console.log(this.schema);
-
     if (this.schema.component === "Input") {
       return this.createInput(this.schema);
     } else if (this.schema.component === "Select") {
@@ -28,15 +33,12 @@ export default {
     }
   },
   methods: {
-    // 输入框
+    /**
+     * @description 创建一个输入框组件
+     * @param schema 数据model
+     */
     createInput(schema) {
       let attr = schema.componentProps;
-
-      // setTimeout(() => {
-      //   if (schema.defaultValue) {
-      //     this.form[schema.field] = schema.defaultValue;
-      //   }
-      // }, 300);
       return (
         <el-input
           v-model={this.form[schema.field]}
@@ -45,10 +47,12 @@ export default {
         ></el-input>
       );
     },
-    // select
+    /**
+     * @description 创建一个选择框组件
+     * @param schema 数据model
+     */
     createSelect(schema) {
       let attr = schema.componentProps;
-
       return (
         <el-select
           v-model={this.form[schema.field]}
@@ -66,6 +70,10 @@ export default {
         </el-select>
       );
     },
+    /**
+     * @description 创建一个表单日日期组件
+     * @param schema 数据model
+     */
     createDaterange(schema) {
       let attr = schema.componentProps;
       return (

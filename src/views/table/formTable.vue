@@ -8,7 +8,7 @@
     >
       <template #form1>
         <el-form-item label="自定义">
-          <el-input v-model="form1" />
+          <el-input v-model="form1" placeholder="自定义组件" />
         </el-form-item>
       </template>
       <template #toolbarLeft>

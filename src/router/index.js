@@ -172,7 +172,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: 'external-link',
     component: Layout,
@@ -183,6 +182,19 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/demo',
+    component: Layout,
+    children: [
+      {
+        path: 'life',
+        name: 'Life',
+        component: () => import('@/views/life/index.vue'),
+        meta: { title: 'demo1 life', icon: 'icon-fenxiang' }
+      },
+    ]
+  },
+
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

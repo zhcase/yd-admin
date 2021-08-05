@@ -4,7 +4,9 @@
       :registerTable="table1"
       :basicTableOptions="options"
       title="基础示例"
+      :border="true"
     >
+      <template slot="index"> </template>
     </BasicTable>
   </div>
 </template>
@@ -26,7 +28,8 @@ export default {
         {
           label: "id",
           value: "id",
-          width: 200,
+          width: 150,
+          sortable: true,
         },
         {
           label: "管理员账号",

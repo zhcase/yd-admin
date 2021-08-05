@@ -62,11 +62,12 @@
         :data="tableData"
         :stripe="true"
         height="100%"
-        v-bind="basicTableOptions.basicTableProps"
-        v-on="basicTableOptions.basicTableProps"
-        border
+        v-on="$listeners"
+        v-bind="$attrs"
         class="base-table__tables"
       >
+        <!-- v-on="basicTableOptions.basicTableProps" -->
+
         <template v-for="item of registerTable">
           <slot v-if="item.slot" :name="item.slot"> </slot>
           <el-table-column
