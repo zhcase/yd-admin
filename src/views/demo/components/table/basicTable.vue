@@ -43,7 +43,6 @@ export default {
           "show-overflow-tooltip": true,
           width: 200,
         },
-
         {
           label: "用户状态",
           value: "status",

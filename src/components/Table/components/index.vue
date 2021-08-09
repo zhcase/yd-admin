@@ -46,6 +46,13 @@
     <div class="base-table-wrapper">
       <div class="base-table__toolbar">
         <span class="base-table__toolbar__title">
+          <el-button
+            type="default"
+            @click="handleDownload"
+            size="small"
+            v-if="isHiddenDownload"
+            >导出</el-button
+          >
           <slot name="toolbarLeft"> {{ title }}</slot>
         </span>
         <!-- 右侧 -->
@@ -61,46 +68,50 @@
       <el-table
         :data="tableData"
         :stripe="true"
+        id="table"
         height="100%"
         v-on="$listeners"
         v-bind="$attrs"
         class="base-table__tables"
       >
-        <!-- v-on="basicTableOptions.basicTableProps" -->
-
         <template v-for="item of registerTable">
-          <slot v-if="item.slot" :name="item.slot"> </slot>
-          <el-table-column
-            v-else
-            :prop="item.value"
-            header-align="center"
-            align="center"
-            :key="item.value"
-            v-bind="item"
-          >
-            <!-- {item.attr} -->
-            <template slot-scope="scope">
-              <!-- 直接展示 -->
-              <template v-if="!item.options">
-                {{ scope.row[item.value] }}
-              </template>
-              <!-- 条件展示 -->
-              <template>
-                <template v-if="item.type === 'radio'">
-                  <el-switch
-                    :value="
-                      handleFilterData(scope.row[item.value], item.options)
-                    "
-                    @change="handleSwitch(scope.row, item.value, item.options)"
-                  >
-                  </el-switch>
+          <!-- 是否隐藏该列 -->
+          <template v-if="!item.isHidden">
+            <slot v-if="item.slot" :name="item.slot"> </slot>
+            <el-table-column
+              v-else
+              :prop="item.value"
+              header-align="center"
+              align="center"
+              :key="item.value"
+              v-bind="item"
+            >
+              <!-- {item.attr} -->
+              <template slot-scope="scope">
+                <!-- 直接展示 -->
+                <template v-if="!item.options">
+                  {{ scope.row[item.value] }}
                 </template>
-                <template v-if="item.type !== 'radio' && item.options">
-                  {{ handleFilterData(scope.row[item.value], item.options) }}
+                <!-- 条件展示 -->
+                <template>
+                  <template v-if="item.type === 'radio'">
+                    <el-switch
+                      :value="
+                        handleFilterData(scope.row[item.value], item.options)
+                      "
+                      @change="
+                        handleSwitch(scope.row, item.value, item.options)
+                      "
+                    >
+                    </el-switch>
+                  </template>
+                  <template v-if="item.type !== 'radio' && item.options">
+                    {{ handleFilterData(scope.row[item.value], item.options) }}
+                  </template>
                 </template>
               </template>
-            </template>
-          </el-table-column>
+            </el-table-column>
+          </template>
         </template>
       </el-table>
       <template v-if="basicTableOptions.paginationProps">
@@ -123,6 +134,7 @@
 
 <script>
 import FormMap from "./FormMap.vue";
+import { downloadExcel } from "./excel.js";
 export default {
   components: {
     FormMap,
@@ -172,6 +184,14 @@ export default {
         return [];
       },
     },
+    isHiddenDownload: {
+      // 是否显示隐藏下载按钮
+      required: false,
+      type: Boolean,
+      default: () => {
+        return false;
+      },
+    },
   },
 
   computed: {
@@ -195,11 +215,29 @@ export default {
       console.log(val);
     },
   },
+  created() {
+    console.log(this.registerTable);
+  },
   mounted() {
     this.handleQuery();
     this.changeFormVisible();
   },
   methods: {
+    // 下载excel文档
+    handleDownload() {
+      downloadExcel(this.registerTable, this.tableData);
+    },
+    formatJson(filterVal) {
+      return this.tableData.map((v) =>
+        filterVal.map((j) => {
+          if (j === "timestamp") {
+            return parseTime(v[j]);
+          } else {
+            return v[j];
+          }
+        })
+      );
+    },
     // 查询
     handleQuery() {
       let form = {};

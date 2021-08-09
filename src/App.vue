@@ -8,14 +8,14 @@
 <template>
   <div id="app">
     <router-view />
-    123
+    123456
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
-}
+  name: "App",
+};
 </script>
 
 <style lang="scss">

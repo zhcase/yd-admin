@@ -60,36 +60,36 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: 'Example', icon: 'icon-example' },
+    meta: { title: '组件', icon: 'icon-example' },
     children: [
       {
         path: 'table',
         name: 'Table',
         meta: { title: 'Table' },
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/demo/components/table/index'),
 
         children: [
           {
             path: 'basic',
             name: 'basicTable',
-            component: () => import('@/views/table/basicTable'),
+            component: () => import('@/views/demo/components/table/basicTable'),
             meta: { title: '基础示例', icon: 'icon-table' }
           },
           {
             path: 'fetchTable',
-            component: () => import('@/views/table/fetchTable.vue'),
+            component: () => import('@/views/demo/components/table/fetchTable.vue'),
             name: 'FetchTable',
             meta: { title: '远程加载示例' }
           },
           {
             path: 'fixedColumn',
-            component: () => import('@/views/table/fixedColumn.vue'),
+            component: () => import('@/views/demo/components/table/fixedColumn.vue'),
             name: 'FixedColumn',
             meta: { title: '固定列' }
           },
           {
             path: 'formTable',
-            component: () => import('@/views/table/formTable.vue'),
+            component: () => import('@/views/demo/components/table/formTable.vue'),
             name: 'FormTable',
             meta: { title: '开启搜索区域' }
           },
