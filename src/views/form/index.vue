@@ -1,84 +1,190 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Activity name">
-        <el-input v-model="form.name" />
-      </el-form-item>
-      <el-form-item label="Activity zone">
-        <el-select v-model="form.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Activity time">
-        <el-col :span="11">
-          <el-date-picker v-model="form.date1" type="date" placeholder="Pick a date" style="width: 100%;" />
-        </el-col>
-        <el-col :span="2" class="line">-</el-col>
-        <el-col :span="11">
-          <el-time-picker v-model="form.date2" type="fixed-time" placeholder="Pick a time" style="width: 100%;" />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="Instant delivery">
-        <el-switch v-model="form.delivery" />
-      </el-form-item>
-      <el-form-item label="Activity type">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="Online activities" name="type" />
-          <el-checkbox label="Promotion activities" name="type" />
-          <el-checkbox label="Offline activities" name="type" />
-          <el-checkbox label="Simple brand exposure" name="type" />
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="Resources">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="Sponsor" />
-          <el-radio label="Venue" />
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="Activity form">
-        <el-input v-model="form.desc" type="textarea" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button @click="onCancel">Cancel</el-button>
-      </el-form-item>
-    </el-form>
+    <BasicForm :schema="schema"></BasicForm>
   </div>
 </template>
 
 <script>
+import BasicForm from "@/components/Form/components/BasicForm.vue";
 export default {
+  components: {
+    BasicForm,
+  },
   data() {
     return {
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
-    }
+      schema: [
+        {
+          field: "name",
+          component: "Input",
+          label: "活动名称",
+          defaultValue: "123232",
+          placeholder: "请填写活动名称",
+          rules: [
+            { required: true, message: "请输入活动名称", trigger: "blur" },
+            {
+              min: 3,
+              max: 5,
+              message: "长度在 3 到 5 个字符",
+              trigger: "blur",
+            },
+          ],
+          colProps: {
+            span: 8,
+          },
+        },
+        {
+          field: "field2",
+          component: "Select",
+          label: "活动区域",
+          placeholder: "请选择活动区域",
+          colProps: {
+            span: 8,
+          },
+          componentProps: {
+            options: [
+              {
+                label: "区域一",
+                value: "1",
+              },
+              {
+                label: "区域二",
+                value: "2",
+              },
+            ],
+          },
+        },
+
+        {
+          field: "field3",
+          component: "DatePicker",
+          label: "活动时间",
+          width: "100%",
+          colProps: {
+            span: 8,
+          },
+          componentProps: {
+            placeholder: "请填写活动名称",
+          },
+        },
+        {
+          field: "field3",
+          component: "Switch",
+          label: "即时配送",
+          colProps: {
+            span: 8,
+          },
+          componentProps: {
+            placeholder: "请填写活动名称",
+            onChange: (e) => {
+              console.log(e);
+            },
+          },
+        },
+        {
+          field: "field4",
+          component: "Checkbox",
+          label: "活动时间",
+          disabled: false,
+          border: true,
+          defaultValue: ["1"],
+          max: 2,
+          colProps: {
+            span: 8,
+          },
+          componentProps: {
+            placeholder: "请填写活动名称",
+            options: [
+              {
+                label: "美食/餐厅线上活动",
+                value: "1",
+              },
+              {
+                label: "地推活动",
+                value: "2",
+              },
+              {
+                label: "线下主题活动",
+                value: "3",
+              },
+              {
+                label: "单纯品牌曝光",
+                value: "4",
+              },
+            ],
+          },
+        },
+        {
+          field: "field3",
+          component: "Radio",
+          label: "特殊资源",
+          colProps: {
+            span: 8,
+          },
+          componentProps: {
+            options: [
+              {
+                label: "线上品牌商赞助",
+                value: "1",
+              },
+              {
+                label: "线下场地免费",
+                value: "2",
+              },
+            ],
+            onChange: (e) => {
+              console.log(e);
+            },
+          },
+        },
+        {
+          field: "field10",
+          component: "Input",
+          label: "活动形式",
+          type: "textarea",
+          rows: 5,
+          colProps: {
+            span: 8,
+          },
+          componentProps: {
+            onChange: (e) => {
+              console.log(e);
+            },
+          },
+        },
+        {
+          field: "field11",
+          component: "InputNumber",
+          label: "活动形式",
+          defaultValue: 1,
+          rows: 5,
+          colProps: {
+            span: 8,
+          },
+          componentProps: {
+            onChange: (e) => {
+              console.log(e);
+            },
+          },
+        },
+      ],
+    };
   },
   methods: {
     onSubmit() {
-      this.$message('submit!')
+      this.$message("submit!");
     },
     onCancel() {
       this.$message({
-        message: 'cancel!',
-        type: 'warning'
-      })
-    }
-  }
-}
+        message: "cancel!",
+        type: "warning",
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
-.line{
+.line {
   text-align: center;
 }
 </style>
