@@ -1,17 +1,25 @@
 <template>
   <div class="app-container">
-    <BasicForm :schema="schema"></BasicForm>
+    <template slot="arr"> </template>
+    <BasicForm :schema="schema" :inline="false">
+      <template slot="movie">
+        <el-input v-model="value3" placeholder=""></el-input
+      ></template>
+    </BasicForm>
   </div>
 </template>
 
 <script>
 import BasicForm from "@/components/Form/components/BasicForm.vue";
+import { getList } from "@/api/table";
+
 export default {
   components: {
     BasicForm,
   },
   data() {
     return {
+      value3: "",
       schema: [
         {
           field: "name",
@@ -65,6 +73,11 @@ export default {
           componentProps: {
             placeholder: "请填写活动名称",
           },
+        },
+        {
+          field: "field22",
+          slot: "movie",
+          label: "活动区域",
         },
         {
           field: "field3",
