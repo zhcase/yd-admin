@@ -71,63 +71,84 @@ export default {
           field: "field",
           component: "Input",
           label: "字段1",
+          placeholder: "自定义placeholder",
           colProps: {
             span: 8,
           },
-          defaultValue: "1",
-          componentProps: {
-            placeholder: "自定义placeholder",
-          },
+          componentProps: {},
         },
         // ],
         {
           slot: "form1",
-          field: "field11",
         },
         {
           field: "field1",
           component: "Select",
           label: "字段1",
+          placeholder: "自定义placeholder",
+
           colProps: {
             span: 8,
           },
-          defaultValue: "1",
           componentProps: {
-            placeholder: "自定义placeholder",
-            options: [
-              {
-                value: "选项1",
-                label: "黄金糕",
-              },
-              {
-                value: "选项2",
-                label: "双皮奶",
-              },
-            ],
+            api: getList,
+            apiFormat: "data.items",
+            optionsFormat: {
+              label: "id",
+              value: "pageviews",
+            },
+            // options: [
+            //   {
+            //     value: "选项1",
+            //     label: "黄金糕",
+            //   },
+            //   {
+            //     value: "选项2",
+            //     label: "双皮奶",
+            //   },
+            // ],
           },
         },
         {
           field: "field2",
           component: "Input",
           label: "字段1",
+
+          placeholder: "自定义placeholder",
+
           colProps: {
             span: 8,
           },
-          defaultValue: "1",
+          componentProps: {},
+        },
+        {
+          field: "field3",
+          component: "TimePicker",
+          label: "字段1",
+          "picker-options": {
+            selectableRange: "18:30:00 - 20:30:00",
+          },
+          defaultValue: new Date(2016, 9, 10, 18, 40),
+          placeholder: "123",
+          colProps: {
+            span: 8,
+          },
           componentProps: {
-            placeholder: "自定义placeholder",
+            onChange: (e) => {
+              console.log(e);
+            },
           },
         },
         {
           field: "field3",
           component: "Input",
           label: "字段1",
+          placeholder: "自定义placeholder",
           colProps: {
             span: 8,
           },
           defaultValue: "1",
           componentProps: {
-            placeholder: "自定义placeholder",
             onChange: (e) => {
               console.log(e);
             },

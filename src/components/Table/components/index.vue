@@ -1,7 +1,7 @@
 <template>
   <div class="base-table">
     <div class="base-table__form" v-if="formSchema.length > 0">
-      <el-form
+      <!-- <el-form
         ref="form"
         :model="form"
         label-width="120px"
@@ -20,8 +20,8 @@
             <FormMap :schema="item" />
           </el-form-item>
         </el-col>
-      </el-form>
-      <div class="base-table__form-actions">
+      </el-form> -->
+      <!-- <div class="base-table__form-actions">
         <span class="content">
           <el-button size="small" @click="handleFormReset">重 置</el-button>
           <el-button type="primary" size="small" @click="handleQuery"
@@ -40,7 +40,16 @@
             ></i
           ></el-button>
         </span>
-      </div>
+      </div> -->
+      <!-- {{ formSchema }} -->
+
+      <BasiceForm :schema="formSchema" :label-width="130">
+        <template v-slot:[item.slot] v-for="item in formSchema">
+          <template v-if="item.slot">
+            <slot :name="item.slot"></slot>
+          </template>
+        </template>
+      </BasiceForm>
     </div>
 
     <div class="base-table-wrapper">
@@ -135,9 +144,11 @@
 <script>
 import FormMap from "./FormMap.vue";
 import { downloadExcel } from "./excel.js";
+import { BasiceForm } from "@/components/Form/index.js";
 export default {
   components: {
     FormMap,
+    BasiceForm,
   },
   data() {
     return {
@@ -219,6 +230,7 @@ export default {
     console.log(this.registerTable);
   },
   mounted() {
+    console.log(this.$slots);
     this.handleQuery();
     this.changeFormVisible();
   },

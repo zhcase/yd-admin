@@ -6,6 +6,8 @@
  * @FilePath: /yd-admin/src/components/Table/components/FormMap.vue
 -->
 <script type='jsx'>
+// refactorFormData(this.schema)
+import { refactorFormData } from "./formUtils.js";
 export default {
   data() {
     return {
@@ -65,9 +67,14 @@ export default {
      * @description 创建一个选择框组件
      * @param schema 数据model
      */
-    createSelect(schema) {
+    async createSelect(schema) {
       let attr = schema.componentProps;
+      if (attr.api) {
+        attr = await refactorFormData(attr);
+        // console.log(a);
+      }
       if (!attr.options) {
+        console.log(attr.options);
         console.error("Select  options未知");
         return;
       }
@@ -116,15 +123,12 @@ export default {
      * @param schema 数据model
      */
     createTimePicker(schema) {
+      console.log(schema);
       let attr = schema.componentProps;
       return (
         <el-time-select
           {...{ attrs: schema }}
-          type="daterange"
-          range-separator="至"
           v-model={this.form[schema.field]}
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
         ></el-time-select>
       );
     },
