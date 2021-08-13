@@ -23,7 +23,13 @@ export default {
       default: "",
     },
   },
-
+  created() {
+    // if (this.schema.componentProps.api) {
+    //   this.schema.componentProps = refactorFormData(this.schema.componentProps);
+    //   // this.$nextTick(() => {
+    //   // });
+    // }
+  },
   render() {
     this.formChange(this.form);
     // this.$emit("handleChange", 1);
@@ -35,7 +41,6 @@ export default {
     if (this.form[this.schema.field] === undefined) {
       this.$set(this.form, this.schema.field, this.schema.defaultValue);
     }
-
     return this["create" + this.schema.component](this.schema);
   },
   mounted() {
@@ -67,14 +72,10 @@ export default {
      * @description 创建一个选择框组件
      * @param schema 数据model
      */
-    async createSelect(schema) {
+    createSelect(schema) {
       let attr = schema.componentProps;
-      if (attr.api) {
-        attr = await refactorFormData(attr);
-        // console.log(a);
-      }
+      console.log(attr);
       if (!attr.options) {
-        console.log(attr.options);
         console.error("Select  options未知");
         return;
       }

@@ -1,49 +1,13 @@
 <template>
   <div class="base-table">
     <div class="base-table__form" v-if="formSchema.length > 0">
-      <!-- <el-form
-        ref="form"
-        :model="form"
-        label-width="120px"
-        size="small"
-        class="base-table__form__content"
+      <BasiceForm
+        :schema="formSchema"
+        :label-width="130"
+        ref="basicForm"
+        @handleSubmit="handleQuery"
+        @resetForm="handleFormReset"
       >
-        <el-col
-          :span="8"
-          :xs="24"
-          v-for="(item, index) of formSchema"
-          :key="index"
-          ref="formData"
-        >
-          <slot :name="item.slot" :schema="item" v-if="item.slot"></slot>
-          <el-form-item :label="item.label" v-else>
-            <FormMap :schema="item" />
-          </el-form-item>
-        </el-col>
-      </el-form> -->
-      <!-- <div class="base-table__form-actions">
-        <span class="content">
-          <el-button size="small" @click="handleFormReset">重 置</el-button>
-          <el-button type="primary" size="small" @click="handleQuery"
-            >查 询</el-button
-          >
-          <el-button
-            type="text"
-            @click="changeFormVisible"
-            v-if="$refs.form && $refs.form.$children.length > 3"
-            >{{ formVisible ? "展开" : "收起" }}
-            <i
-              :class="{
-                'el-icon-arrow-down': formVisible,
-                'el-icon-arrow-up': !formVisible,
-              }"
-            ></i
-          ></el-button>
-        </span>
-      </div> -->
-      <!-- {{ formSchema }} -->
-
-      <BasiceForm :schema="formSchema" :label-width="130">
         <template v-slot:[item.slot] v-for="item in formSchema">
           <template v-if="item.slot">
             <slot :name="item.slot"></slot>
@@ -77,6 +41,7 @@
       <el-table
         :data="tableData"
         :stripe="true"
+        v-loading="tableLoading"
         id="table"
         height="100%"
         v-on="$listeners"
@@ -155,6 +120,7 @@ export default {
       form: {},
       formVisible: false,
       tableData: [],
+      tableLoading: false,
 
       // 分页
       paginationConfig: {
@@ -251,58 +217,31 @@ export default {
       );
     },
     // 查询
-    handleQuery() {
-      let form = {};
-      let t = "";
-      console.log(this.$refs.formData);
-      if (this.$refs.formData) {
-        for (let i = 0; i < this.$refs.formData.length; i++) {
-          t =
-            this.$refs.formData[i].$children[0] &&
-            this.$refs.formData[i].$children[0].$children[1];
-          if (t && t.form) {
-            if (Object.keys(t.form).length > 0) {
-              form = {
-                ...form,
-                ...t.form,
-              };
-            } else {
-              let formKeys = t.schema.field;
-              form[formKeys] = "";
-            }
-          } else {
-            if (t) {
-              let formModel = t.$vnode.data.model;
-              form[formModel.expression] = formModel.value;
-            }
-          }
-        }
-      }
+    handleQuery(form = {}) {
+      this.tableLoading = true;
       let paramsObj = {
         pageSize: this.paginationConfig.pageSize,
         pageNumber: this.paginationConfig.currentPage,
       };
-      let paramsForm = this.formDataParams(form);
+      let paramsForm = form;
+      console.log(paramsForm);
       let parmas = { ...paramsObj, ...paramsForm };
+      console.log(parmas);
+      parmas = this.formDataParams(parmas);
+      console.log(parmas);
       this.basicTableOptions.api(parmas).then((res) => {
         this.tableData = res.data.items;
         this.paginationConfig.total = res.data.total;
+        setTimeout(() => {
+          this.tableLoading = false;
+        }, 300);
       });
     },
     // 重置
-    handleFormReset() {
-      if (this.$refs.formData) {
-        for (let i = 0; i < this.$refs.formData.length; i++) {
-          let t = this.$refs.formData[i].$children[0].$children[1];
-          if (t.form) {
-            t.form = {};
-          } else {
-            this.$emit("resetForm");
-          }
-        }
-      }
+    handleFormReset(form) {
+      this.$emit("resetForm", form);
       this.$nextTick(() => {
-        this.handleQuery();
+        this.handleQuery(form);
       });
     },
     /**
@@ -331,7 +270,6 @@ export default {
     handleSizeChange(val) {
       this.paginationConfig.pageSize = val;
       this.paginationConfig.currentPage = 1;
-
       this.handleQuery();
 
       /**
@@ -342,9 +280,9 @@ export default {
 
     //当前页: ${val}
     handleCurrentChange(val) {
+      console.log();
       this.paginationConfig.currentPage = val;
-
-      this.handleQuery();
+      this.handleQuery(this.$refs.basicForm.form);
       /**
        * 分页注释改版
        */
@@ -370,11 +308,14 @@ export default {
     },
     // utils 参数 临时放置！！！！ 后期 移utils
     formDataParams(obj) {
+      console.log(obj);
       let params = {};
       for (let key in obj) {
-        params[key] = obj[key].replace(/(^\s*)|(\s*$)/g, "");
-
-        // params+=obj
+        if (typeof obj[key] !== "number") {
+          params[key] = String(obj[key]).replace(/(^\s*)|(\s*$)/g, "");
+        } else {
+          params[key] = obj[key];
+        }
       }
       return params;
     },

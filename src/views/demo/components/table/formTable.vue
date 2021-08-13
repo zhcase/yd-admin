@@ -3,9 +3,13 @@
     <BasicTable
       :registerTable="table1"
       :basicTableOptions="options"
+      @select="handleSelect"
       :formSchema="schemas"
       @changeSwitch="changeSwitch"
     >
+      <template #selection>
+        <el-table-column type="selection" width="55"> </el-table-column>
+      </template>
       <template #form1>
         <el-form-item label="自定义">
           <el-input v-model="form1" placeholder="自定义组件" />
@@ -84,9 +88,8 @@ export default {
         {
           field: "field1",
           component: "Select",
-          label: "字段1",
+          label: "字段2",
           placeholder: "自定义placeholder",
-
           colProps: {
             span: 8,
           },
@@ -97,16 +100,16 @@ export default {
               label: "id",
               value: "pageviews",
             },
-            // options: [
-            //   {
-            //     value: "选项1",
-            //     label: "黄金糕",
-            //   },
-            //   {
-            //     value: "选项2",
-            //     label: "双皮奶",
-            //   },
-            // ],
+            options: [
+              {
+                value: "选项1",
+                label: "黄金糕",
+              },
+              {
+                value: "选项2",
+                label: "双皮奶",
+              },
+            ],
           },
         },
         {
@@ -122,7 +125,7 @@ export default {
           componentProps: {},
         },
         {
-          field: "field3",
+          field: "field13",
           component: "TimePicker",
           label: "字段1",
           "picker-options": {
@@ -158,6 +161,9 @@ export default {
 
       // table 索引
       table1: [
+        {
+          slot: "selection",
+        },
         {
           label: "id",
           value: "id",
@@ -216,6 +222,9 @@ export default {
     };
   },
   methods: {
+    handleSelect(val) {
+      console.log(val);
+    },
     //   switch
     changeSwitch(val, cb) {
       console.log(val);

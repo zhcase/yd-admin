@@ -1,10 +1,12 @@
 <template>
   <div class="app-container">
     <template slot="arr"> </template>
-    <BasicForm :schema="schema" :inline="false">
+    <BasicForm :schema="schema" :inline="true" size="medium">
       <template slot="movie">
-        <el-input v-model="value3" placeholder=""></el-input
-      ></template>
+        <el-form-item label="活动名称">
+          <el-input v-model="value3" placeholder=""></el-input>
+        </el-form-item>
+      </template>
     </BasicForm>
   </div>
 </template>

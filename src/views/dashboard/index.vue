@@ -7,26 +7,52 @@
 -->
 <template>
   <div class="page-dashboard">
-    <div class="temp-block">
-      <!-- <div class="slogan">欢迎进入{{ title }}</div> -->
+    <el-row>
+      <el-col
+        :span="5"
+        v-for="(o, index) in 4"
+        :key="o"
+        :offset="index > 0 ? 1 : 1"
+      >
+        <el-card :body-style="{ padding: '0px' }">
+          <div slot="header" class="clearfix">
+            <span>访问数</span>
+            <el-button style="float: right; padding: 3px 0" type="text"
+              >操作按钮</el-button
+            >
+          </div>
+          <div id="container"></div>
 
-      <Flow />
-    </div>
+          <div style="padding: 14px">
+            <span>好吃的汉堡</span>
+            <div class="bottom clearfix">
+              <time class="time">{{ currentDate }}</time>
+              <el-button type="text" class="button">操作按钮</el-button>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
 import defaultSettings from "@/settings";
-import Flow from "@/components/Flow/index";
+import { Chart } from "@antv/g2";
+
 export default {
   name: "Dashboard",
-  components: {
-    Flow,
-  },
+  components: {},
   data() {
-    return {
-      title: defaultSettings.title,
-    };
+    return {};
+  },
+  mounted() {
+    const chart = new Chart({
+      container: "container",
+      width: 600,
+      height: 300,
+    });
+    chart.source(data);
   },
 };
 </script>

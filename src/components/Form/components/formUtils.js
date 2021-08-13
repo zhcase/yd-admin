@@ -3,7 +3,7 @@
  * @description 重构form 表单数据 调用api 格式options
  * @param {*} value   form 表单数据
  */
-export function refactorFormData(value) {
+export function refactorFormData(value, callback) {
     let data = []
     // getList
     // for (let i = 0; i < value.length; i++) {
@@ -15,15 +15,20 @@ export function refactorFormData(value) {
             res = res[apiformdata[t]]
         }
         value.options = res
-        if (value && value.optionsFormat) {
-            value.options = formDataFormOptions(value.options, value.optionsFormat)
-        }
+        // if (value && value.optionsFormat) {
+        //     value.options = formDataFormOptions(value.options, value.optionsFormat)
+        // }
+        // console.log(value.options)
+        // callback(value)
+        console.log(value)
+        return value
+
     })
     // }
 
     // console.log(value[i].componentProps.options)
     // }
-    return value
+
 }
 
 export function formDataFormOptions(Arraydata, keyMap) {
