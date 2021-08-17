@@ -27,7 +27,7 @@ export default {
           field: "name",
           component: "Input",
           label: "活动名称",
-          defaultValue: "123232",
+          defaultValue: "12232",
           placeholder: "请填写活动名称",
           rules: [
             { required: true, message: "请输入活动名称", trigger: "blur" },

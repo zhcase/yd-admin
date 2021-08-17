@@ -26,6 +26,13 @@ export default {
   created() {
     // if (this.schema.componentProps.api) {
     //   this.schema.componentProps = refactorFormData(this.schema.componentProps);
+    //   if (!this.schema.componentProps) {
+    //     this.schema.componentProps = {};
+    //     this.schema.componentProps.options = [{}];
+    //   }
+    //   // setTimeout(() => {
+    //   //   console.log(this.schema);
+    //   // }, 5000);
     //   // this.$nextTick(() => {
     //   // });
     // }
@@ -74,7 +81,11 @@ export default {
      */
     createSelect(schema) {
       let attr = schema.componentProps;
+      // if (!attr.isCallApi) {
+      //   attr.isCallApi = true;
+      // }
       console.log(attr);
+
       if (!attr.options) {
         console.error("Select  options未知");
         return;
@@ -146,7 +157,7 @@ export default {
       }
       return (
         <el-checkbox-group
-          v-model={this.form.field4}
+          v-model={this.form[schema.field]}
           {...{ attrs: schema }}
           {...onChange(this.form[schema.field])}
         >
@@ -204,6 +215,35 @@ export default {
       );
     },
     /**
+     * @description 创建一个RadioButton 组件
+     * @param schema 数据Model
+     */
+    createRadioButton(schema) {
+      let attr = schema.componentProps;
+      let onChange = attr.onChange ? attr.onChange : () => {};
+      if (!attr.options) {
+        console.error("缺少options 参数");
+        return;
+      }
+      return (
+        <el-radio-group
+          v-model={this.form[schema.field]}
+          {...{ attrs: schema }}
+          {...onChange(this.form[schema.field])}
+        >
+          {attr.options.map((item, index) => (
+            <el-radio-button
+              key={index}
+              {...{ attrs: item }}
+              label={item.value}
+            >
+              {item.label}
+            </el-radio-button>
+          ))}
+        </el-radio-group>
+      );
+    },
+    /**
      * @description 创建一个数字输入框组件
      * @param schema 数据model
      */
@@ -234,6 +274,38 @@ export default {
           {...schema}
           {...{ attrs: schema }}
         ></el-cascader>
+      );
+    },
+    /**
+     * @description 创建一个滑块
+     * @param schema 数据model
+     */
+    createSlider(schema) {
+      let attr = schema.componentProps;
+      let onChange = attr.onChange ? attr.onChange : () => {};
+      return (
+        <el-slider
+          v-model={this.form[schema.field]}
+          {...onChange(this.form[schema.field])}
+          {...schema}
+          {...{ attrs: schema }}
+        ></el-slider>
+      );
+    },
+    /**
+     * @description 创建一个滑块
+     * @param schema 数据model
+     */
+    createRate(schema) {
+      let attr = schema.componentProps;
+      let onChange = attr.onChange ? attr.onChange : () => {};
+      return (
+        <el-rate
+          v-model={this.form[schema.field]}
+          {...onChange(this.form[schema.field])}
+          {...schema}
+          {...{ attrs: schema }}
+        ></el-rate>
       );
     },
   },

@@ -71,12 +71,41 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
-    path: '/example',
+    path: '/page-demo',
     component: Layout,
     redirect: '/example/table',
-    name: 'Example',
+    name: 'Page',
+    meta: { title: '页面', icon: 'icon-example' },
+    children: [
+      {
+        path: 'form',
+        name: 'Page',
+        meta: { title: '表单页', },
+        children: [
+          {
+            path: 'basic',
+            name: 'PageBasicForm',
+            meta: { title: '基础Form' },
+            component: () => import('@/views/demo/pages/form/basicForm.vue'),
+          },
+          {
+            path: 'step',
+            name: 'PageStepForm',
+            meta: { title: '分步表单' },
+            component: () => import('@/views/demo/pages/form/basicForm.vue'),
+          }
+        ]
+      },
+
+
+    ]
+  },
+  {
+    path: '/comp',
+    component: Layout,
+    redirect: '/comp/table',
+    name: 'Components',
     meta: { title: '组件', icon: 'icon-example' },
     children: [
       {
@@ -110,6 +139,26 @@ export const constantRoutes = [
             name: 'FormTable',
             meta: { title: '开启搜索区域' }
           },
+        ],
+      },
+      {
+        path: 'form',
+        name: 'Form',
+        meta: { title: 'Form' },
+        component: () => import('@/views/demo/components/form/index'),
+        children: [
+          {
+            path: 'basic',
+            name: 'BasicForm',
+            component: () => import('@/views/demo/components/form/basicForm.vue'),
+            meta: { title: '基础表单' }
+          },
+          {
+            path: 'tree',
+            name: 'Tree',
+            component: () => import('@/views/tree/index'),
+            meta: { title: 'Form' }
+          }
         ]
       },
       {

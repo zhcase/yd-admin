@@ -94,7 +94,7 @@ export default {
             span: 8,
           },
           componentProps: {
-            api: getList,
+            // api: getList,
             apiFormat: "data.items",
             optionsFormat: {
               label: "id",

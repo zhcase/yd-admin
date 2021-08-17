@@ -12,19 +12,21 @@
       <el-col
         :span="inline ? 24 : 8"
         :key="index"
+        style="height: 60px; line-height: 50px"
         :xs="24"
         v-for="(item, index) in schema"
       >
         <slot :name="item.slot" v-if="item.slot" :field="item.field"> </slot>
         <el-form-item :label="item.label" :prop="item.field" v-if="!item.slot">
-          <template>
+          <div :style="{ display: item.suffix ? 'flex' : '' }">
             <FormMap
               :schema="item"
               ref="formData"
               v-model="item.field"
               @handleChange="handleChange"
             />
-          </template>
+            <span class="suffix" v-if="item.suffix">{{ item.suffix }}</span>
+          </div>
         </el-form-item>
       </el-col>
     </el-form>
@@ -52,7 +54,7 @@
 </template>
 <script>
 import FormMap from "./FormMap.vue";
-import { refactorFormData } from "./formUtils.js";
+import { formDataFormOptions } from "./formUtils.js";
 export default {
   components: {
     FormMap,
@@ -68,6 +70,7 @@ export default {
   },
   props: {
     size: {
+      // 大小
       default: "small",
       type: String,
     },
@@ -76,8 +79,15 @@ export default {
       default: false,
       type: Boolean,
     },
-    schema: {},
+    schema: {
+      // 数据源
+      default: () => {
+        return [];
+      },
+      type: Array,
+    },
     labelWidth: {
+      // label 宽度
       type: Number,
       default: () => {
         return 150;
@@ -99,6 +109,7 @@ export default {
       this.formValue();
       this.getFormData();
       this.$emit("resetForm", this.params);
+      this.$refs["form"].validate();
     },
     /** 提交 */
     handleSubmit() {
@@ -111,9 +122,9 @@ export default {
     getFormData() {
       this.params = {};
       for (let i = 0; i < this.$refs.formData.length; i++) {
+        console.log(this.$refs.formData[i]);
         this.params = { ...this.params, ...this.$refs.formData[i].form };
       }
-      // for()
       let slotArray = Object.keys(this.$slots);
       //循环所有slot key
       for (let i = 0; i < slotArray.length; i++) {
@@ -136,16 +147,24 @@ export default {
           }
         }
       }
+      Object.keys(this.params).forEach((key) => {
+        // 这里 obj[key] 便是对象的每一个的值
+        if (!this.params[key]) {
+          this.params[key] = "";
+        }
+      });
     },
     // 设置form表单的value
     formValue() {
-      console.log(this.form);
       for (let i = 0; i < this.schema.length; i++) {
         this.$set(this.rules, this.schema[i].field, this.schema[i].rules);
         this.$set(this.form, this.schema[i].field, this.schema[i].defaultValue);
       }
-      this.$refs["form"].validate();
     },
+
+    /**
+     * @description 隐藏Form与显示Form 按钮
+     */
     changeFormVisible() {
       this.formVisible = !this.formVisible;
       if (this.$refs.form) {
@@ -160,8 +179,53 @@ export default {
         }
       }
     },
+    /**
+     * @description 格式化options 参数
+     * @param value 参数
+     */
+    formateOptionsData(value) {
+      //  如果 需要格式化参数
+      value.options = formDataFormOptions(value.options, value.optionsFormat);
+      return value;
+    },
+    /**
+     * @description 重构 如果有api 数据
+     *
+     */
+    isApiData() {
+      for (let i = 0; i < this.schema.length; i++) {
+        if (
+          this.schema[i].componentProps &&
+          this.schema[i].componentProps.api
+        ) {
+          this.schema[i].componentProps.api().then((res) => {
+            let apiformdata =
+              this.schema[i].componentProps.apiFormat.split(".");
+            for (let t = 0; t < apiformdata.length; t++) {
+              res = res[apiformdata[t]];
+            }
+            this.schema[i].componentProps.options = res;
+            if (this.schema[i].componentProps.optionsFormat) {
+              this.schema[i].componentProps = this.formateOptionsData(
+                this.schema[i].componentProps
+              );
+            }
+          });
+        }
+        if (
+          this.schema[i].componentProps &&
+          this.schema[i].componentProps.optionsFormat
+        ) {
+          this.schema[i].componentProps = this.formateOptionsData(
+            this.schema[i].componentProps
+          );
+        }
+      }
+    },
   },
-  created() {},
+  created() {
+    this.isApiData();
+  },
   mounted() {
     this.formValue();
   },
@@ -171,6 +235,14 @@ export default {
 .antd-form {
   form {
     overflow: hidden;
+    ::v-deep .el-form-item {
+      /* display: flex; */
+      /* overflow: hidden; */
+      /* line-height: 30px; */
+    }
+    .suffix {
+      padding: 0 5px;
+    }
   }
   &__footer {
     /* height: 60px; */
