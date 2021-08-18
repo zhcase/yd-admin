@@ -125,7 +125,7 @@ export const constantRoutes = [
             path: 'fetchTable',
             component: () => import('@/views/demo/components/table/fetchTable.vue'),
             name: 'FetchTable',
-            meta: { title: '远程加载示例' }
+            meta: { title: '分页示例' }
           },
           {
             path: 'fixedColumn',

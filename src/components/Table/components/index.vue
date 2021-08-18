@@ -88,6 +88,7 @@
           </template>
         </template>
       </el-table>
+      <slot name="tableFooter"></slot>
       <template v-if="basicTableOptions.paginationProps">
         <div class="base-table__pagination">
           <el-pagination
@@ -245,9 +246,7 @@ export default {
         }
         this.tableData = data;
 
-        setTimeout(() => {
-          this.tableLoading = false;
-        }, 300);
+        this.tableLoading = false;
       });
     },
     // 重置

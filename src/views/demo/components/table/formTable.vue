@@ -5,6 +5,7 @@
       :basicTableOptions="options"
       @select="handleSelect"
       :formSchema="schemas"
+      ref="table"
       @changeSwitch="changeSwitch"
     >
       <template #selection>
@@ -16,9 +17,10 @@
         </el-form-item>
       </template>
       <template #toolbarLeft>
-        <el-button size="mini" @click="handleEdit([tableData[1], tableData[2]])"
-          >Edit</el-button
-        >
+        <el-button size="mini" @click="handleEdit()">添加</el-button>
+        <!-- <el-button size="mini" @click="handleEdit([tableData[1], tableData[2]])"
+          >删除</el-button
+        > -->
       </template>
       <!-- <template #form1>
         <el-form-item label="标题3">
@@ -236,10 +238,11 @@ export default {
     // resetForm() {
     //   this.form1 = "";
     // },
-    // handleEdit(row) {
-    //   console.log(this.$refs.table.$refs.multipleTable);
-    //   console.log(this.$refs.table.$refs.multipleTable.setCurrentRow(row));
-    // },
+    handleEdit(row) {
+      console.log(this.$refs.table);
+      console.log(this.$refs.table.$refs.multipleTable);
+      // console.log(this.$refs.table.$refs.multipleTable.setCurrentRow(row));
+    },
     // 改变表格switch
     // changeSwitch(val, cab) {
     //   console.log(val);
