@@ -63,6 +63,8 @@ export default {
       options: {
         api: getList, // 调用接口地址
         paginationProps: {},
+        apiFormat: "data.items",
+        paginationFormat: "data.total",
         // basicTableProps: {
         //   select: (e) => {
         //     console.log(e);

@@ -154,10 +154,10 @@ export const constantRoutes = [
             meta: { title: '基础表单' }
           },
           {
-            path: 'tree',
-            name: 'Tree',
-            component: () => import('@/views/tree/index'),
-            meta: { title: 'Form' }
+            path: 'ruleForm',
+            name: 'RuleForm',
+            component: () => import('@/views/demo/components/form/ruleForm.vue'),
+            meta: { title: '可验证表单' }
           }
         ]
       },

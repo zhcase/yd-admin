@@ -224,14 +224,27 @@ export default {
         pageNumber: this.paginationConfig.currentPage,
       };
       let paramsForm = form;
-      console.log(paramsForm);
       let parmas = { ...paramsObj, ...paramsForm };
-      console.log(parmas);
       parmas = this.formDataParams(parmas);
-      console.log(parmas);
       this.basicTableOptions.api(parmas).then((res) => {
-        this.tableData = res.data.items;
-        this.paginationConfig.total = res.data.total;
+        if (!this.basicTableOptions.apiFormat) {
+          console.error("缺少apiFormat");
+          return;
+        }
+        let data = res;
+        this.paginationConfig.total = res;
+        let formatdata = this.basicTableOptions.apiFormat.split("."); // table 数据格式
+        let paginationFormat =
+          this.basicTableOptions.paginationFormat.split("."); // 分页总数table 格式
+        for (let i = 0; i < formatdata.length; i++) {
+          data = data[formatdata[i]];
+        }
+        for (let i = 0; i < paginationFormat.length; i++) {
+          this.paginationConfig.total =
+            this.paginationConfig.total[paginationFormat[i]];
+        }
+        this.tableData = data;
+
         setTimeout(() => {
           this.tableLoading = false;
         }, 300);

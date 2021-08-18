@@ -22,6 +22,8 @@ export default {
     return {
       options: {
         api: getList, // 调用接口地址
+        apiFormat: "data.items",
+        paginationFormat: "data.total",
       },
       // table 索引
       table1: [
