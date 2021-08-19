@@ -17,7 +17,12 @@
         v-for="(item, index) in schema"
       >
         <slot :name="item.slot" v-if="item.slot" :field="item.field"> </slot>
-        <el-form-item :label="item.label" :prop="item.field" v-if="!item.slot">
+        <el-form-item
+          :label="item.label"
+          :prop="item.field"
+          v-if="!item.slot"
+          :rules="item.rules"
+        >
           <div :style="{ display: item.suffix ? 'flex' : '' }">
             <FormMap
               :schema="item"
@@ -33,7 +38,7 @@
     <slot name="footer">
       <div class="antd-form__footer">
         <el-button @click="reset('form')" size="small">重 置</el-button>
-        <el-button type="primary" @click="handleSubmit" size="small"
+        <el-button type="primary" @click="handleSubmit('form')" size="small"
           >查 询</el-button
         >
         <el-button
@@ -109,11 +114,12 @@ export default {
       this.formValue();
       this.getFormData();
       this.$emit("resetForm", this.params);
-      this.$refs["form"].validate();
     },
     /** 提交 */
     handleSubmit() {
       this.getFormData();
+      this.$refs["form"].validate();
+
       this.$emit("handleSubmit", this.params);
     },
     /**
@@ -157,8 +163,8 @@ export default {
     // 设置form表单的value
     formValue() {
       for (let i = 0; i < this.schema.length; i++) {
-        this.$set(this.rules, this.schema[i].field, this.schema[i].rules);
         this.$set(this.form, this.schema[i].field, this.schema[i].defaultValue);
+        // this.$set(this.rules, this.schema[i].field, this.schema[i].rules);
       }
     },
 

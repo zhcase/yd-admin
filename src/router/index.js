@@ -53,7 +53,6 @@ export const constantRoutes = [
         path: 'dashboard',
         name: 'Dashboard',
         meta: { title: 'Dashboard', },
-
         component: () => import('@/views/dashboard/index'),
         meta: { title: '分析页' }
       },
@@ -158,6 +157,20 @@ export const constantRoutes = [
             name: 'RuleForm',
             component: () => import('@/views/demo/components/form/ruleForm.vue'),
             meta: { title: '可验证表单' }
+          }
+        ]
+      },
+      {
+        path: 'card',
+        name: 'Card',
+        component: () => import('@/views/demo/components/card/index'),
+        meta: { title: 'Card' },
+        children: [
+          {
+            path: 'basic',
+            name: 'BasicForm',
+            component: () => import('@/views/demo/components/card/basicCard.vue'),
+            meta: { title: '基础Card' }
           }
         ]
       },
