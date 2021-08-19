@@ -44,6 +44,7 @@
         v-loading="tableLoading"
         id="table"
         height="100%"
+        ref="table"
         v-on="$listeners"
         v-bind="$attrs"
         class="base-table__tables"
@@ -57,6 +58,7 @@
               :prop="item.value"
               header-align="center"
               align="center"
+              class="table-hover"
               :key="item.value"
               v-bind="item"
             >
@@ -64,7 +66,55 @@
               <template slot-scope="scope">
                 <!-- 直接展示 -->
                 <template v-if="!item.options">
-                  {{ scope.row[item.value] }}
+                  <el-input
+                    size="mini"
+                    @blur="tableInputBlur(scope.$index, scope.row, scope)"
+                    v-if="
+                      scope.row[scope.$index] &&
+                      scope.row[scope.$index][scope.column.property]
+                    "
+                    v-model="scope.row[item.value]"
+                    class="edit-input"
+                  ></el-input>
+
+                  <!-- <template> -->
+                  {{
+                    scope.row[scope.$index] &&
+                    scope.row[scope.$index][scope.column.property]
+                      ? ""
+                      : scope.row[item.value]
+                  }}
+                  <!-- </template> -->
+                  <!-- 修改按钮 -->
+                  <span
+                    class="edit el-icon-edit"
+                    v-if="
+                      !(
+                        scope.row[scope.$index] &&
+                        scope.row[scope.$index][scope.column.property]
+                      )
+                    "
+                    @click="handleEdit(scope.$index, scope)"
+                  ></span>
+                  <!-- 取消按钮 -->
+                  <span
+                    class="edit cancel-btn el-icon-close"
+                    @click="handleCancelEdit($event, scope.$index, scope)"
+                    v-if="
+                      scope.row[scope.$index] &&
+                      scope.row[scope.$index][scope.column.property]
+                    "
+                  ></span>
+                  <!-- 确定按钮 -->
+                  <span
+                    class="edit cancel-btn el-icon-check"
+                    @mousemove.native="handleStopFoucs"
+                    @click.stop="handleConfirm($event, scope.$index, scope)"
+                    v-if="
+                      scope.row[scope.$index] &&
+                      scope.row[scope.$index][scope.column.property]
+                    "
+                  ></span>
                 </template>
                 <!-- 条件展示 -->
                 <template>
@@ -202,6 +252,40 @@ export default {
     this.changeFormVisible();
   },
   methods: {
+    handleStopFoucs(e) {
+      e.preventDefault();
+    },
+    /**
+     * 修改确认
+     */
+    handleConfirm(e, index, scoped) {
+      e.preventDefault();
+      let params = {
+        scoped,
+        index,
+      };
+      scoped.row[index][scoped.column.property] = false;
+      this.tableData.splice(1, 0);
+      this.$emit("handleTableEdit", params);
+    },
+    /**
+     * @description 取消输入框
+     */
+    handleCancelEdit(e, index, scoped) {
+      scoped.row[index][scoped.column.property] = false;
+      scoped.row[scoped.column.property] = scoped.row[index].content;
+      this.tableData.splice(1, 0);
+    },
+    /**
+     * 点击修改单元格
+     */
+    handleEdit(index, scoped) {
+      console.log(scoped);
+      scoped.row[index] = {};
+      scoped.row[index][scoped.column.property] = true;
+      scoped.row[index].content = scoped.row[scoped.column.property];
+      this.tableData.splice(1, 0);
+    },
     // 下载excel文档
     handleDownload() {
       downloadExcel(this.registerTable, this.tableData);
@@ -318,6 +402,17 @@ export default {
         }
       });
     },
+    /**
+     * @description 监听输入框是否失去焦点
+     * @param index 索引
+     * @param row
+     * @param scoped table 属性值
+     */
+    tableInputBlur(index, row, scoped) {
+      scoped.row[index][scoped.column.label] = false;
+      scoped.row[scoped.column.property] = scoped.row[index].content;
+      this.tableData.splice(1, 0);
+    },
     // utils 参数 临时放置！！！！ 后期 移utils
     formDataParams(obj) {
       console.log(obj);
@@ -340,6 +435,23 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  td:hover {
+    .el-icon-edit {
+      display: inline-block !important;
+    }
+  }
+  .el-icon-edit {
+    display: none !important;
+  }
+  .edit {
+    text-align: right;
+    cursor: pointer;
+    padding-left: 10px;
+    display: inline-block;
+  }
+  .edit-input {
+    width: 60%;
+  }
   &__form {
     height: auto;
     overflow: hidden;

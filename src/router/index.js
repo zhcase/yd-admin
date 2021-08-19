@@ -112,7 +112,6 @@ export const constantRoutes = [
         name: 'Table',
         meta: { title: 'Table' },
         component: () => import('@/views/demo/components/table/index'),
-
         children: [
           {
             path: 'basic',
@@ -137,6 +136,12 @@ export const constantRoutes = [
             component: () => import('@/views/demo/components/table/formTable.vue'),
             name: 'FormTable',
             meta: { title: '开启搜索区域' }
+          },
+          {
+            path: 'editCellTable',
+            component: () => import('@/views/demo/components/table/editCellTable.vue'),
+            name: 'EditCellTable',
+            meta: { title: '可编辑单元格' }
           },
         ],
       },
