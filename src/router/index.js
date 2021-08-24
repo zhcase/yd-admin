@@ -138,6 +138,12 @@ export const constantRoutes = [
             meta: { title: '开启搜索区域' }
           },
           {
+            path: 'multipleHeader',
+            component: () => import('@/views/demo/components/table/multipleHeader.vue'),
+            name: 'MultipleHeader',
+            meta: { title: '头部合并' }
+          },
+          {
             path: 'editCellTable',
             component: () => import('@/views/demo/components/table/editCellTable.vue'),
             name: 'EditCellTable',

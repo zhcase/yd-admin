@@ -53,88 +53,7 @@
           <!-- 是否隐藏该列 -->
           <template v-if="!item.isHidden">
             <slot v-if="item.slot" :name="item.slot"> </slot>
-            <el-table-column
-              v-else
-              :prop="item.value"
-              header-align="center"
-              align="center"
-              class="table-hover"
-              :key="item.value"
-              v-bind="item"
-            >
-              <!-- {item.attr} -->
-              <template slot-scope="scope">
-                <!-- 直接展示 -->
-                <template v-if="!item.options">
-                  <el-input
-                    size="mini"
-                    @blur="tableInputBlur(scope.$index, scope.row, scope)"
-                    v-if="
-                      scope.row[scope.$index] &&
-                      scope.row[scope.$index][scope.column.property]
-                    "
-                    v-model="scope.row[item.value]"
-                    class="edit-input"
-                  ></el-input>
-
-                  <!-- <template> -->
-                  {{
-                    scope.row[scope.$index] &&
-                    scope.row[scope.$index][scope.column.property]
-                      ? ""
-                      : scope.row[item.value]
-                  }}
-                  <!-- </template> -->
-                  <!-- 修改按钮 -->
-                  <span
-                    class="edit el-icon-edit"
-                    v-if="
-                      !(
-                        scope.row[scope.$index] &&
-                        scope.row[scope.$index][scope.column.property]
-                      )
-                    "
-                    @click="handleEdit(scope.$index, scope)"
-                  ></span>
-                  <!-- 取消按钮 -->
-                  <span
-                    class="edit cancel-btn el-icon-close"
-                    @click="handleCancelEdit($event, scope.$index, scope)"
-                    v-if="
-                      scope.row[scope.$index] &&
-                      scope.row[scope.$index][scope.column.property]
-                    "
-                  ></span>
-                  <!-- 确定按钮 -->
-                  <span
-                    class="edit cancel-btn el-icon-check"
-                    @mousemove.native="handleStopFoucs"
-                    @click.stop="handleConfirm($event, scope.$index, scope)"
-                    v-if="
-                      scope.row[scope.$index] &&
-                      scope.row[scope.$index][scope.column.property]
-                    "
-                  ></span>
-                </template>
-                <!-- 条件展示 -->
-                <template>
-                  <template v-if="item.type === 'radio'">
-                    <el-switch
-                      :value="
-                        handleFilterData(scope.row[item.value], item.options)
-                      "
-                      @change="
-                        handleSwitch(scope.row, item.value, item.options)
-                      "
-                    >
-                    </el-switch>
-                  </template>
-                  <template v-if="item.type !== 'radio' && item.options">
-                    {{ handleFilterData(scope.row[item.value], item.options) }}
-                  </template>
-                </template>
-              </template>
-            </el-table-column>
+            <tableColumn :item="item" v-else :key="item.value" />
           </template>
         </template>
       </el-table>
@@ -161,10 +80,12 @@
 import FormMap from "./FormMap.vue";
 import { downloadExcel } from "./excel.js";
 import { BasiceForm } from "@/components/Form/index.js";
+import tableColumn from "./tableColumn.vue";
 export default {
   components: {
     FormMap,
     BasiceForm,
+    tableColumn,
   },
   data() {
     return {
@@ -266,7 +187,7 @@ export default {
       };
       scoped.row[index][scoped.column.property] = false;
       this.tableData.splice(1, 0);
-      this.$emit("handleTableEdit", params);
+      this.$emit("handleTableCellEdit", params);
     },
     /**
      * @description 取消输入框
@@ -409,9 +330,14 @@ export default {
      * @param scoped table 属性值
      */
     tableInputBlur(index, row, scoped) {
+      let params = {
+        scoped,
+        index,
+      };
       scoped.row[index][scoped.column.label] = false;
-      scoped.row[scoped.column.property] = scoped.row[index].content;
+      // scoped.row[scoped.column.property] = scoped.row[index].content;
       this.tableData.splice(1, 0);
+      this.$emit("handleTableCellEdit", params);
     },
     // utils 参数 临时放置！！！！ 后期 移utils
     formDataParams(obj) {
@@ -441,11 +367,15 @@ export default {
     }
   }
   .el-icon-edit {
+    position: absolute;
+    right: 20px;
+    top: 45%;
     display: none !important;
   }
   .edit {
     text-align: right;
     cursor: pointer;
+
     padding-left: 10px;
     display: inline-block;
   }

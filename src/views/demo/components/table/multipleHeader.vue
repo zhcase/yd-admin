@@ -3,7 +3,7 @@
     <BasicTable
       :registerTable="table1"
       :basicTableOptions="options"
-      title="可编辑单元格"
+      title="头部合并"
       :border="true"
     >
       <template slot="index"> </template>
@@ -28,33 +28,29 @@ export default {
       // table 索引
       table1: [
         {
-          label: "id",
+          label: "日期",
           value: "id",
-          width: 150,
-          sortable: true,
         },
         {
-          label: "管理员账号",
-          value: "author",
-          edit: true,
-          "show-overflow-tooltip": true,
-          width: 200,
-        },
-        {
-          label: "title",
-          value: "title",
-          "show-overflow-tooltip": true,
-          width: 200,
-        },
-        {
-          label: "用户状态",
-          value: "status",
-          options: [
+          label: "配送消息",
+          children: [
             {
-              label: "删除",
-              value: "deleted",
+              label: "姓名",
             },
-            { label: "发表", value: "published" },
+            {
+              label: "地址",
+              children: [
+                {
+                  label: "省份",
+                },
+                {
+                  label: "市区",
+                },
+                {
+                  label: "地址",
+                },
+              ],
+            },
           ],
         },
       ],

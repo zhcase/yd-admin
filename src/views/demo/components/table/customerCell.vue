@@ -36,7 +36,7 @@ export default {
           width: 200,
         },
         {
-          label: "管理员账号",
+          label: "管理员账号1",
           value: "author",
           "show-overflow-tooltip": true,
           width: 200,
