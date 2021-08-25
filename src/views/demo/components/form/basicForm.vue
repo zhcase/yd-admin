@@ -4,7 +4,7 @@
       <h1>基础表单</h1>
     </div>
     <el-card class="box-card" shadow="never">
-      <BasicForm :schema="basicForm" @handleSubmit="handleSubmit" />
+      <BasicForm :schema="basicForm" @handleSubmit="handleSubmit" :span="8" />
     </el-card>
   </div>
 </template>

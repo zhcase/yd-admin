@@ -10,7 +10,7 @@
       v-bind="$attrs"
     >
       <el-col
-        :span="inline ? 24 : 8"
+        :span="span"
         :key="index"
         style="height: 60px; line-height: 50px"
         :xs="24"
@@ -74,6 +74,10 @@ export default {
     };
   },
   props: {
+    span: {
+      default: 24,
+      type: Number,
+    },
     size: {
       // 大小
       default: "small",
@@ -118,9 +122,11 @@ export default {
     /** 提交 */
     handleSubmit() {
       this.getFormData();
-      this.$refs["form"].validate();
-
-      this.$emit("handleSubmit", this.params);
+      this.$refs["form"].validate((valid) => {
+        if (valid) {
+          this.$emit("handleSubmit", this.params);
+        }
+      });
     },
     /**
      * @description 获取数据
