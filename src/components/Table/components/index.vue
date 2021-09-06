@@ -186,6 +186,7 @@ export default {
      * 修改确认
      */
     handleEditConfirm(params) {
+      console.log(params);
       this.$emit('handleTableCellEdit', params);
     },
 
@@ -288,7 +289,6 @@ export default {
 
     //当前页: ${val}
     handleCurrentChange(val) {
-      console.log();
       this.paginationConfig.currentPage = val;
       this.handleQuery(this.$refs.basicForm.form);
       /**

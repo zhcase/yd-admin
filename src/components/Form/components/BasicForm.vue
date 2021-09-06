@@ -15,7 +15,7 @@
           <el-form-item
             :label="item.label"
             :prop="item.field"
-            v-if="!item.slot"
+            v-if="!item.slot && item.field"
             :rules="item.rules"
           >
             <div :style="{ display: item.suffix ? 'flex' : '' }">
@@ -41,7 +41,7 @@
           type="text"
           @click="changeFormVisible"
           v-if="$refs.form && $refs.form.$children.length > 3"
-          >{{ formVisible ? "展开" : "收起" }}
+          >{{ formVisible ? '展开' : '收起' }}
           <i
             :class="{
               'el-icon-arrow-down': formVisible,
@@ -54,8 +54,8 @@
   </div>
 </template>
 <script>
-import FormMap from "./FormMap.vue";
-import { formDataFormOptions } from "./formUtils.js";
+import FormMap from './FormMap.vue';
+import { formDataFormOptions } from './formUtils.js';
 export default {
   components: {
     FormMap,
@@ -74,9 +74,13 @@ export default {
       default: 8,
       type: Number,
     },
+    formModel: {
+      type: Object,
+      default: {},
+    },
     size: {
       // 大小
-      default: "small",
+      default: 'small',
       type: String,
     },
     // 是否是以行的形式展示
@@ -99,6 +103,20 @@ export default {
       },
     },
   },
+  // 监听form Model
+  watch: {
+    formModel(val) {
+      for (let key in val) {
+        for (let i = 0; i < this.$refs.formData.length; i++) {
+          for (let keys in this.$refs.formData[i].form) {
+            if (key == keys) {
+              this.$refs.formData[i].form[keys] = val[key];
+            }
+          }
+        }
+      }
+    },
+  },
 
   methods: {
     // form 表单改变
@@ -113,14 +131,14 @@ export default {
       }
       this.formValue();
       this.getFormData();
-      this.$emit("resetForm", this.params);
+      this.$emit('resetForm', this.params);
     },
     /** 提交 */
     handleSubmit() {
       this.getFormData();
-      this.$refs["form"].validate((valid) => {
+      this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.$emit("handleSubmit", this.params);
+          this.$emit('handleSubmit', this.params);
         }
       });
     },
@@ -149,10 +167,9 @@ export default {
                     this.$slots[slotArray[i]][
                       t
                     ].componentOptions.children[0].data.model.expression
-                  ] =
-                    this.$slots[slotArray[i]][
-                      t
-                    ].componentOptions.children[0].data.model.value;
+                  ] = this.$slots[slotArray[i]][
+                    t
+                  ].componentOptions.children[0].data.model.value;
                 }
               }
             } else {
@@ -171,7 +188,7 @@ export default {
       Object.keys(this.params).forEach((key) => {
         // 这里 obj[key] 便是对象的每一个的值
         if (!this.params[key]) {
-          this.params[key] = "";
+          this.params[key] = '';
         }
       });
     },
@@ -191,11 +208,11 @@ export default {
       if (this.$refs.form) {
         if (this.formVisible) {
           for (let i = 3; i < this.$refs.form.$children.length; i++) {
-            this.$refs.form.$children[i].$el.style = "display:none";
+            this.$refs.form.$children[i].$el.style = 'display:none';
           }
         } else {
           for (let i = 3; i < this.$refs.form.$children.length; i++) {
-            this.$refs.form.$children[i].$el.style = "display:block";
+            this.$refs.form.$children[i].$el.style = 'display:block';
           }
         }
       }
@@ -220,8 +237,9 @@ export default {
           this.schema[i].componentProps.api
         ) {
           this.schema[i].componentProps.api.then((res) => {
-            let apiformdata =
-              this.schema[i].componentProps.apiFormat.split(".");
+            let apiformdata = this.schema[i].componentProps.apiFormat.split(
+              '.'
+            );
             for (let t = 0; t < apiformdata.length; t++) {
               res = res[apiformdata[t]];
             }
@@ -249,11 +267,12 @@ export default {
     this.isApiData();
   },
   mounted() {
+    console.log(this.formModel);
     this.formValue();
   },
 };
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .antd-form {
   form {
     overflow: hidden;

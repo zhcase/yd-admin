@@ -51,8 +51,8 @@
 </template>
 
 <script>
-import { getList } from "@/api/table";
-import { BasicTable } from "@/components/Table/index";
+import { getList } from '@/api/table';
+import { BasicTable } from '@/components/Table/index';
 export default {
   components: {
     BasicTable,
@@ -60,13 +60,13 @@ export default {
   data() {
     return {
       // list: null,
-      form1: "",
+      form1: '',
       // listLoading: true,
       options: {
         api: getList, // 调用接口地址
         paginationProps: {},
-        apiFormat: "data.items",
-        paginationFormat: "data.total",
+        apiFormat: 'data.items',
+        paginationFormat: 'data.total',
         // basicTableProps: {
         //   select: (e) => {
         //     console.log(e);
@@ -76,10 +76,10 @@ export default {
       // 头部表单配置生成
       schemas: [
         {
-          field: "field",
-          component: "Input",
-          label: "字段1",
-          placeholder: "自定义placeholder",
+          field: 'field',
+          component: 'Input',
+          label: '字段1',
+          placeholder: '自定义placeholder',
           colProps: {
             span: 8,
           },
@@ -87,41 +87,41 @@ export default {
         },
         // ],
         {
-          slot: "form1",
+          slot: 'form1',
         },
         {
-          field: "field1",
-          component: "Select",
-          label: "字段2",
-          placeholder: "自定义placeholder",
+          field: 'field1',
+          component: 'Select',
+          label: '字段2',
+          placeholder: '自定义placeholder',
           colProps: {
             span: 8,
           },
           componentProps: {
             // api: getList,
-            apiFormat: "data.items",
+            apiFormat: 'data.items',
             optionsFormat: {
-              label: "id",
-              value: "pageviews",
+              label: 'id',
+              value: 'pageviews',
             },
             options: [
               {
-                value: "选项1",
-                label: "黄金糕",
+                value: '选项1',
+                label: '黄金糕',
               },
               {
-                value: "选项2",
-                label: "双皮奶",
+                value: '选项2',
+                label: '双皮奶',
               },
             ],
           },
         },
         {
-          field: "field2",
-          component: "Input",
-          label: "字段1",
+          field: 'field2',
+          component: 'Input',
+          label: '字段1',
 
-          placeholder: "自定义placeholder",
+          placeholder: '自定义placeholder',
 
           colProps: {
             span: 8,
@@ -129,14 +129,14 @@ export default {
           componentProps: {},
         },
         {
-          field: "field13",
-          component: "TimePicker",
-          label: "字段1",
-          "picker-options": {
-            selectableRange: "18:30:00 - 20:30:00",
+          field: 'field13',
+          component: 'TimePicker',
+          label: '字段1',
+          'picker-options': {
+            selectableRange: '18:30:00 - 20:30:00',
           },
           defaultValue: new Date(2016, 9, 10, 18, 40),
-          placeholder: "123",
+          placeholder: '123',
           colProps: {
             span: 8,
           },
@@ -147,14 +147,14 @@ export default {
           },
         },
         {
-          field: "field3",
-          component: "Input",
-          label: "字段1",
-          placeholder: "自定义placeholder",
+          field: 'field3',
+          component: 'Input',
+          label: '字段1',
+          placeholder: '自定义placeholder',
           colProps: {
             span: 8,
           },
-          defaultValue: "1",
+          defaultValue: '1',
           componentProps: {
             onChange: (e) => {
               console.log(e);
@@ -166,35 +166,35 @@ export default {
       // table 索引
       table1: [
         {
-          slot: "selection",
+          slot: 'selection',
         },
         {
-          label: "id",
-          value: "id",
+          label: 'id',
+          value: 'id',
           width: 200,
         },
         {
-          label: "管理员账号",
-          value: "author",
-          "show-overflow-tooltip": true,
+          label: '管理员账号',
+          value: 'author',
+          'show-overflow-tooltip': true,
           width: 200,
         },
         {
-          label: "title",
-          value: "title",
-          "show-overflow-tooltip": true,
+          label: 'title',
+          value: 'title',
+          'show-overflow-tooltip': true,
           width: 200,
         },
 
         {
-          label: "用户状态",
-          value: "status",
+          label: '用户状态',
+          value: 'status',
           options: [
             {
-              label: "删除",
-              value: "deleted",
+              label: '删除',
+              value: 'deleted',
             },
-            { label: "发表", value: "published" },
+            { label: '发表', value: 'published' },
           ],
           // options: [
           //   {
@@ -205,14 +205,14 @@ export default {
           // ],
         },
         {
-          type: "radio",
-          label: "是否",
+          type: 'radio',
+          label: '是否',
           options: [
             {
-              label: "删除",
-              value: "deleted",
+              label: '删除',
+              value: 'deleted',
             },
-            { label: "发表", value: "published" },
+            { label: '发表', value: 'published' },
           ],
         },
 

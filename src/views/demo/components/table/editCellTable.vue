@@ -9,6 +9,7 @@
   <div class="app-container">
     <BasicTable
       :registerTable="table1"
+      @handleTableCellEdit="handleEditChange"
       :basicTableOptions="options"
       title="可编辑单元格"
       :border="true"
@@ -66,6 +67,11 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    handleEditChange(val) {
+      console.log(val);
+    },
   },
 };
 </script>
