@@ -2,8 +2,8 @@
  * @Author: zeHua
  * @Date: 2021-07-01 11:47:50
  * @LastEditors: zeHua
- * @LastEditTime: 2021-07-23 09:19:58
- * @FilePath: /yd-admin/src/components/Table/components/FormMap.vue
+ * @LastEditTime: 2021-08-29 13:54:58
+ * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type='jsx'>
 // refactorFormData(this.schema)
@@ -81,10 +81,7 @@ export default {
      */
     createSelect(schema) {
       let attr = schema.componentProps;
-      // if (!attr.isCallApi) {
-      //   attr.isCallApi = true;
-      // }
-      console.log(attr);
+      let onChange = attr.onChange ? attr.onChange : () => {};
 
       if (!attr.options) {
         console.error("Select  options未知");
@@ -93,6 +90,7 @@ export default {
       return (
         <el-select
           v-model={this.form[schema.field]}
+          {...onChange(this.form[schema.field])}
           {...{ attrs: schema }}
           style="width:100%"
         >
@@ -119,14 +117,17 @@ export default {
      */
     createDatePicker(schema) {
       let attr = schema.componentProps;
+      let onChange = attr.onChange ? attr.onChange : () => {};
+
       return (
         <el-date-picker
-          {...{ attrs: schema }}
           type="daterange"
           range-separator="至"
+          {...onChange(this.form[schema.field])}
           v-model={this.form[schema.field]}
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          {...{ attrs: schema }}
         ></el-date-picker>
       );
     },

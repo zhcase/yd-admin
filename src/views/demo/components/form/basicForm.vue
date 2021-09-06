@@ -4,13 +4,19 @@
       <h1>基础表单</h1>
     </div>
     <el-card class="box-card" shadow="never">
-      <BasicForm :schema="basicForm" @handleSubmit="handleSubmit" :span="8" />
+      <BasicForm :schema="basicForm" @handleSubmit="handleSubmit" :span="8">
+        <template #slot1>
+          <el-form-item style="opacity: 0">1</el-form-item>
+        </template>
+      </BasicForm>
     </el-card>
   </div>
 </template>
 
 <script>
 import BasicForm from "@/components/Form/components/BasicForm.vue";
+import { getList } from "@/api/table";
+
 export default {
   components: {
     BasicForm,
@@ -22,8 +28,12 @@ export default {
         {
           field: "field1",
           label: "字段1",
+
           component: "Input",
           placeholder: "字段1",
+        },
+        {
+          slot: "slot1",
         },
         {
           field: "field2",
@@ -37,6 +47,7 @@ export default {
           label: "字段3",
           component: "DatePicker",
           placeholder: "请选择",
+          type: "date",
         },
         {
           field: "field4",
@@ -44,17 +55,25 @@ export default {
           component: "Select",
           placeholder: "请选择",
           clearable: true,
+
           componentProps: {
-            options: [
-              {
-                label: "hello",
-                value: 1,
-              },
-              {
-                label: "hello2",
-                value: 2,
-              },
-            ],
+            api: getList(1),
+            apiFormat: "data.items",
+            optionsFormat: { label: "id", value: "pageviews" },
+            options: [],
+            // options: [
+            //   {
+            //     label: "hello",
+            //     value: 1,
+            //   },
+            //   {
+            //     label: "hello2",
+            //     value: 2,
+            //   },
+            // ],
+            onChange: (e) => {
+              console.log(e);
+            },
           },
         },
         {

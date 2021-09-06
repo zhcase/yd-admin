@@ -1,3 +1,10 @@
+<!--
+ * @Author: zeHua
+ * @Date: 2021-08-19 13:36:56
+ * @LastEditors: zeHua
+ * @LastEditTime: 2021-09-06 10:23:53
+ * @FilePath: /yd-admin/src/views/demo/components/table/editCellTable.vue
+-->
 <template>
   <div class="app-container">
     <BasicTable
@@ -12,8 +19,8 @@
 </template>
 
 <script>
-import { getList } from "@/api/table";
-import { BasicTable } from "@/components/Table/index";
+import { getList } from '@/api/table';
+import { BasicTable } from '@/components/Table/index';
 export default {
   components: {
     BasicTable,
@@ -22,39 +29,39 @@ export default {
     return {
       options: {
         api: getList, // 调用接口地址
-        apiFormat: "data.items",
-        paginationFormat: "data.total",
+        apiFormat: 'data.items',
+        paginationFormat: 'data.total',
       },
       // table 索引
       table1: [
         {
-          label: "id",
-          value: "id",
+          label: 'id',
+          value: 'id',
           width: 150,
           sortable: true,
         },
         {
-          label: "管理员账号",
-          value: "author",
+          label: '管理员账号',
+          value: 'author',
           edit: true,
-          "show-overflow-tooltip": true,
+          'show-overflow-tooltip': true,
           width: 200,
         },
         {
-          label: "title",
-          value: "title",
-          "show-overflow-tooltip": true,
+          label: 'title',
+          value: 'title',
+          'show-overflow-tooltip': true,
           width: 200,
         },
         {
-          label: "用户状态",
-          value: "status",
+          label: '用户状态',
+          value: 'status',
           options: [
             {
-              label: "删除",
-              value: "deleted",
+              label: '删除',
+              value: 'deleted',
             },
-            { label: "发表", value: "published" },
+            { label: '发表', value: 'published' },
           ],
         },
       ],

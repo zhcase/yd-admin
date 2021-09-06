@@ -32,6 +32,7 @@ export function refactorFormData(value, callback) {
 }
 
 export function formDataFormOptions(Arraydata, keyMap) {
+    console.log(Arraydata)
     for (var i = 0; i < Arraydata.length; i++) {
         var obj = Arraydata[i]
 

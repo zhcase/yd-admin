@@ -20,7 +20,7 @@
           @blur="tableInputBlur(scope.$index, scope.row, scope)"
           v-if="
             scope.row[scope.$index] &&
-            scope.row[scope.$index][scope.column.property]
+              scope.row[scope.$index][scope.column.property]
           "
           v-model="scope.row[item.value]"
           class="edit-input"
@@ -30,7 +30,7 @@
         {{
           scope.row[scope.$index] &&
           scope.row[scope.$index][scope.column.property]
-            ? ""
+            ? ''
             : scope.row[item.value]
         }}
         <el-popover
@@ -54,10 +54,10 @@
           class="edit el-icon-edit"
           v-if="
             item.edit &&
-            !(
-              scope.row[scope.$index] &&
-              scope.row[scope.$index][scope.column.property]
-            )
+              !(
+                scope.row[scope.$index] &&
+                scope.row[scope.$index][scope.column.property]
+              )
           "
           @click="handleEdit(scope.$index, scope)"
         ></span>
@@ -67,7 +67,7 @@
           @click="handleCancelEdit($event, scope.$index, scope)"
           v-if="
             scope.row[scope.$index] &&
-            scope.row[scope.$index][scope.column.property]
+              scope.row[scope.$index][scope.column.property]
           "
         ></span>
         <!-- 确定按钮 -->
@@ -77,7 +77,7 @@
           @click.stop="handleConfirm($event, scope.$index, scope)"
           v-if="
             scope.row[scope.$index] &&
-            scope.row[scope.$index][scope.column.property]
+              scope.row[scope.$index][scope.column.property]
           "
         ></span>
       </template>
@@ -99,12 +99,109 @@
 </template>
 <script>
 export default {
-  name: "TableColumn",
+  name: 'TableColumn',
   props: {
     item: {
       type: Object,
       default: {},
     },
+    //表单数据
+    // tableData: {
+    //   type: Array,
+    //   default: [],
+    // },
+  },
+  methods: {
+    /**
+     * 点击修改单元格
+     * @param index 索引
+     * @param scoped 整行数据
+     */
+    handleEdit(index, scoped) {
+      scoped.row[index] = {};
+      scoped.row[index][scoped.column.property] = true;
+      scoped.row[index].content = scoped.row[scoped.column.property];
+      this.$emit('updateTableData');
+    },
+    /**
+     * @description 监听输入框是否失去焦点
+     * @param index 索引
+     * @param row
+     * @param scoped table 属性值
+     */
+    tableInputBlur(index, row, scoped) {
+      let params = {
+        scoped,
+        index,
+      };
+      scoped.row[index][scoped.column.label] = false;
+      // scoped.row[scoped.column.property] = scoped.row[index].content;
+      this.$emit('updateTableData');
+      this.$emit('handleTableCellEdit', params);
+    },
+    /**
+     * 修改确认
+     * @param e 默认事件
+     * @param index 索引
+     * @param scoped 整行数据
+     */
+    handleConfirm(e, index, scoped) {
+      e.preventDefault();
+      let params = {
+        scoped,
+        index,
+      };
+      scoped.row[index][scoped.column.property] = false;
+      this.$emit('updateTableData');
+      this.$emit('updateTableData');
+      this.$emit('handleTableCellEdit', params);
+    },
+    /**
+     * @description 取消输入框
+     * @param e 默认事件
+     * @param index 索引
+     * @param scoped 整行数据
+     */
+    handleCancelEdit(e, index, scoped) {
+      scoped.row[index][scoped.column.property] = false;
+      scoped.row[scoped.column.property] = scoped.row[index].content;
+      this.$emit('updateTableData');
+    },
+    /**
+     * @description 取消输入框
+     * @param e 默认事件
+     * @param index 索引
+     * @param scoped 整行数据
+     */
+    handleCancelEdit(e, index, scoped) {
+      scoped.row[index][scoped.column.property] = false;
+      scoped.row[scoped.column.property] = scoped.row[index].content;
+      this.$emit('updateTableData');
+    },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+td:hover {
+  .el-icon-edit {
+    display: inline-block !important;
+  }
+}
+.el-icon-edit {
+  position: absolute;
+  right: 20px;
+  top: 45%;
+  display: none !important;
+}
+.edit {
+  text-align: right;
+  cursor: pointer;
+
+  padding-left: 10px;
+  display: inline-block;
+}
+.edit-input {
+  width: 60%;
+}
+</style>

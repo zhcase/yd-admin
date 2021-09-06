@@ -53,7 +53,13 @@
           <!-- 是否隐藏该列 -->
           <template v-if="!item.isHidden">
             <slot v-if="item.slot" :name="item.slot"> </slot>
-            <tableColumn :item="item" v-else :key="item.value" />
+            <tableColumn
+              :item="item"
+              @handleTableCellEdit="handleEditConfirm"
+              v-else
+              :key="item.value"
+              @updateTableData="handleUpdateTableData"
+            />
           </template>
         </template>
       </el-table>
@@ -77,10 +83,10 @@
 </template>
 
 <script>
-import FormMap from "./FormMap.vue";
-import { downloadExcel } from "./excel.js";
-import { BasiceForm } from "@/components/Form/index.js";
-import tableColumn from "./tableColumn.vue";
+import FormMap from './FormMap.vue';
+import { downloadExcel } from './excel.js';
+import { BasiceForm } from '@/components/Form/index.js';
+import tableColumn from './tableColumn.vue';
 export default {
   components: {
     FormMap,
@@ -179,32 +185,15 @@ export default {
     /**
      * 修改确认
      */
-    handleConfirm(e, index, scoped) {
-      e.preventDefault();
-      let params = {
-        scoped,
-        index,
-      };
-      scoped.row[index][scoped.column.property] = false;
-      this.tableData.splice(1, 0);
-      this.$emit("handleTableCellEdit", params);
+    handleEditConfirm(params) {
+      this.$emit('handleTableCellEdit', params);
     },
+
     /**
-     * @description 取消输入框
+     * 更新Table数据
+     *
      */
-    handleCancelEdit(e, index, scoped) {
-      scoped.row[index][scoped.column.property] = false;
-      scoped.row[scoped.column.property] = scoped.row[index].content;
-      this.tableData.splice(1, 0);
-    },
-    /**
-     * 点击修改单元格
-     */
-    handleEdit(index, scoped) {
-      console.log(scoped);
-      scoped.row[index] = {};
-      scoped.row[index][scoped.column.property] = true;
-      scoped.row[index].content = scoped.row[scoped.column.property];
+    handleUpdateTableData() {
       this.tableData.splice(1, 0);
     },
     // 下载excel文档
@@ -214,7 +203,7 @@ export default {
     formatJson(filterVal) {
       return this.tableData.map((v) =>
         filterVal.map((j) => {
-          if (j === "timestamp") {
+          if (j === 'timestamp') {
             return parseTime(v[j]);
           } else {
             return v[j];
@@ -234,20 +223,22 @@ export default {
       parmas = this.formDataParams(parmas);
       this.basicTableOptions.api(parmas).then((res) => {
         if (!this.basicTableOptions.apiFormat) {
-          console.error("缺少apiFormat");
+          console.error('缺少apiFormat');
           return;
         }
         let data = res;
         this.paginationConfig.total = res;
-        let formatdata = this.basicTableOptions.apiFormat.split("."); // table 数据格式
-        let paginationFormat =
-          this.basicTableOptions.paginationFormat.split("."); // 分页总数table 格式
+        let formatdata = this.basicTableOptions.apiFormat.split('.'); // table 数据格式
+        let paginationFormat = this.basicTableOptions.paginationFormat.split(
+          '.'
+        ); // 分页总数table 格式
         for (let i = 0; i < formatdata.length; i++) {
           data = data[formatdata[i]];
         }
         for (let i = 0; i < paginationFormat.length; i++) {
-          this.paginationConfig.total =
-            this.paginationConfig.total[paginationFormat[i]];
+          this.paginationConfig.total = this.paginationConfig.total[
+            paginationFormat[i]
+          ];
         }
         this.tableData = data;
 
@@ -256,7 +247,7 @@ export default {
     },
     // 重置
     handleFormReset(form) {
-      this.$emit("resetForm", form);
+      this.$emit('resetForm', form);
       this.$nextTick(() => {
         this.handleQuery(form);
       });
@@ -269,11 +260,11 @@ export default {
       if (this.$refs.form) {
         if (this.formVisible) {
           for (let i = 3; i < this.$refs.form.$children.length; i++) {
-            this.$refs.form.$children[i].$el.style = "display:none";
+            this.$refs.form.$children[i].$el.style = 'display:none';
           }
         } else {
           for (let i = 3; i < this.$refs.form.$children.length; i++) {
-            this.$refs.form.$children[i].$el.style = "display:block";
+            this.$refs.form.$children[i].$el.style = 'display:block';
           }
         }
       }
@@ -281,7 +272,7 @@ export default {
     // 刷新
     handleRefresh() {
       this.handleQuery();
-      this.$emit("getTableData");
+      this.$emit('getTableData');
     },
     //每页 ${val} 条
     handleSizeChange(val) {
@@ -311,7 +302,7 @@ export default {
      * @param arr 数组
      */
     handleSwitch(row, index, arr) {
-      this.$emit("changeSwitch", row, (res) => {
+      this.$emit('changeSwitch', row, (res) => {
         if (res) {
           for (let i = 0; i < arr.length; i++) {
             if (row[index] !== arr[i].value) {
@@ -323,29 +314,14 @@ export default {
         }
       });
     },
-    /**
-     * @description 监听输入框是否失去焦点
-     * @param index 索引
-     * @param row
-     * @param scoped table 属性值
-     */
-    tableInputBlur(index, row, scoped) {
-      let params = {
-        scoped,
-        index,
-      };
-      scoped.row[index][scoped.column.label] = false;
-      // scoped.row[scoped.column.property] = scoped.row[index].content;
-      this.tableData.splice(1, 0);
-      this.$emit("handleTableCellEdit", params);
-    },
+
     // utils 参数 临时放置！！！！ 后期 移utils
     formDataParams(obj) {
       console.log(obj);
       let params = {};
       for (let key in obj) {
-        if (typeof obj[key] !== "number") {
-          params[key] = String(obj[key]).replace(/(^\s*)|(\s*$)/g, "");
+        if (typeof obj[key] !== 'number') {
+          params[key] = String(obj[key]).replace(/(^\s*)|(\s*$)/g, '');
         } else {
           params[key] = obj[key];
         }
@@ -356,7 +332,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .base-table {
   height: 100%;
   display: flex;
@@ -431,7 +407,7 @@ export default {
 }
 </style>
 
-<style lang='scss'>
+<style lang="scss">
 .base-table__tables {
   th {
     color: #000;
@@ -444,4 +420,3 @@ export default {
   }
 }
 </style>
-

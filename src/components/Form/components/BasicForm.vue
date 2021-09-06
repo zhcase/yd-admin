@@ -9,31 +9,27 @@
       v-on="$listeners"
       v-bind="$attrs"
     >
-      <el-col
-        :span="span"
-        :key="index"
-        style="height: 60px; line-height: 50px"
-        :xs="24"
-        v-for="(item, index) in schema"
-      >
-        <slot :name="item.slot" v-if="item.slot" :field="item.field"> </slot>
-        <el-form-item
-          :label="item.label"
-          :prop="item.field"
-          v-if="!item.slot"
-          :rules="item.rules"
-        >
-          <div :style="{ display: item.suffix ? 'flex' : '' }">
-            <FormMap
-              :schema="item"
-              ref="formData"
-              v-model="item.field"
-              @handleChange="handleChange"
-            />
-            <span class="suffix" v-if="item.suffix">{{ item.suffix }}</span>
-          </div>
-        </el-form-item>
-      </el-col>
+      <template v-for="(item, index) in schema">
+        <el-col :span="span" :key="index" v-if="!item.isHidden" :xs="24">
+          <slot :name="item.slot" v-if="item.slot" :field="item.field"> </slot>
+          <el-form-item
+            :label="item.label"
+            :prop="item.field"
+            v-if="!item.slot"
+            :rules="item.rules"
+          >
+            <div :style="{ display: item.suffix ? 'flex' : '' }">
+              <FormMap
+                :schema="item"
+                ref="formData"
+                v-model="item.field"
+                @handleChange="handleChange"
+              />
+              <span class="suffix" v-if="item.suffix">{{ item.suffix }}</span>
+            </div>
+          </el-form-item>
+        </el-col>
+      </template>
     </el-form>
     <slot name="footer">
       <div class="antd-form__footer">
@@ -75,7 +71,7 @@ export default {
   },
   props: {
     span: {
-      default: 24,
+      default: 8,
       type: Number,
     },
     size: {
@@ -142,19 +138,32 @@ export default {
       for (let i = 0; i < slotArray.length; i++) {
         if (this.$slots[slotArray[i]]) {
           for (let t = 0; t < this.$slots[slotArray[i]].length; t++) {
-            // 循环判断是否用children 还是外层的 如果有children 说明目前是table 外层套了children  看后期有时间做次修改!!!
-            if (this.$slots[slotArray[i]][t].componentOptions.children) {
-              this.params[
-                this.$slots[slotArray[i]][
-                  t
-                ].componentOptions.children[0].data.model.expression
-              ] =
-                this.$slots[slotArray[i]][
-                  t
-                ].componentOptions.children[0].data.model.value;
+            if (this.$slots[slotArray[i]][t].componentOptions) {
+              // 循环判断是否用children 还是外层的 如果有children 说明目前是table 外层套了children  看后期有时间做次修改!!!
+              if (this.$slots[slotArray[i]][t].componentOptions.children) {
+                if (
+                  this.$slots[slotArray[i]][t].componentOptions.children[0].data
+                    .model
+                ) {
+                  this.params[
+                    this.$slots[slotArray[i]][
+                      t
+                    ].componentOptions.children[0].data.model.expression
+                  ] =
+                    this.$slots[slotArray[i]][
+                      t
+                    ].componentOptions.children[0].data.model.value;
+                }
+              }
             } else {
-              this.params[this.$slots[slotArray[i]][t].data.model.expression] =
-                this.$slots[slotArray[i]][t].data.model.value;
+              if (
+                this.$slots[slotArray[i]][t].data &&
+                this.$slots[slotArray[i]][t].data.model
+              ) {
+                this.params[
+                  this.$slots[slotArray[i]][t].data.model.expression
+                ] = this.$slots[slotArray[i]][t].data.model.value;
+              }
             }
           }
         }
@@ -210,12 +219,13 @@ export default {
           this.schema[i].componentProps &&
           this.schema[i].componentProps.api
         ) {
-          this.schema[i].componentProps.api().then((res) => {
+          this.schema[i].componentProps.api.then((res) => {
             let apiformdata =
               this.schema[i].componentProps.apiFormat.split(".");
             for (let t = 0; t < apiformdata.length; t++) {
               res = res[apiformdata[t]];
             }
+            console.log(res);
             this.schema[i].componentProps.options = res;
             if (this.schema[i].componentProps.optionsFormat) {
               this.schema[i].componentProps = this.formateOptionsData(
