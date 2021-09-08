@@ -8,11 +8,8 @@
         :schema="basicForm"
         @handleSubmit="handleSubmit"
         :span="8"
-        :formModel="form"
+        :formModel="formsss"
       >
-        <!-- <template #slot1>
-          <el-form-item style="opacity: 0">1</el-form-item>
-        </template> -->
       </BasicForm>
     </el-card>
   </div>
@@ -29,12 +26,33 @@ export default {
   data() {
     return {
       activeNames: '1',
-      form: {},
+      formsss: {},
       basicForm: [
         {
+          component: 'Text',
+          componentProps: {
+            color: 'red',
+            fontSize: '12px',
+          },
+          content: '<div>123232</div>',
+        },
+        {
           field: 'field1',
+          colProps: {
+            span: 12,
+            formSpan: 18,
+          },
           label: '字段1',
-          componentProps: {},
+          componentProps: {
+            onChange: (e) => {
+              // console.log(1232);
+              if (e) {
+                this.basicForm[4].componentProps.options = [
+                  { pageviews: 1, id: 2 },
+                ];
+              }
+            },
+          },
           component: 'Input',
           isShow: true,
           placeholder: '字段1',
@@ -47,6 +65,7 @@ export default {
           placeholder: '字段2',
           suffix: '天',
         },
+
         {
           field: 'field2',
           label: '字段3',
@@ -61,10 +80,10 @@ export default {
           placeholder: '请选择',
           clearable: true,
           componentProps: {
-            api: getList(1),
-            apiFormat: 'data.items',
+            // api: getList(1),
+            // apiFormat: 'data.items',
             optionsFormat: { label: 'id', value: 'pageviews' },
-            options: [],
+            options: [{ pageviews: 4, id: 4 }],
             // options: [
             //   {
             //     label: "hello",
@@ -162,28 +181,9 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.$set(this.basicForm[3].componentProps, 'options', [
-        {
-          pageviews: '1',
-          id: 12,
-        },
-        {
-          pageviews: '2',
-          id: 13,
-        },
-      ]);
-      // this.basicForm[3].options = [
-      //   {
-      //     pageviews: '1',
-      //     id: 12,
-      //   },
-      //   {
-      //     pageviews: '1',
-      //     id: 13,
-      //   },
-      // ];
-      console.log(this.basicForm);
-    }, 2000);
+      this.$set(this.formsss, 'field1', 12323);
+      this.formsss.field1 = '12323';
+    }, 3000);
   },
   methods: {
     handleSubmit(val) {

@@ -6,8 +6,6 @@
  * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type="jsx">
-// refactorFormData(this.schema)
-import { refactorFormData } from "./formUtils.js";
 export default {
   data() {
     return {
@@ -23,20 +21,7 @@ export default {
       default: "",
     },
   },
-  created() {
-    // if (this.schema.componentProps.api) {
-    //   this.schema.componentProps = refactorFormData(this.schema.componentProps);
-    //   if (!this.schema.componentProps) {
-    //     this.schema.componentProps = {};
-    //     this.schema.componentProps.options = [{}];
-    //   }
-    //   // setTimeout(() => {
-    //   //   console.log(this.schema);
-    //   // }, 5000);
-    //   // this.$nextTick(() => {
-    //   // });
-    // }
-  },
+
   render() {
     this.formChange(this.form);
     // 创建组件 create开头+组件名 传递this.schema参数
@@ -46,6 +31,7 @@ export default {
     // ;
     if (this.form[this.schema.field] === undefined) {
       this.$set(this.form, this.schema.field, this.schema.defaultValue);
+
     }
     return this["create" + this.schema.component](this.schema);
   },
@@ -57,6 +43,17 @@ export default {
   methods: {
     formChange() {
       this.$emit("handleChange", this.form, this.schema.field);
+    },
+      /**
+     * @description 创建一个文本显示行
+     * @param schema 数据model
+     */
+    createText(schema){
+      console.log(schema);
+          return (
+            <div domPropsInnerHTML={schema.content} style={schema.componentProps}>
+            </div>
+          )
     },
     /**
      * @description 创建一个输入框组件
@@ -81,7 +78,6 @@ export default {
     createSelect(schema) {
       let attr = schema.componentProps;
       let onChange = attr.onChange ? attr.onChange : () => {};
-    console.log(attr);
       if (!attr.options) {
         console.error("Select  options未知");
         return;

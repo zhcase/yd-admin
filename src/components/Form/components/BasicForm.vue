@@ -10,24 +10,45 @@
       v-bind="$attrs"
     >
       <template v-for="(item, index) in schema">
-        <el-col :span="span" :key="index" v-if="!item.isHidden" :xs="24">
+        <!-- 判断是否 设置了表单单独的列 如果有的话 先使用单独的 否者使用统一的 -->
+        <el-col
+          :span="
+            item.colProps && item.colProps.span ? item.colProps.span : span
+          "
+          :xs="24"
+          :key="index"
+          v-show="!item.isHidden"
+        >
           <slot :name="item.slot" v-if="item.slot" :field="item.field"> </slot>
-          <el-form-item
-            :label="item.label"
-            :prop="item.field"
-            v-if="!item.slot && item.field"
-            :rules="item.rules"
-          >
-            <div :style="{ display: item.suffix ? 'flex' : '' }">
-              <FormMap
-                :schema="item"
-                ref="formData"
-                v-model="item.field"
-                @handleChange="handleChange"
-              />
-              <span class="suffix" v-if="item.suffix">{{ item.suffix }}</span>
-            </div>
-          </el-form-item>
+          <el-col :span="24" :xs="24">
+            <el-form-item
+              :label="item.label"
+              :prop="item.field"
+              v-if="!item.slot"
+              :rules="item.rules"
+            >
+              <el-col
+                :span="
+                  item.colProps && item.colProps.formSpan
+                    ? item.colProps.formSpan
+                    : 24
+                "
+                :xs="24"
+              >
+                <div :style="{ display: item.suffix ? 'flex' : '' }">
+                  <FormMap
+                    :schema="item"
+                    ref="formData"
+                    v-model="item.field"
+                    @handleChange="handleChange"
+                  />
+                  <span class="suffix" v-if="item.suffix">{{
+                    item.suffix
+                  }}</span>
+                </div>
+              </el-col>
+            </el-form-item>
+          </el-col>
         </el-col>
       </template>
     </el-form>
@@ -60,6 +81,7 @@ export default {
   components: {
     FormMap,
   },
+
   data() {
     return {
       form: {},
@@ -107,19 +129,27 @@ export default {
   },
   // 监听form Model
   watch: {
-    formModel(val) {
-      for (let key in val) {
-        for (let i = 0; i < this.$refs.formData.length; i++) {
-          for (let keys in this.$refs.formData[i].form) {
-            if (key == keys) {
-              this.$refs.formData[i].form[keys] = val[key];
+    formModel: {
+      handler(val) {
+        for (let key in val) {
+          for (let i = 0; i < this.$refs.formData.length; i++) {
+            for (let keys in this.$refs.formData[i].form) {
+              if (key == keys) {
+                // 文本占位符
+                if (this.$refs.formData[i].schema.component === 'Text') {
+                  this.$refs.formData[i].schema.content = val[key];
+                } else {
+                  this.$refs.formData[i].form[keys] = val[key];
+                }
+              }
             }
           }
         }
-      }
+      },
+      immediate: true,
+      deep: true,
     },
   },
-
   methods: {
     // form 表单改变
     handleChange(val, key) {
@@ -150,7 +180,6 @@ export default {
     getFormData() {
       this.params = {};
       for (let i = 0; i < this.$refs.formData.length; i++) {
-        console.log(this.$refs.formData[i]);
         this.params = { ...this.params, ...this.$refs.formData[i].form };
       }
       let slotArray = Object.keys(this.$slots);
@@ -189,6 +218,7 @@ export default {
           }
         }
       }
+      console.log(this.params);
       Object.keys(this.params).forEach((key) => {
         // 这里 obj[key] 便是对象的每一个的值
         if (!this.params[key]) {
@@ -270,8 +300,8 @@ export default {
     this.isApiData();
   },
   mounted() {
-    console.log(this.formModel);
     this.formValue();
+    console.log(this.formModel);
   },
 };
 </script>
