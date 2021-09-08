@@ -5,7 +5,7 @@
  * @LastEditTime: 2021-08-29 13:54:58
  * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
-<script type='jsx'>
+<script type="jsx">
 // refactorFormData(this.schema)
 import { refactorFormData } from "./formUtils.js";
 export default {
@@ -39,7 +39,6 @@ export default {
   },
   render() {
     this.formChange(this.form);
-    // this.$emit("handleChange", 1);
     // 创建组件 create开头+组件名 传递this.schema参数
     if (!this.schema.componentProps) {
       this.schema.componentProps = "";
@@ -82,7 +81,7 @@ export default {
     createSelect(schema) {
       let attr = schema.componentProps;
       let onChange = attr.onChange ? attr.onChange : () => {};
-
+    console.log(attr);
       if (!attr.options) {
         console.error("Select  options未知");
         return;
@@ -95,10 +94,11 @@ export default {
           style="width:100%"
         >
           {attr.options.map((item) => (
+            // 判断是否有格式化的值
             <el-option
-              label={item.label}
-              value={item.value}
-              key={item.value}
+              label={attr.optionsFormat?item[attr.optionsFormat.label]:item.label}
+              value={attr.optionsFormat?item[attr.optionsFormat.value]:item.value}
+
             ></el-option>
           ))}
         </el-select>

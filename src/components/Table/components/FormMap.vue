@@ -5,7 +5,7 @@
  * @LastEditTime: 2021-07-23 09:19:58
  * @FilePath: /yd-admin/src/components/Table/components/FormMap.vue
 -->
-<script type='jsx'>
+<script type="jsx">
 export default {
   data() {
     return {

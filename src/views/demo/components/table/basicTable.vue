@@ -2,6 +2,7 @@
   <div class="app-container">
     <BasicTable
       :registerTable="table1"
+      v-if="demoStr"
       :basicTableOptions="options"
       title="基础示例"
       :border="true"
@@ -12,53 +13,65 @@
 </template>
 
 <script>
-import { getList } from "@/api/table";
-import { BasicTable } from "@/components/Table/index";
+import { getList } from '@/api/table';
+import { BasicTable } from '@/components/Table/index';
 export default {
   components: {
     BasicTable,
   },
   data() {
     return {
+      demoStr: '',
       options: {
         api: getList, // 调用接口地址
-        apiFormat: "data.items",
-        paginationFormat: "data.total",
+        apiFormat: 'data.items',
+        apiParams: { a: 1, b: 2 },
+        paginationFormat: 'data.total',
       },
       // table 索引
       table1: [
         {
-          label: "id",
-          value: "id",
+          label: 'id',
+          value: 'id',
           width: 150,
           sortable: true,
         },
         {
-          label: "管理员账号",
-          value: "author",
-          "show-overflow-tooltip": true,
+          label: '管理员账号',
+          value: 'author',
+          'show-overflow-tooltip': true,
+          width: 200,
+          formatter: (e) => {
+            return this.demoStr;
+            // console.log(e);
+          },
+        },
+        {
+          label: 'title',
+          value: 'title',
+          'show-overflow-tooltip': true,
           width: 200,
         },
         {
-          label: "title",
-          value: "title",
-          "show-overflow-tooltip": true,
-          width: 200,
-        },
-        {
-          label: "用户状态",
-          value: "status",
+          label: '用户状态',
+          value: 'status',
           options: [
             {
-              label: "删除",
-              value: "deleted",
+              label: '删除',
+              value: 'deleted',
             },
-            { label: "发表", value: "published" },
+            { label: '发表', value: 'published' },
           ],
         },
       ],
     };
   },
+  created() {
+    setTimeout(() => {
+      this.demoStr = 'demoTest';
+    }, 500);
+  },
+  methods: {},
 };
 </script>
 

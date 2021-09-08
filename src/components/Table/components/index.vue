@@ -4,6 +4,7 @@
       <BasiceForm
         :schema="formSchema"
         :label-width="130"
+        :formModel="form"
         ref="basicForm"
         @handleSubmit="handleQuery"
         @resetForm="handleFormReset"
@@ -95,8 +96,8 @@ export default {
   },
   data() {
     return {
-      form: {},
-      formVisible: false,
+      form: {}, //form 表单
+      formVisible: false, //
       tableData: [],
       tableLoading: false,
 
@@ -149,22 +150,6 @@ export default {
     },
   },
 
-  computed: {
-    /**
-     * 过滤返回选中数据
-     */
-    handleFilterData() {
-      return (index, data) => {
-        let result = data.filter((item) => {
-          return item.value === index;
-        });
-        if (result && result[0]) {
-          return result[0].label;
-        }
-        return;
-      };
-    },
-  },
   watch: {
     basicTableOptions(val) {
       console.log(val);
@@ -174,7 +159,6 @@ export default {
     console.log(this.registerTable);
   },
   mounted() {
-    console.log(this.$slots);
     this.handleQuery();
     this.changeFormVisible();
   },
@@ -186,7 +170,6 @@ export default {
      * 修改确认
      */
     handleEditConfirm(params) {
-      console.log(params);
       this.$emit('handleTableCellEdit', params);
     },
 
@@ -214,15 +197,23 @@ export default {
     },
     // 查询
     handleQuery(form = {}) {
+      //table 滚动条滚动到顶部
+      this.$refs.table.bodyWrapper.scrollTop = 0;
+      //启动loading
       this.tableLoading = true;
       let paramsObj = {
-        pageSize: this.paginationConfig.pageSize,
-        pageNumber: this.paginationConfig.currentPage,
+        pageSize: this.paginationConfig.pageSize, //分页数量
+        pageNum: this.paginationConfig.currentPage, //页数
       };
       let paramsForm = form;
-      let parmas = { ...paramsObj, ...paramsForm };
+      //分页参数 表单参数 自定义参数结合
+      let parmas = {
+        ...paramsObj,
+        ...paramsForm,
+        ...this.basicTableOptions.apiParams,
+      };
       parmas = this.formDataParams(parmas);
-      this.basicTableOptions.api(parmas).then((res) => {
+      this.basicTableOptions.api({ ...parmas }).then((res) => {
         if (!this.basicTableOptions.apiFormat) {
           console.error('缺少apiFormat');
           return;
@@ -317,13 +308,18 @@ export default {
 
     // utils 参数 临时放置！！！！ 后期 移utils
     formDataParams(obj) {
-      console.log(obj);
       let params = {};
       for (let key in obj) {
         if (typeof obj[key] !== 'number') {
-          params[key] = String(obj[key]).replace(/(^\s*)|(\s*$)/g, '');
+          if (obj[key]) {
+            params[key] = String(obj[key]).replace(/(^\s*)|(\s*$)/g, '');
+          } else {
+            params[key] = '';
+          }
         } else {
-          params[key] = obj[key];
+          if (obj[key]) {
+            params[key] = obj[key];
+          }
         }
       }
       return params;

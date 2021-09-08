@@ -10,9 +10,9 @@
         :span="8"
         :formModel="form"
       >
-        <template #slot1>
+        <!-- <template #slot1>
           <el-form-item style="opacity: 0">1</el-form-item>
-        </template>
+        </template> -->
       </BasicForm>
     </el-card>
   </div>
@@ -36,14 +36,10 @@ export default {
           label: '字段1',
           componentProps: {},
           component: 'Input',
+          isShow: true,
           placeholder: '字段1',
         },
-        {
-          isShow: false,
-        },
-        {
-          slot: 'slot1',
-        },
+
         {
           field: 'field2',
           label: '带后缀',
@@ -64,7 +60,6 @@ export default {
           component: 'Select',
           placeholder: '请选择',
           clearable: true,
-
           componentProps: {
             api: getList(1),
             apiFormat: 'data.items',
@@ -167,11 +162,27 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.form = {
-        field1: '12323',
-        field2: '23232323',
-        field3: '23232323',
-      };
+      this.$set(this.basicForm[3].componentProps, 'options', [
+        {
+          pageviews: '1',
+          id: 12,
+        },
+        {
+          pageviews: '2',
+          id: 13,
+        },
+      ]);
+      // this.basicForm[3].options = [
+      //   {
+      //     pageviews: '1',
+      //     id: 12,
+      //   },
+      //   {
+      //     pageviews: '1',
+      //     id: 13,
+      //   },
+      // ];
+      console.log(this.basicForm);
     }, 2000);
   },
   methods: {

@@ -76,7 +76,9 @@ export default {
     },
     formModel: {
       type: Object,
-      default: {},
+      default: () => {
+        return {};
+      },
     },
     size: {
       // 大小
@@ -126,7 +128,6 @@ export default {
     /** 重置 */
     reset() {
       for (let i = 0; i < this.$refs.formData.length; i++) {
-        console.log(this.$refs.formData[i]);
         this.$refs.formData[i].form = {};
       }
       this.formValue();
@@ -138,7 +139,8 @@ export default {
       this.getFormData();
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.$emit('handleSubmit', this.params);
+          this.$emit('formSubmit', this.params);
+          // return this.params;
         }
       });
     },
@@ -160,6 +162,8 @@ export default {
               // 循环判断是否用children 还是外层的 如果有children 说明目前是table 外层套了children  看后期有时间做次修改!!!
               if (this.$slots[slotArray[i]][t].componentOptions.children) {
                 if (
+                  this.$slots[slotArray[i]][t].componentOptions.children[0]
+                    .data &&
                   this.$slots[slotArray[i]][t].componentOptions.children[0].data
                     .model
                 ) {
@@ -196,7 +200,6 @@ export default {
     formValue() {
       for (let i = 0; i < this.schema.length; i++) {
         this.$set(this.form, this.schema[i].field, this.schema[i].defaultValue);
-        // this.$set(this.rules, this.schema[i].field, this.schema[i].rules);
       }
     },
 
@@ -223,7 +226,7 @@ export default {
      */
     formateOptionsData(value) {
       //  如果 需要格式化参数
-      value.options = formDataFormOptions(value.options, value.optionsFormat);
+      // value.options = formDataFormOptions(value.options, value.optionsFormat);
       return value;
     },
     /**

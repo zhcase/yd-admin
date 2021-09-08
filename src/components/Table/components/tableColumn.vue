@@ -6,6 +6,7 @@
     class="table-hover"
     v-bind="item"
   >
+    <!-- 递归合并table 头 -->
     <template v-if="item.children">
       <template v-for="(item, index) of item.children">
         <TableColumn :item="item" :key="index"></TableColumn>
@@ -13,6 +14,7 @@
     </template>
     <!-- {item.attr} -->
     <template slot-scope="scope">
+      <!-- {{ formmater(item.formater) }} -->
       <!-- 直接展示 -->
       <template v-if="!item.options">
         <el-input
@@ -25,14 +27,28 @@
           v-model="scope.row[item.value]"
           class="edit-input"
         ></el-input>
-
-        <!-- <template> -->
-        {{
-          scope.row[scope.$index] &&
-          scope.row[scope.$index][scope.column.property]
-            ? ''
-            : scope.row[item.value]
-        }}
+        <!-- 判断是否需要格式化  -->
+        <!-- 需要 -->
+        <template v-if="item.formatter">
+          {{
+            formatter(
+              item.formatter,
+              scope.row[scope.$index] &&
+                scope.row[scope.$index][scope.column.property]
+                ? ''
+                : scope.row[item.value]
+            )
+          }}
+        </template>
+        <!-- 不需要直接展示 -->
+        <template v-else>
+          {{
+            scope.row[scope.$index] &&
+            scope.row[scope.$index][scope.column.property]
+              ? ''
+              : scope.row[item.value]
+          }}
+        </template>
         <el-popover
           placement="top-start"
           width="200"
@@ -94,12 +110,19 @@
           {{ handleFilterData(scope.row[item.value], item.options) }}
         </template>
       </template> -->
+      <template v-if="item.type !== 'radio' && item.options">
+        {{ handleFilterData(scope.row[item.value], item.options) }}
+      </template>
     </template>
+    <!-- </template> -->
   </el-table-column>
 </template>
 <script>
 export default {
   name: 'TableColumn',
+  data() {
+    return {};
+  },
   props: {
     item: {
       type: Object,
@@ -111,7 +134,54 @@ export default {
     //   default: [],
     // },
   },
+  computed: {
+    /**
+     * 格式化数据
+     * @param fn 传递函数
+     * @param args 传递的值
+     */
+    // formatter() {
+    //   return async (fn, args) => {
+    //     if (typeof fn === 'function') {
+    //       let result = fn(args);
+    //       this.$nextTick(() => {
+    //         setTimeout(() => {
+    //           console.log(result);
+    //           return result;
+    //         }, 5000);
+    //       });
+    //     }
+    //   };
+    // },
+    /**
+     * 过滤返回选中数据
+     */
+    handleFilterData() {
+      return (index, data) => {
+        let result = data.filter((item) => {
+          return item.value === index;
+        });
+        if (result && result[0]) {
+          return result[0].label;
+        }
+        return;
+      };
+    },
+  },
+  watch: {},
+
   methods: {
+    /**
+     * 格式化数据
+     * @param fn 传递函数
+     * @param args 传递的值
+     */
+    formatter(fn, args) {
+      if (typeof fn === 'function') {
+        console.log(fn(args));
+        return fn(args);
+      }
+    },
     /**
      * 点击修改单元格
      * @param index 索引
@@ -126,7 +196,7 @@ export default {
     /**
      * @description 监听输入框是否失去焦点
      * @param index 索引
-     * @param row
+     * @param row  行的数据
      * @param scoped table 属性值
      */
     tableInputBlur(index, row, scoped) {
