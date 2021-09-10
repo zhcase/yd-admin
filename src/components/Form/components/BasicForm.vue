@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 15:24:16
+ * @LastEditTime: 2021-09-10 15:45:52
  * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
 -->
 <template>
@@ -333,6 +333,11 @@ export default {
     // 重构方法暴露出去给予修改schema属性与方法
     refactorSchemaAttr() {
       for (let i = 0; i < this.schema.length; i++) {
+        // console.log(this.schema[i]);
+        if (!this.schema[i].isHidden) {
+          this.schema[i].isHidden = false;
+          this.$set(this.schema[i], 'isHidden', false);
+        }
         if (this.schema[i].field) {
           this.schemaAttr[this.schema[i].field] = this.schema[i];
         }

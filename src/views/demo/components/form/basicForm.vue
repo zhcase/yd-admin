@@ -50,7 +50,6 @@ export default {
             },
           },
           component: 'Input',
-          isHidden: false,
           placeholder: '字段1',
         },
         {
