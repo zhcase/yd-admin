@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 15:45:52
+ * @LastEditTime: 2021-09-10 16:20:20
  * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
 -->
 <template>
@@ -96,10 +96,15 @@ export default {
       //form参数
       params: {},
       // 暴露出去的方法
-      schemaAttr: {},
     };
   },
   props: {
+    schemaAttr: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
     span: {
       // form的宽度 最宽为24（100%）
       default: 8,
@@ -137,12 +142,15 @@ export default {
       },
     },
   },
+
   // 监听form Model
   watch: {
     formModel: {
       handler(val, oldVal) {
         this.$nextTick(() => {
+          console.log(val);
           this.refactoringSchema(val);
+          this.$emit('update:formModel', val);
         });
       },
       immediate: true,
@@ -151,14 +159,7 @@ export default {
     // 监听暴露出去的方法与修改
     schemaAttr: {
       handler(val, oldVal) {
-        console.log(val);
-        // for (let key in val) {
-        //   console.log(typeof val[key]);
-        //   // console.log(JSON.stringify(val[key]));
-        //   if (val[key] != oldVal[key]) {
-        //     console.log(val);
-        //   }
-        // }
+        this.$emit('update:schemaAttr', val);
       },
       // deep: true,
     },
@@ -171,6 +172,7 @@ export default {
      */
     handleChange(val, key) {
       this.$set(this.form, key, val[key]);
+      this.$set(this.formModel, key, val[key]);
       this.$nextTick(() => {
         this.refactoringSchema(this.form);
       });

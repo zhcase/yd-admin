@@ -8,11 +8,12 @@
         :schema="basicForm"
         @handleSubmit="handleSubmit"
         :span="8"
-        ref="formModels"
-        :formModel="formModel"
+        :schemaAttr.sync="schemaAttr"
+        :formModel.sync="formModel"
       >
       </BasicForm>
     </el-card>
+    <el-button type="primary" @click="handleClick">获取值</el-button>
   </div>
 </template>
 
@@ -29,6 +30,7 @@ export default {
       formModel: {
         field6: 2,
       },
+      schemaAttr: {},
       activeNames: '1',
       formsss: {},
       basicForm: [
@@ -191,10 +193,14 @@ export default {
     };
   },
   mounted() {
-    let attr = this.$refs.formModels.schemaAttr;
-    attr.field1.isHidden = true;
+    this.$nextTick(() => {
+      this.schemaAttr.field1.isHidden = true;
+    });
   },
   methods: {
+    handleClick(e) {
+      console.log(this.formModel);
+    },
     handleSubmit(val) {
       console.log(val);
     },
