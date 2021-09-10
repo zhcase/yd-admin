@@ -154,9 +154,7 @@ export default {
   },
   methods: {
     handleSubmit(val) {
-      console.log(this.$refs.form);
       let result = this.$refs.form.handleSubmit();
-      console.log(result);
     },
   },
 };

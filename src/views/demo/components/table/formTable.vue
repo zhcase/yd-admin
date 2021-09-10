@@ -3,14 +3,14 @@
     <BasicTable
       :registerTable="table1"
       :basicTableOptions="options"
-      @select="handleSelect"
+      @selection-change="handleSelect"
       :formSchema="schemas"
       ref="table"
       @changeSwitch="changeSwitch"
     >
-      <template #selection>
+      <!-- <template #selection>
         <el-table-column type="selection" width="55"> </el-table-column>
-      </template>
+      </template> -->
       <template #form1>
         <el-form-item label="自定义">
           <el-input v-model="form1" placeholder="自定义组件" />
@@ -166,7 +166,8 @@ export default {
       // table 索引
       table1: [
         {
-          slot: 'selection',
+          type: 'selection',
+          width: 50,
         },
         {
           label: 'id',
@@ -240,7 +241,7 @@ export default {
     // },
     handleEdit(row) {
       console.log(this.$refs.table);
-      console.log(this.$refs.table.$refs.multipleTable);
+      console.log(this.$refs.table.toggleRowSelection([1, 2]));
       // console.log(this.$refs.table.$refs.multipleTable.setCurrentRow(row));
     },
     // 改变表格switch

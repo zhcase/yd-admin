@@ -1,3 +1,10 @@
+<!--
+ * @Author: zeHua
+ * @Date: 2021-07-02 15:09:51
+ * @LastEditors: zeHua
+ * @LastEditTime: 2021-09-10 11:28:01
+ * @FilePath: /yd-admin/src/components/Table/components/index.vue
+-->
 <template>
   <div class="base-table">
     <div class="base-table__form" v-if="formSchema.length > 0">
@@ -53,11 +60,19 @@
         <template v-for="item of registerTable">
           <!-- 是否隐藏该列 -->
           <template v-if="!item.isHidden">
-            <slot v-if="item.slot" :name="item.slot"> </slot>
+            <el-table-column
+              type="selection"
+              width="55"
+              :key="item.value"
+              v-if="item.type === 'selection'"
+            >
+            </el-table-column>
+
+            <slot v-else-if="item.slot" :name="item.slot"> </slot>
             <tableColumn
               :item="item"
-              @handleTableCellEdit="handleEditConfirm"
               v-else
+              @handleTableCellEdit="handleEditConfirm"
               :key="item.value"
               @updateTableData="handleUpdateTableData"
             />
@@ -84,13 +99,11 @@
 </template>
 
 <script>
-import FormMap from './FormMap.vue';
 import { downloadExcel } from './excel.js';
 import { BasiceForm } from '@/components/Form/index.js';
 import tableColumn from './tableColumn.vue';
 export default {
   components: {
-    FormMap,
     BasiceForm,
     tableColumn,
   },
@@ -304,6 +317,18 @@ export default {
           }
         }
       });
+    },
+    // 清空table
+    clearSelection() {
+      this.$refs.table.clearSelection();
+    },
+    // 选中table
+    toggleRowSelection(rows) {
+      if (rows) {
+        rows.forEach((row) => {
+          this.$refs.table.toggleRowSelection(this.tableData[row]);
+        });
+      }
     },
 
     // utils 参数 临时放置！！！！ 后期 移utils

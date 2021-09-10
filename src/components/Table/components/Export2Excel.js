@@ -1,3 +1,10 @@
+/*
+ * @Author: zeHua
+ * @Date: 2021-08-09 13:50:48
+ * @LastEditors: zeHua
+ * @LastEditTime: 2021-09-10 11:27:58
+ * @FilePath: /yd-admin/src/components/Table/components/Export2Excel.js
+ */
 /* eslint-disable */
 import { saveAs } from 'file-saver'
 import XLSX from 'xlsx'

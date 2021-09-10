@@ -1,3 +1,10 @@
+<!--
+ * @Author: zeHua
+ * @Date: 2021-09-09 09:07:00
+ * @LastEditors: zeHua
+ * @LastEditTime: 2021-09-10 14:08:53
+ * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
+-->
 <template>
   <div class="antd-form">
     <el-form
@@ -20,33 +27,29 @@
           v-show="!item.isHidden"
         >
           <slot :name="item.slot" v-if="item.slot" :field="item.field"> </slot>
-          <el-col :span="24" :xs="24">
+          <el-col
+            :span="
+              item.colProps && item.colProps.formSpan
+                ? item.colProps.formSpan
+                : 24
+            "
+            :xs="24"
+          >
             <el-form-item
               :label="item.label"
               :prop="item.field"
               v-if="!item.slot"
               :rules="item.rules"
             >
-              <el-col
-                :span="
-                  item.colProps && item.colProps.formSpan
-                    ? item.colProps.formSpan
-                    : 24
-                "
-                :xs="24"
-              >
-                <div :style="{ display: item.suffix ? 'flex' : '' }">
-                  <FormMap
-                    :schema="item"
-                    ref="formData"
-                    v-model="item.field"
-                    @handleChange="handleChange"
-                  />
-                  <span class="suffix" v-if="item.suffix">{{
-                    item.suffix
-                  }}</span>
-                </div>
-              </el-col>
+              <div :style="{ display: item.suffix ? 'flex' : '' }">
+                <FormMap
+                  :schema="item"
+                  ref="formData"
+                  v-model="item.field"
+                  @handleChange="handleChange"
+                />
+                <span class="suffix" v-if="item.suffix">{{ item.suffix }}</span>
+              </div>
             </el-form-item>
           </el-col>
         </el-col>
@@ -130,30 +133,26 @@ export default {
   // 监听form Model
   watch: {
     formModel: {
-      handler(val) {
-        for (let key in val) {
-          for (let i = 0; i < this.$refs.formData.length; i++) {
-            for (let keys in this.$refs.formData[i].form) {
-              if (key == keys) {
-                // 文本占位符
-                if (this.$refs.formData[i].schema.component === 'Text') {
-                  this.$refs.formData[i].schema.content = val[key];
-                } else {
-                  this.$refs.formData[i].form[keys] = val[key];
-                }
-              }
-            }
-          }
-        }
+      handler(val, oldVal) {
+        this.$nextTick(() => {
+          this.refactoringSchema(val);
+        });
       },
       immediate: true,
       deep: true,
     },
   },
   methods: {
-    // form 表单改变
+    /**
+     * 更新this.form
+     * @param val 当前改变的{key:value}的一个对象
+     * @param key  一个key
+     */
     handleChange(val, key) {
       this.$set(this.form, key, val[key]);
+      this.$nextTick(() => {
+        this.refactoringSchema(this.form);
+      });
     },
     /** 重置 */
     reset() {
@@ -169,7 +168,7 @@ export default {
       this.getFormData();
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.$emit('formSubmit', this.params);
+          this.$emit('handleSubmit', this.params);
           // return this.params;
         }
       });
@@ -276,7 +275,6 @@ export default {
             for (let t = 0; t < apiformdata.length; t++) {
               res = res[apiformdata[t]];
             }
-            console.log(res);
             this.schema[i].componentProps.options = res;
             if (this.schema[i].componentProps.optionsFormat) {
               this.schema[i].componentProps = this.formateOptionsData(
@@ -295,8 +293,26 @@ export default {
         }
       }
     },
+
+    /**
+     *  重新构造schema数组
+     *  @param refactorObject 重构的对象
+     */
+    refactoringSchema(refactorObject) {
+      for (let i = 0; i < this.schema.length; i++) {
+        if (refactorObject[this.schema[i].field]) {
+          this.$set(
+            this.schema[i],
+            'defaultValue',
+            refactorObject[this.schema[i].field]
+          );
+        }
+      }
+    },
   },
   created() {
+    // 构造schema数组
+    this.refactoringSchema(this.formModel);
     this.isApiData();
   },
   mounted() {

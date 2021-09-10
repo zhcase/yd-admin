@@ -1,3 +1,10 @@
+/*
+ * @Author: zeHua
+ * @Date: 2021-08-09 16:15:05
+ * @LastEditors: zeHua
+ * @LastEditTime: 2021-09-10 11:27:54
+ * @FilePath: /yd-admin/src/components/Table/components/excel.js
+ */
 import XLSX from "xlsx"
 
 /**

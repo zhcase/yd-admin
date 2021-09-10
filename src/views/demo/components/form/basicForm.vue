@@ -8,7 +8,7 @@
         :schema="basicForm"
         @handleSubmit="handleSubmit"
         :span="8"
-        :formModel="formsss"
+        :formModel="formModel"
       >
       </BasicForm>
     </el-card>
@@ -25,22 +25,17 @@ export default {
   },
   data() {
     return {
+      formModel: {
+        field6: 2,
+      },
       activeNames: '1',
       formsss: {},
       basicForm: [
         {
-          component: 'Text',
-          componentProps: {
-            color: 'red',
-            fontSize: '12px',
-          },
-          content: '<div>123232</div>',
-        },
-        {
           field: 'field1',
           colProps: {
-            span: 12,
-            formSpan: 18,
+            // span: 12,
+            // formSpan: 18,
           },
           label: '字段1',
           componentProps: {
@@ -56,6 +51,14 @@ export default {
           component: 'Input',
           isShow: true,
           placeholder: '字段1',
+        },
+        {
+          field: 'field22',
+          component: 'Text',
+          content: '2323',
+          componentProps: {
+            fontSize: '24px',
+          },
         },
 
         {
@@ -120,7 +123,15 @@ export default {
           field: 'field6',
           label: '字段6',
           component: 'Radio',
+
           componentProps: {
+            onChange: (e) => {
+              if (e === 1) {
+                this.$nextTick(() => {
+                  this.$set(this.formModel, 'field22', 'hellowolrd');
+                });
+              }
+            },
             options: [
               {
                 label: '选项1',

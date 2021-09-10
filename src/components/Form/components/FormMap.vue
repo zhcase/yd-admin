@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-01 11:47:50
  * @LastEditors: zeHua
- * @LastEditTime: 2021-08-29 13:54:58
+ * @LastEditTime: 2021-09-10 14:11:41
  * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type="jsx">
@@ -31,8 +31,8 @@ export default {
     // ;
     if (this.form[this.schema.field] === undefined) {
       this.$set(this.form, this.schema.field, this.schema.defaultValue);
-
     }
+
     return this["create" + this.schema.component](this.schema);
   },
   mounted() {
@@ -44,16 +44,28 @@ export default {
     formChange() {
       this.$emit("handleChange", this.form, this.schema.field);
     },
-      /**
-     * @description 创建一个文本显示行
+    /**
+     * @description 创建一个文本显示行 占位符
      * @param schema 数据model
      */
-    createText(schema){
-      console.log(schema);
-          return (
-            <div domPropsInnerHTML={schema.content} style={schema.componentProps}>
-            </div>
-          )
+    createText(schema) {
+      if (schema.defaultValue) {
+        schema.content = schema.defaultValue;
+      }
+      if (typeof schema.content === "number") {
+        schema.content = String(schema.content);
+      }
+
+      return (
+        <div
+          domPropsInnerHTML={schema.content ? schema.content : "占位符"}
+          style={
+            schema.content
+              ? schema.componentProps
+              : { opacity: 0, ...schema.componentProps }
+          }
+        ></div>
+      );
     },
     /**
      * @description 创建一个输入框组件
@@ -92,9 +104,12 @@ export default {
           {attr.options.map((item) => (
             // 判断是否有格式化的值
             <el-option
-              label={attr.optionsFormat?item[attr.optionsFormat.label]:item.label}
-              value={attr.optionsFormat?item[attr.optionsFormat.value]:item.value}
-
+              label={
+                attr.optionsFormat ? item[attr.optionsFormat.label] : item.label
+              }
+              value={
+                attr.optionsFormat ? item[attr.optionsFormat.value] : item.value
+              }
             ></el-option>
           ))}
         </el-select>

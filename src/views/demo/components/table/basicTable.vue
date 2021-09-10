@@ -1,9 +1,17 @@
+<!--
+ * @Author: zeHua
+ * @Date: 2021-07-06 14:25:26
+ * @LastEditors: zeHua
+ * @LastEditTime: 2021-09-10 10:59:08
+ * @FilePath: /yd-admin/src/views/demo/components/table/basicTable.vue
+-->
 <template>
   <div class="app-container">
     <BasicTable
       :registerTable="table1"
       v-if="demoStr"
       :basicTableOptions="options"
+      :span-method="objectSpanMethod"
       title="基础示例"
       :border="true"
     >
@@ -42,7 +50,10 @@ export default {
           'show-overflow-tooltip': true,
           width: 200,
           formatter: (e) => {
-            return this.demoStr;
+            if (e == 1) {
+              return 'hihi hi';
+            }
+            return e;
             // console.log(e);
           },
         },
@@ -71,7 +82,23 @@ export default {
       this.demoStr = 'demoTest';
     }, 500);
   },
-  methods: {},
+  methods: {
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        if (rowIndex % 2 === 0) {
+          return {
+            rowspan: 2,
+            colspan: 1,
+          };
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0,
+          };
+        }
+      }
+    },
+  },
 };
 </script>
 

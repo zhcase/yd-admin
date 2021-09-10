@@ -1,3 +1,10 @@
+<!--
+ * @Author: zeHua
+ * @Date: 2021-08-23 14:22:12
+ * @LastEditors: zeHua
+ * @LastEditTime: 2021-09-10 11:28:06
+ * @FilePath: /yd-admin/src/components/Table/components/tableColumn.vue
+-->
 <template>
   <el-table-column
     :prop="item.value"
@@ -9,7 +16,11 @@
     <!-- 递归合并table 头 -->
     <template v-if="item.children">
       <template v-for="(item, index) of item.children">
-        <TableColumn :item="item" :key="index"></TableColumn>
+        <TableColumn
+          :item="item"
+          :key="index"
+          @updateTableData="updateTableDataChildren"
+        ></TableColumn>
       </template>
     </template>
     <!-- {item.attr} -->
@@ -30,24 +41,29 @@
         <!-- 判断是否需要格式化  -->
         <!-- 需要 -->
         <template v-if="item.formatter">
-          {{
-            formatter(
-              item.formatter,
-              scope.row[scope.$index] &&
-                scope.row[scope.$index][scope.column.property]
-                ? ''
-                : scope.row[item.value]
-            )
-          }}
+          <span :style="item.style">
+            {{
+              formatter(
+                item.formatter,
+                scope.row[scope.$index] &&
+                  scope.row[scope.$index][scope.column.property]
+                  ? ''
+                  : scope.row[item.value],
+                scope.row
+              )
+            }}
+          </span>
         </template>
         <!-- 不需要直接展示 -->
         <template v-else>
-          {{
-            scope.row[scope.$index] &&
-            scope.row[scope.$index][scope.column.property]
-              ? ''
-              : scope.row[item.value]
-          }}
+          <span :style="item.style">
+            {{
+              scope.row[scope.$index] &&
+              scope.row[scope.$index][scope.column.property]
+                ? ''
+                : scope.row[item.value]
+            }}
+          </span>
         </template>
         <el-popover
           placement="top-start"
@@ -171,14 +187,22 @@ export default {
   watch: {},
 
   methods: {
+    // 递归触发更新table
+    updateTableDataChildren() {
+      this.$emit('updateTableData');
+    },
     /**
      * 格式化数据
      * @param fn 传递函数
      * @param args 传递的值
      */
-    formatter(fn, args) {
+    formatter(fn, args, cloumns) {
       if (typeof fn === 'function') {
-        console.log(fn(args));
+        // console.log(fn(args));
+        // console.log(cloumns);
+        // this.$set(cloumns, 'author', new Date());
+        // cloumns.author = new Date();
+        // args = fn(args);
         return fn(args);
       }
     },
