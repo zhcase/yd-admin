@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-02 15:09:51
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 11:28:01
+ * @LastEditTime: 2021-09-10 17:17:59
  * @FilePath: /yd-admin/src/components/Table/components/index.vue
 -->
 <template>
@@ -127,11 +127,12 @@ export default {
       type: String,
     },
     // table 数据
-    // tableData: {
-    //   required: true,
-    //   type: Array,
-    //   default: [],
-    // },
+    basicTableData: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
     // table 索引与title
     registerTable: {
       required: true,
@@ -232,6 +233,7 @@ export default {
           return;
         }
         let data = res;
+        this.$emit('update:basicTableData', res); //同步给与父组件table
         this.paginationConfig.total = res;
         let formatdata = this.basicTableOptions.apiFormat.split('.'); // table 数据格式
         let paginationFormat = this.basicTableOptions.paginationFormat.split(

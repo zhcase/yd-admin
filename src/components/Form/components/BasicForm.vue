@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 16:20:20
+ * @LastEditTime: 2021-09-10 18:45:38
  * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
 -->
 <template>
@@ -147,8 +147,8 @@ export default {
   watch: {
     formModel: {
       handler(val, oldVal) {
+        console.log(val);
         this.$nextTick(() => {
-          console.log(val);
           this.refactoringSchema(val);
           this.$emit('update:formModel', val);
         });
@@ -171,9 +171,10 @@ export default {
      * @param key  一个key
      */
     handleChange(val, key) {
-      this.$set(this.form, key, val[key]);
       this.$set(this.formModel, key, val[key]);
+      this.formModel[key] = val[key];
       this.$nextTick(() => {
+        this.$set(this.form, key, val[key]);
         this.refactoringSchema(this.form);
       });
     },

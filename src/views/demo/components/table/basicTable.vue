@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-06 14:25:26
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 10:59:08
+ * @LastEditTime: 2021-09-10 18:43:42
  * @FilePath: /yd-admin/src/views/demo/components/table/basicTable.vue
 -->
 <template>
@@ -12,6 +12,7 @@
       v-if="demoStr"
       :basicTableOptions="options"
       :span-method="objectSpanMethod"
+      :basicTableData.sync="getBasicTable"
       title="基础示例"
       :border="true"
     >
@@ -30,6 +31,7 @@ export default {
   data() {
     return {
       demoStr: '',
+      getBasicTable: {},
       options: {
         api: getList, // 调用接口地址
         apiFormat: 'data.items',
@@ -81,6 +83,9 @@ export default {
     setTimeout(() => {
       this.demoStr = 'demoTest';
     }, 500);
+  },
+  mounted() {
+    this.$nextTick(() => {});
   },
   methods: {
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {

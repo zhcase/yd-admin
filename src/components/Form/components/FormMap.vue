@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-01 11:47:50
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 14:11:41
+ * @LastEditTime: 2021-09-10 18:44:51
  * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type="jsx">
@@ -23,7 +23,6 @@ export default {
   },
 
   render() {
-    this.formChange(this.form);
     // 创建组件 create开头+组件名 传递this.schema参数
     if (!this.schema.componentProps) {
       this.schema.componentProps = "";
@@ -31,8 +30,11 @@ export default {
     // ;
     if (this.form[this.schema.field] === undefined) {
       this.$set(this.form, this.schema.field, this.schema.defaultValue);
-    }
 
+    }
+    this.$nextTick(()=>{
+         this.formChange(this.form);
+    })
     return this["create" + this.schema.component](this.schema);
   },
   mounted() {
@@ -42,7 +44,9 @@ export default {
   },
   methods: {
     formChange() {
+      this.$nextTick(()=>{
       this.$emit("handleChange", this.form, this.schema.field);
+      })
     },
     /**
      * @description 创建一个文本显示行 占位符

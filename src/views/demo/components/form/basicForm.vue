@@ -8,7 +8,6 @@
         :schema="basicForm"
         @handleSubmit="handleSubmit"
         :span="8"
-        :schemaAttr.sync="schemaAttr"
         :formModel.sync="formModel"
       >
       </BasicForm>
@@ -29,6 +28,7 @@ export default {
     return {
       formModel: {
         field6: 2,
+        field1: 'hello world',
       },
       schemaAttr: {},
       activeNames: '1',
@@ -130,7 +130,7 @@ export default {
             onChange: (e) => {
               if (e === 1) {
                 this.$nextTick(() => {
-                  this.$set(this.formModel, 'field22', 'hellowolrd');
+                  // this.$set(this.formModel, 'field22', 'hellowolrd');
                 });
               }
             },
@@ -194,7 +194,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.schemaAttr.field1.isHidden = true;
+      // this.schemaAttr.field1.isHidden = true;
+      setTimeout(() => {
+        this.$set(this.formModel, 'field1', 'hello hihi hi');
+      }, 2000);
     });
   },
   methods: {
