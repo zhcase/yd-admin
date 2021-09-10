@@ -8,6 +8,7 @@
         :schema="basicForm"
         @handleSubmit="handleSubmit"
         :span="8"
+        ref="formModels"
         :formModel="formModel"
       >
       </BasicForm>
@@ -49,7 +50,7 @@ export default {
             },
           },
           component: 'Input',
-          isShow: true,
+          isHidden: false,
           placeholder: '字段1',
         },
         {
@@ -70,7 +71,7 @@ export default {
         },
 
         {
-          field: 'field2',
+          field: 'field3',
           label: '字段3',
           component: 'DatePicker',
           placeholder: '请选择',
@@ -191,10 +192,8 @@ export default {
     };
   },
   mounted() {
-    setTimeout(() => {
-      this.$set(this.formsss, 'field1', 12323);
-      this.formsss.field1 = '12323';
-    }, 3000);
+    let attr = this.$refs.formModels.schemaAttr;
+    attr.field1.isHidden = true;
   },
   methods: {
     handleSubmit(val) {

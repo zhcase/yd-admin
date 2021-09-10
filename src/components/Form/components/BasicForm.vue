@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 14:08:53
+ * @LastEditTime: 2021-09-10 15:24:16
  * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
 -->
 <template>
@@ -87,19 +87,26 @@ export default {
 
   data() {
     return {
+      // form表单
       form: {},
+      // 规则
       rules: {},
-      isHiddeForm: false,
+      // 表单是否显示
       formVisible: false,
+      //form参数
       params: {},
+      // 暴露出去的方法
+      schemaAttr: {},
     };
   },
   props: {
     span: {
+      // form的宽度 最宽为24（100%）
       default: 8,
       type: Number,
     },
     formModel: {
+      // 对应的form表单
       type: Object,
       default: () => {
         return {};
@@ -140,6 +147,20 @@ export default {
       },
       immediate: true,
       deep: true,
+    },
+    // 监听暴露出去的方法与修改
+    schemaAttr: {
+      handler(val, oldVal) {
+        console.log(val);
+        // for (let key in val) {
+        //   console.log(typeof val[key]);
+        //   // console.log(JSON.stringify(val[key]));
+        //   if (val[key] != oldVal[key]) {
+        //     console.log(val);
+        //   }
+        // }
+      },
+      // deep: true,
     },
   },
   methods: {
@@ -309,8 +330,17 @@ export default {
         }
       }
     },
+    // 重构方法暴露出去给予修改schema属性与方法
+    refactorSchemaAttr() {
+      for (let i = 0; i < this.schema.length; i++) {
+        if (this.schema[i].field) {
+          this.schemaAttr[this.schema[i].field] = this.schema[i];
+        }
+      }
+    },
   },
   created() {
+    this.refactorSchemaAttr();
     // 构造schema数组
     this.refactoringSchema(this.formModel);
     this.isApiData();
