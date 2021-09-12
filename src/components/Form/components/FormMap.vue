@@ -2,8 +2,8 @@
  * @Author: zeHua
  * @Date: 2021-07-01 11:47:50
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 14:11:41
- * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
+ * @LastEditTime: 2021-09-12 12:41:22
+ * @FilePath: /yd/yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type="jsx">
 export default {
@@ -21,19 +21,32 @@ export default {
       default: "",
     },
   },
-
+  watch: {
+    schema: {
+      handler(val) {
+        if (val.defaultValue) {
+          this.$set(this.form, this.schema.field, this.schema.defaultValue);
+        }
+        console.log(val);
+        this.formChange();
+      },
+      deep: true,
+    },
+  },
   render() {
-    this.formChange(this.form);
     // 创建组件 create开头+组件名 传递this.schema参数
     if (!this.schema.componentProps) {
       this.schema.componentProps = "";
     }
-    // ;
-    if (this.form[this.schema.field] === undefined) {
-      this.$set(this.form, this.schema.field, this.schema.defaultValue);
-    }
-
+    this.formChange();
     return this["create" + this.schema.component](this.schema);
+  },
+  beforeMount() {
+    if (!this.form[this.schema.field]) {
+      this.$set(this.form, this.schema.field, this.schema.defaultValue);
+    } else {
+      this.$set(this.form, this.schema.field, this.schema.field);
+    }
   },
   mounted() {
     if (this.componentProps.field === "Input") {

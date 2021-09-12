@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import BasicForm from '@/components/Form/components/BasicForm.vue';
-import { getList } from '@/api/table';
+import BasicForm from "@/components/Form/components/BasicForm.vue";
+import { getList } from "@/api/table";
 
 export default {
   components: {
@@ -29,18 +29,19 @@ export default {
     return {
       formModel: {
         field6: 2,
+        field1: 22,
       },
       schemaAttr: {},
-      activeNames: '1',
+      activeNames: "1",
       formsss: {},
       basicForm: [
         {
-          field: 'field1',
+          field: "field1",
           colProps: {
             // span: 12,
             // formSpan: 18,
           },
-          label: '字段1',
+          label: "字段1",
           componentProps: {
             onChange: (e) => {
               // console.log(1232);
@@ -51,43 +52,43 @@ export default {
               }
             },
           },
-          component: 'Input',
-          placeholder: '字段1',
+          component: "Input",
+          placeholder: "字段1",
         },
         {
-          field: 'field22',
-          component: 'Text',
-          content: '2323',
+          field: "field22",
+          component: "Text",
+          content: "2323",
           componentProps: {
-            fontSize: '24px',
+            fontSize: "24px",
           },
         },
 
         {
-          field: 'field2',
-          label: '带后缀',
-          component: 'Input',
-          placeholder: '字段2',
-          suffix: '天',
+          field: "field2",
+          label: "带后缀",
+          component: "Input",
+          placeholder: "字段2",
+          suffix: "天",
         },
 
         {
-          field: 'field3',
-          label: '字段3',
-          component: 'DatePicker',
-          placeholder: '请选择',
-          type: 'date',
+          field: "field3",
+          label: "字段3",
+          component: "DatePicker",
+          placeholder: "请选择",
+          type: "date",
         },
         {
-          field: 'field4',
-          label: '字段4',
-          component: 'Select',
-          placeholder: '请选择',
+          field: "field4",
+          label: "字段4",
+          component: "Select",
+          placeholder: "请选择",
           clearable: true,
           componentProps: {
             // api: getList(1),
             // apiFormat: 'data.items',
-            optionsFormat: { label: 'id', value: 'pageviews' },
+            optionsFormat: { label: "id", value: "pageviews" },
             options: [{ pageviews: 4, id: 4 }],
             // options: [
             //   {
@@ -105,96 +106,99 @@ export default {
           },
         },
         {
-          field: 'field5',
-          label: '字段5',
-          component: 'Checkbox',
+          field: "field5",
+          label: "字段5",
+          component: "Checkbox",
           componentProps: {
             options: [
               {
-                label: '选项1',
+                label: "选项1",
                 value: 1,
               },
               {
-                label: '选项2',
+                label: "选项2",
                 value: 2,
               },
             ],
           },
         },
         {
-          field: 'field6',
-          label: '字段6',
-          component: 'Radio',
+          field: "field6",
+          label: "字段6",
+          component: "Radio",
 
           componentProps: {
             onChange: (e) => {
               if (e === 1) {
                 this.$nextTick(() => {
-                  this.$set(this.formModel, 'field22', 'hellowolrd');
+                  this.$set(this.formModel, "field22", "hellowolrd");
                 });
               }
             },
             options: [
               {
-                label: '选项1',
+                label: "选项1",
                 value: 1,
               },
               {
-                label: '选项2',
+                label: "选项2",
                 value: 2,
               },
             ],
           },
         },
         {
-          field: 'field7',
-          label: '字段7',
-          component: 'Switch',
+          field: "field7",
+          label: "字段7",
+          component: "Switch",
         },
         {
-          field: 'field8',
-          label: '字段8',
-          component: 'RadioButton',
+          field: "field8",
+          label: "字段8",
+          component: "RadioButton",
           componentProps: {
             options: [
               {
-                label: '选项1',
+                label: "选项1",
                 value: 1,
               },
               {
-                label: '选项2',
+                label: "选项2",
                 value: 2,
               },
             ],
           },
         },
         {
-          field: 'field9',
-          label: '字段7',
+          field: "field9",
+          label: "字段7",
           marks: {
-            0: '0°C',
-            8: '8°C',
-            37: '37°C',
+            0: "0°C",
+            8: "8°C",
+            37: "37°C",
             50: {
               style: {
-                color: '#1989FA',
+                color: "#1989FA",
               },
-              label: this.$createElement('strong', '50%'),
+              label: this.$createElement("strong", "50%"),
             },
           },
-          component: 'Slider',
+          component: "Slider",
         },
         {
-          field: 'field10',
-          label: '字段7',
-          component: 'Rate',
+          field: "field10",
+          label: "字段7",
+          component: "Rate",
         },
       ],
     };
   },
   mounted() {
     this.$nextTick(() => {
-      this.schemaAttr.field1.isHidden = true;
+      setTimeout(() => {
+        this.formModel.field1 = "hello";
+      }, 3000);
+      // this.schemaAttr.field1.isHidden = true;
     });
   },
   methods: {
