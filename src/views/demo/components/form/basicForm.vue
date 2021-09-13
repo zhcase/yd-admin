@@ -28,7 +28,7 @@ export default {
     return {
       formModel: {
         field6: 2,
-        field1: 'hello world',
+        field1: 22,
       },
       schemaAttr: {},
       activeNames: '1',
@@ -130,7 +130,7 @@ export default {
             onChange: (e) => {
               if (e === 1) {
                 this.$nextTick(() => {
-                  // this.$set(this.formModel, 'field22', 'hellowolrd');
+                  this.$set(this.formModel, 'field22', 'hellowolrd');
                 });
               }
             },
@@ -194,10 +194,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      // this.schemaAttr.field1.isHidden = true;
       setTimeout(() => {
-        this.$set(this.formModel, 'field1', 'hello hihi hi');
-      }, 2000);
+        this.formModel.field1 = 'hello';
+      }, 3000);
+      // this.schemaAttr.field1.isHidden = true;
     });
   },
   methods: {
