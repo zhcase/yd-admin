@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-14 16:39:04
+ * @LastEditTime: 2021-09-14 18:15:03
  * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
 -->
 <template>
@@ -154,7 +154,7 @@ export default {
       handler(val, oldVal) {
         this.$nextTick(() => {
           this.$set(this, 'form', val);
-          this.$emit('update:formModel', val);
+          // this.$emit('update:formModel', val);
         });
       },
       immediate: true,

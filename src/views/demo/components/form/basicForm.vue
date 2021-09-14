@@ -196,12 +196,8 @@ export default {
   },
   created() {
     this.$nextTick(() => {
-      this.formModel.field1 = 'hello';
-
-      // setInterval(() => {
-      //   this.formModel.field1 += 1;
-      // }, 3000);
-      // this.schemaAttr.field1.isHidden = true;
+      this.formModel.field1 = 'hello1232';
+      this.formModel.field22 = 'hello';
     });
   },
   mounted() {},

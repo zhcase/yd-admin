@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-01 11:47:50
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-14 14:42:49
+ * @LastEditTime: 2021-09-14 17:32:21
  * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type="jsx">
@@ -27,6 +27,7 @@ export default {
   watch: {
     value: {
       handler(val) {
+        console.log(val);
         this.form = val;
       },
       deep: true,
@@ -51,6 +52,9 @@ export default {
       }
       if (typeof schema.content === "number") {
         schema.content = String(schema.content);
+      }
+      if(this.form){
+        schema.content =this.form
       }
 
       return (
