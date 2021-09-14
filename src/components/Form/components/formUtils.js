@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 11:27:41
+ * @LastEditTime: 2021-09-13 16:55:36
  * @FilePath: /yd-admin/src/components/Form/components/formUtils.js
  */
 
@@ -68,4 +68,40 @@ export function formDataFormOptions(Arraydata, keyMap) {
     }
 
     return Arraydata
+}
+
+export function deepCopy(obj) {
+    // hash表，记录所有的对象的引用关系
+    let map = new WeakMap()
+
+    function dp(obj) {
+        let result = null
+        let keys = Object.keys(obj)
+        let key = null,
+            temp = null,
+            existobj = null
+
+        existobj = map.get(obj)
+        //如果这个对象已经被记录则直接返回
+        if (existobj) {
+            return existobj
+        }
+
+        result = {}
+        map.set(obj, result)
+
+        for (let i = 0, len = keys.length; i < len; i++) {
+            key = keys[i]
+            temp = obj[key]
+            if (temp && typeof temp === 'object') {
+                result[key] = dp(temp)
+            } else {
+                result[key] = temp
+            }
+        }
+        return result
+    }
+
+
+    return dp(obj)
 }

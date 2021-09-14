@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-01 11:47:50
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-13 09:10:56
+ * @LastEditTime: 2021-09-14 11:00:39
  * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type="jsx">
@@ -25,9 +25,22 @@ export default {
     schema: {
       handler(val) {
         if (val.defaultValue) {
+          console.log(this.schema.field);
           this.$set(this.form, this.schema.field, this.schema.defaultValue);
+        }else{
+
+          if(Array.isArray(this.form[this.schema.field])){
+               this.$set(this.form, this.schema.field, []);
+
+          }
+          else{
+          this.$set(this.form, this.schema.field, null);
+
+          }
+
         }
-        console.log(val);
+
+
         this.formChange();
       },
       deep: true,
@@ -109,6 +122,7 @@ export default {
         console.error("Select  options未知");
         return;
       }
+      console.log(schema);
       return (
         <el-select
           v-model={this.form[schema.field]}

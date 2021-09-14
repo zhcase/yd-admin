@@ -9,6 +9,7 @@
         @handleSubmit="handleSubmit"
         :span="8"
         :formModel.sync="formModel"
+        :schemaAttr.sync="schemaAttr"
       >
       </BasicForm>
     </el-card>
@@ -26,16 +27,14 @@ export default {
   },
   data() {
     return {
-      formModel: {
-        field6: 2,
-        field1: 22,
-      },
+      formModel: {},
       schemaAttr: {},
       activeNames: '1',
       formsss: {},
       basicForm: [
         {
           field: 'field1',
+          defaultValue: 'hihihi',
           colProps: {
             // span: 12,
             // formSpan: 18,
@@ -44,11 +43,11 @@ export default {
           componentProps: {
             onChange: (e) => {
               // console.log(1232);
-              if (e) {
-                this.basicForm[4].componentProps.options = [
-                  { pageviews: 1, id: 2 },
-                ];
-              }
+              // if (e) {
+              //   this.basicForm[4].componentProps.options = [
+              //     { pageviews: 1, id: 2 },
+              //   ];
+              // }
             },
           },
           component: 'Input',
@@ -68,6 +67,7 @@ export default {
           label: '带后缀',
           component: 'Input',
           placeholder: '字段2',
+          defaultValue: 22,
           suffix: '天',
         },
 
@@ -84,11 +84,14 @@ export default {
           component: 'Select',
           placeholder: '请选择',
           clearable: true,
+          defaultValue: 3,
+
+          // defaultValue: 4,
           componentProps: {
             // api: getList(1),
             // apiFormat: 'data.items',
-            optionsFormat: { label: 'id', value: 'pageviews' },
-            options: [{ pageviews: 4, id: 4 }],
+            // optionsFormat: { label: 'label', value: 'value' },
+            options: [{ label: 'hello', value: 3 }],
             // options: [
             //   {
             //     label: "hello",
@@ -192,12 +195,18 @@ export default {
       ],
     };
   },
+  created() {
+    // this.formModel.field1 = 'hello';
+    // console.log(this.formModel);
+  },
   mounted() {
     this.$nextTick(() => {
       setTimeout(() => {
-        this.formModel.field1 = 'hello';
+        this.$set(this.formModel, 'field1', '');
+        this.$set(this.formModel, 'field4', '');
+        console.log(this.formModel);
       }, 3000);
-      // this.schemaAttr.field1.isHidden = true;
+      this.schemaAttr.field1.isHidden = true;
     });
   },
   methods: {

@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-13 09:10:53
+ * @LastEditTime: 2021-09-14 11:06:42
  * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
 -->
 <template>
@@ -147,13 +147,13 @@ export default {
   watch: {
     formModel: {
       handler(val, oldVal) {
-        console.log(val);
         this.$nextTick(() => {
-          this.refactoringSchema(val);
+          console.log(val);
+          this.refactoringSchema(val, true);
           this.$emit('update:formModel', val);
         });
       },
-      immediate: true,
+      // immediate: true,
       deep: true,
     },
     // 监听暴露出去的方法与修改
@@ -171,15 +171,17 @@ export default {
      * @param key  一个key
      */
     handleChange(val, key) {
-      this.$set(this.formModel, key, val[key]);
-      this.formModel[key] = val[key];
+      if (val[key] === undefined) {
+        val[key] = '';
+      }
       this.$nextTick(() => {
-        this.$set(this.form, key, val[key]);
-        this.refactoringSchema(this.form);
+        // this.$set(this.formModel, key, val[key]);
+        // this.formModel[key] = val[key];
+        // this.$set(this.form, key, val[key]);
+        // this.refactoringSchema(this.form);
       });
     },
-    /** 重置 */
-    reset() {
+    /** 重置 */ reset() {
       for (let i = 0; i < this.$refs.formData.length; i++) {
         this.$refs.formData[i].form = {};
       }
@@ -321,7 +323,7 @@ export default {
      *  重新构造schema数组
      *  @param refactorObject 重构的对象
      */
-    refactoringSchema(refactorObject) {
+    refactoringSchema(refactorObject, val) {
       for (let i = 0; i < this.schema.length; i++) {
         if (refactorObject[this.schema[i].field]) {
           this.$set(
@@ -329,6 +331,11 @@ export default {
             'defaultValue',
             refactorObject[this.schema[i].field]
           );
+        } else {
+          if (val && !refactorObject[this.schema[i].field]) {
+            this.$set(this.schema[i], 'defaultValue', undefined);
+            111;
+          }
         }
       }
     },
