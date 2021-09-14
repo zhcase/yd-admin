@@ -9,6 +9,7 @@
         @handleSubmit="handleSubmit"
         :span="8"
         :formModel.sync="formModel"
+        :schemaAttr.sync="schemaAttr"
       >
       </BasicForm>
     </el-card>
@@ -43,12 +44,13 @@ export default {
           label: '字段1',
           componentProps: {
             onChange: (e) => {
+              console.log(e);
               // console.log(1232);
-              if (e) {
-                this.basicForm[4].componentProps.options = [
-                  { pageviews: 1, id: 2 },
-                ];
-              }
+              // if (e) {
+              //   this.basicForm[4].componentProps.options = [
+              //     { pageviews: 1, id: 2 },
+              //   ];
+              // }
             },
           },
           component: 'Input',
@@ -84,6 +86,7 @@ export default {
           component: 'Select',
           placeholder: '请选择',
           clearable: true,
+          defaultValue: 4,
           componentProps: {
             // api: getList(1),
             // apiFormat: 'data.items',
@@ -125,7 +128,6 @@ export default {
           field: 'field6',
           label: '字段6',
           component: 'Radio',
-
           componentProps: {
             onChange: (e) => {
               if (e === 1) {
@@ -192,14 +194,17 @@ export default {
       ],
     };
   },
-  mounted() {
+  created() {
     this.$nextTick(() => {
-      setTimeout(() => {
-        this.formModel.field1 = 'hello';
-      }, 3000);
+      this.formModel.field1 = 'hello';
+
+      // setInterval(() => {
+      //   this.formModel.field1 += 1;
+      // }, 3000);
       // this.schemaAttr.field1.isHidden = true;
     });
   },
+  mounted() {},
   methods: {
     handleClick(e) {
       console.log(this.formModel);

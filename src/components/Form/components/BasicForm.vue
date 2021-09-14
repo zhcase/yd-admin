@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-13 09:10:53
+ * @LastEditTime: 2021-09-14 16:39:04
  * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
 -->
 <template>
@@ -45,8 +45,7 @@
                 <FormMap
                   :schema="item"
                   ref="formData"
-                  v-model="item.field"
-                  @handleChange="handleChange"
+                  :value.sync="form[item.field]"
                 />
                 <span class="suffix" v-if="item.suffix">{{ item.suffix }}</span>
               </div>
@@ -145,11 +144,16 @@ export default {
 
   // 监听form Model
   watch: {
+    form: {
+      handler(val) {
+        this.$emit('update:formModel', val);
+      },
+      deep: true,
+    },
     formModel: {
       handler(val, oldVal) {
-        console.log(val);
         this.$nextTick(() => {
-          this.refactoringSchema(val);
+          this.$set(this, 'form', val);
           this.$emit('update:formModel', val);
         });
       },
@@ -161,39 +165,24 @@ export default {
       handler(val, oldVal) {
         this.$emit('update:schemaAttr', val);
       },
-      // deep: true,
+      deep: true,
     },
   },
   methods: {
-    /**
-     * 更新this.form
-     * @param val 当前改变的{key:value}的一个对象
-     * @param key  一个key
-     */
-    handleChange(val, key) {
-      this.$set(this.formModel, key, val[key]);
-      this.formModel[key] = val[key];
-      this.$nextTick(() => {
-        this.$set(this.form, key, val[key]);
-        this.refactoringSchema(this.form);
-      });
-    },
     /** 重置 */
     reset() {
-      for (let i = 0; i < this.$refs.formData.length; i++) {
-        this.$refs.formData[i].form = {};
-      }
-      this.formValue();
-      this.getFormData();
-      this.$emit('resetForm', this.params);
+      this.form = {};
+      this.refactoringSchema();
+      this.$refs['form'].resetFields();
+      this.refactorSchemaAttr();
+      this.$emit('resetForm', this.form);
     },
     /** 提交 */
     handleSubmit() {
       this.getFormData();
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.$emit('handleSubmit', this.params);
-          // return this.params;
+          this.$emit('handleSubmit', this.form);
         }
       });
     },
@@ -318,22 +307,25 @@ export default {
     },
 
     /**
-     *  重新构造schema数组
+     *  重新构造schema数组 重置初始值 判断是否有默认值 如果有默认值将先赋值默认值
      *  @param refactorObject 重构的对象
      */
     refactoringSchema(refactorObject) {
       for (let i = 0; i < this.schema.length; i++) {
-        if (refactorObject[this.schema[i].field]) {
-          this.$set(
-            this.schema[i],
-            'defaultValue',
-            refactorObject[this.schema[i].field]
-          );
+        if (this.schema[i].defaultValue) {
+          this.$nextTick(() => {
+            this.$set(
+              this.form,
+              this.schema[i].field,
+              this.schema[i].defaultValue
+            );
+          });
         }
       }
     },
     // 重构方法暴露出去给予修改schema属性与方法
     refactorSchemaAttr() {
+      console.log(this.schema);
       for (let i = 0; i < this.schema.length; i++) {
         if (!this.schema[i].isHidden) {
           this.schema[i].isHidden = false;
@@ -353,7 +345,6 @@ export default {
   },
   mounted() {
     this.formValue();
-    console.log(this.formModel);
   },
 };
 </script>

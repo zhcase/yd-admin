@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-08-23 14:22:12
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 11:28:06
+ * @LastEditTime: 2021-09-14 15:12:31
  * @FilePath: /yd-admin/src/components/Table/components/tableColumn.vue
 -->
 <template>
@@ -203,7 +203,7 @@ export default {
         // this.$set(cloumns, 'author', new Date());
         // cloumns.author = new Date();
         // args = fn(args);
-        return fn(args);
+        return fn(args, cloumns);
       }
     },
     /**

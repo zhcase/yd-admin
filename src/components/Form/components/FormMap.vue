@@ -2,33 +2,32 @@
  * @Author: zeHua
  * @Date: 2021-07-01 11:47:50
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-13 09:10:56
+ * @LastEditTime: 2021-09-14 14:42:49
  * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type="jsx">
 export default {
   data() {
     return {
-      form: {},
+      form: "",
       componentProps: {
         field: "Input",
       },
     };
   },
+
   props: {
     schema: {},
     value: {
-      default: "",
+      default: () => {
+        return undefined;
+      },
     },
   },
   watch: {
-    schema: {
+    value: {
       handler(val) {
-        if (val.defaultValue) {
-          this.$set(this.form, this.schema.field, this.schema.defaultValue);
-        }
-        console.log(val);
-        this.formChange();
+        this.form = val;
       },
       deep: true,
     },
@@ -38,27 +37,10 @@ export default {
     if (!this.schema.componentProps) {
       this.schema.componentProps = "";
     }
-    this.formChange();
+    this.$emit("update:value", this.form);
     return this["create" + this.schema.component](this.schema);
   },
-  beforeMount() {
-    if (!this.form[this.schema.field]) {
-      this.$set(this.form, this.schema.field, this.schema.defaultValue);
-    } else {
-      this.$set(this.form, this.schema.field, this.schema.field);
-    }
-  },
-  mounted() {
-    if (this.componentProps.field === "Input") {
-      return <Input />;
-    }
-  },
   methods: {
-    formChange() {
-      this.$nextTick(()=>{
-      this.$emit("handleChange", this.form, this.schema.field);
-      })
-    },
     /**
      * @description 创建一个文本显示行 占位符
      * @param schema 数据model
@@ -91,8 +73,8 @@ export default {
       let onChange = attr.onChange ? attr.onChange : () => {};
       return (
         <el-input
-          v-model={this.form[schema.field]}
-          {...onChange(this.form[schema.field])}
+          v-model={this.form}
+          {...onChange(this.form)}
           {...schema}
           {...{ attrs: schema }}
         ></el-input>
@@ -104,6 +86,7 @@ export default {
      */
     createSelect(schema) {
       let attr = schema.componentProps;
+
       let onChange = attr.onChange ? attr.onChange : () => {};
       if (!attr.options) {
         console.error("Select  options未知");
@@ -111,8 +94,8 @@ export default {
       }
       return (
         <el-select
-          v-model={this.form[schema.field]}
-          {...onChange(this.form[schema.field])}
+          v-model={this.form}
+          {...onChange(this.form)}
           {...{ attrs: schema }}
           style="width:100%"
         >
@@ -144,13 +127,12 @@ export default {
     createDatePicker(schema) {
       let attr = schema.componentProps;
       let onChange = attr.onChange ? attr.onChange : () => {};
-
       return (
         <el-date-picker
           type="daterange"
           range-separator="至"
-          {...onChange(this.form[schema.field])}
-          v-model={this.form[schema.field]}
+          v-model={this.form}
+          {...onChange(this.form)}
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           {...{ attrs: schema }}
@@ -162,12 +144,11 @@ export default {
      * @param schema 数据model
      */
     createTimePicker(schema) {
-      console.log(schema);
       let attr = schema.componentProps;
       return (
         <el-time-select
           {...{ attrs: schema }}
-          v-model={this.form[schema.field]}
+          v-model={this.form}
         ></el-time-select>
       );
     },
@@ -179,14 +160,14 @@ export default {
     createCheckbox(schema) {
       let attr = schema.componentProps;
       let onChange = attr.onChange ? attr.onChange : () => {};
-      if (!this.form[schema.field]) {
-        this.$set(this.form, schema.field, []);
+      if (!this.form) {
+        this.form = [];
       }
       return (
         <el-checkbox-group
-          v-model={this.form[schema.field]}
+          v-model={this.form}
           {...{ attrs: schema }}
-          {...onChange(this.form[schema.field])}
+          {...onChange(this.form)}
         >
           {attr.options.map((item, index) => (
             <el-checkbox
@@ -210,9 +191,9 @@ export default {
       let onChange = attr.onChange ? attr.onChange : () => {};
       return (
         <el-switch
-          v-model={this.form[schema.field]}
+          v-model={this.form}
           {...{ attrs: schema }}
-          {...onChange(this.form[schema.field])}
+          {...onChange(this.form)}
         ></el-switch>
       );
     },
@@ -229,9 +210,9 @@ export default {
       }
       return (
         <el-radio-group
-          v-model={this.form[schema.field]}
+          v-model={this.form}
           {...{ attrs: schema }}
-          {...onChange(this.form[schema.field])}
+          {...onChange(this.form)}
         >
           {attr.options.map((item, index) => (
             <el-radio key={index} {...{ attrs: item }} label={item.value}>
@@ -254,9 +235,9 @@ export default {
       }
       return (
         <el-radio-group
-          v-model={this.form[schema.field]}
+          v-model={this.form}
           {...{ attrs: schema }}
-          {...onChange(this.form[schema.field])}
+          {...onChange(this.form)}
         >
           {attr.options.map((item, index) => (
             <el-radio-button
@@ -279,8 +260,8 @@ export default {
       let onChange = attr.onChange ? attr.onChange : () => {};
       return (
         <el-input-number
-          v-model={this.form[schema.field]}
-          {...onChange(this.form[schema.field])}
+          v-model={this.form}
+          {...onChange(this.form)}
           {...schema}
           {...{ attrs: schema }}
         ></el-input-number>
@@ -295,9 +276,9 @@ export default {
       let onChange = attr.onChange ? attr.onChange : () => {};
       return (
         <el-cascader
-          v-model={this.form[schema.field]}
+          v-model={this.form}
           options={attr.options}
-          {...onChange(this.form[schema.field])}
+          {...onChange(this.form)}
           {...schema}
           {...{ attrs: schema }}
         ></el-cascader>
@@ -310,10 +291,13 @@ export default {
     createSlider(schema) {
       let attr = schema.componentProps;
       let onChange = attr.onChange ? attr.onChange : () => {};
+      if (!this.form) {
+        this.form = 0;
+      }
       return (
         <el-slider
-          v-model={this.form[schema.field]}
-          {...onChange(this.form[schema.field])}
+          v-model={this.form}
+          {...onChange(this.form)}
           {...schema}
           {...{ attrs: schema }}
         ></el-slider>
@@ -326,10 +310,13 @@ export default {
     createRate(schema) {
       let attr = schema.componentProps;
       let onChange = attr.onChange ? attr.onChange : () => {};
+      if (!this.form) {
+        this.form = 0;
+      }
       return (
         <el-rate
-          v-model={this.form[schema.field]}
-          {...onChange(this.form[schema.field])}
+          v-model={this.form}
+          {...onChange(this.form)}
           {...schema}
           {...{ attrs: schema }}
         ></el-rate>
