@@ -188,8 +188,16 @@ export const constantRoutes = [
       {
         path: 'tree',
         name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree' }
+        component: () => import('@/views/demo/components/tree/index.vue'),
+        meta: { title: 'Tree' },
+        children: [
+          {
+            path: 'basic',
+            name: 'BasicForm',
+            component: () => import('@/views/demo/components/tree/basicTree.vue'),
+            meta: { title: '基础Tree' }
+          }
+        ]
       }
     ]
   },

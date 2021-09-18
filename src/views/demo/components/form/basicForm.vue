@@ -41,6 +41,7 @@ export default {
             // span: 12,
             // formSpan: 18,
           },
+
           label: '字段1',
           componentProps: {
             onChange: (e) => {
@@ -77,7 +78,11 @@ export default {
           field: 'field3',
           label: '字段3',
           component: 'DatePicker',
+          style: {
+            width: '200px',
+          },
           placeholder: '请选择',
+
           type: 'date',
         },
         {
@@ -86,6 +91,7 @@ export default {
           component: 'Select',
           placeholder: '请选择',
           clearable: true,
+
           defaultValue: 4,
           componentProps: {
             // api: getList(1),
@@ -196,8 +202,8 @@ export default {
   },
   created() {
     this.$nextTick(() => {
-      this.formModel.field1 = 'hello1232';
-      this.formModel.field22 = 'hello';
+      // this.formModel.field1 = 'hello1232';
+      // this.formModel.field22 = 'hello';
     });
   },
   mounted() {},
@@ -213,6 +219,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.file1 {
+  border: 1px solid red;
+}
 .basic-form {
   .title {
     background-color: #fff;

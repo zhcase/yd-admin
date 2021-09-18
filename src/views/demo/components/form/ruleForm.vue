@@ -6,10 +6,27 @@
     <el-card class="box-card" shadow="never">
       <BasicForm
         :schema="basicForm"
-        @handleSubmit="handleSubmit"
         :span="8"
+        :formModel.sync="formModel"
         ref="form"
-      />
+      >
+        <template #form1>
+          <el-form-item
+            prop="email"
+            label="邮箱"
+            :rules="[
+              { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+              {
+                type: 'email',
+                message: '请输入正确的邮箱地址',
+                trigger: ['blur', 'change'],
+              },
+            ]"
+          >
+            <el-input v-model="formModel.email"></el-input>
+          </el-form-item>
+        </template>
+      </BasicForm>
     </el-card>
     <el-button type="primary" @click="handleSubmit">12323</el-button>
   </div>
@@ -23,6 +40,8 @@ export default {
   },
   data() {
     return {
+      formModel: {},
+      email: '',
       activeNames: '1',
       basicForm: [
         {
@@ -39,6 +58,9 @@ export default {
               trigger: 'blur',
             },
           ],
+        },
+        {
+          slot: 'form1',
         },
         {
           field: 'field2',
@@ -155,6 +177,7 @@ export default {
   methods: {
     handleSubmit(val) {
       let result = this.$refs.form.handleSubmit();
+      console.log(result);
     },
   },
 };

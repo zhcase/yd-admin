@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-14 18:15:03
+ * @LastEditTime: 2021-09-17 10:35:12
  * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
 -->
 <template>
@@ -24,7 +24,7 @@
           "
           :xs="24"
           :key="index"
-          v-show="!item.isHidden"
+          v-if="!item.isHidden"
         >
           <slot :name="item.slot" v-if="item.slot" :field="item.field"> </slot>
           <el-col
@@ -57,7 +57,7 @@
     <slot name="footer">
       <div class="antd-form__footer">
         <el-button @click="reset('form')" size="small">重 置</el-button>
-        <el-button type="primary" @click="handleSubmit('form')" size="small"
+        <el-button type="primary" @click="handleSubmit()" size="small"
           >查 询</el-button
         >
         <el-button
@@ -179,7 +179,6 @@ export default {
     },
     /** 提交 */
     handleSubmit() {
-      this.getFormData();
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.$emit('handleSubmit', this.form);

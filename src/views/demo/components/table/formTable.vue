@@ -11,11 +11,11 @@
       <!-- <template #selection>
         <el-table-column type="selection" width="55"> </el-table-column>
       </template> -->
-      <template #form1>
+      <!-- <template #form1>
         <el-form-item label="自定义">
           <el-input v-model="form1" placeholder="自定义组件" />
         </el-form-item>
-      </template>
+      </template> -->
       <template #toolbarLeft>
         <el-button size="mini" @click="handleEdit()">添加</el-button>
         <!-- <el-button size="mini" @click="handleEdit([tableData[1], tableData[2]])"

@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-01 11:47:50
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-14 17:32:21
+ * @LastEditTime: 2021-09-16 10:23:49
  * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type="jsx">
@@ -77,9 +77,10 @@ export default {
       let onChange = attr.onChange ? attr.onChange : () => {};
       return (
         <el-input
+        style='height:40px'
           v-model={this.form}
           {...onChange(this.form)}
-          {...schema}
+          {...attr}
           {...{ attrs: schema }}
         ></el-input>
       );
@@ -101,7 +102,8 @@ export default {
           v-model={this.form}
           {...onChange(this.form)}
           {...{ attrs: schema }}
-          style="width:100%"
+           {...schema}
+
         >
           {attr.options.map((item) => (
             // 判断是否有格式化的值
@@ -134,6 +136,7 @@ export default {
       return (
         <el-date-picker
           type="daterange"
+             {...schema}
           range-separator="至"
           v-model={this.form}
           {...onChange(this.form)}
@@ -171,6 +174,7 @@ export default {
         <el-checkbox-group
           v-model={this.form}
           {...{ attrs: schema }}
+           {...schema}
           {...onChange(this.form)}
         >
           {attr.options.map((item, index) => (
@@ -197,6 +201,7 @@ export default {
         <el-switch
           v-model={this.form}
           {...{ attrs: schema }}
+           {...schema}
           {...onChange(this.form)}
         ></el-switch>
       );
@@ -216,6 +221,7 @@ export default {
         <el-radio-group
           v-model={this.form}
           {...{ attrs: schema }}
+           {...schema}
           {...onChange(this.form)}
         >
           {attr.options.map((item, index) => (
@@ -241,6 +247,7 @@ export default {
         <el-radio-group
           v-model={this.form}
           {...{ attrs: schema }}
+           {...schema}
           {...onChange(this.form)}
         >
           {attr.options.map((item, index) => (
@@ -267,6 +274,7 @@ export default {
           v-model={this.form}
           {...onChange(this.form)}
           {...schema}
+
           {...{ attrs: schema }}
         ></el-input-number>
       );
@@ -282,6 +290,7 @@ export default {
         <el-cascader
           v-model={this.form}
           options={attr.options}
+
           {...onChange(this.form)}
           {...schema}
           {...{ attrs: schema }}
