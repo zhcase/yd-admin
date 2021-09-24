@@ -11,6 +11,11 @@
         :formModel.sync="formModel"
         :schemaAttr.sync="schemaAttr"
       >
+        <template #tree>
+          <el-form-item>
+            <tree-select style="width:250px"> </tree-select>
+          </el-form-item>
+        </template>
       </BasicForm>
     </el-card>
     <el-button type="primary" @click="handleClick">获取值</el-button>
@@ -20,10 +25,12 @@
 <script>
 import BasicForm from '@/components/Form/components/BasicForm.vue';
 import { getList } from '@/api/table';
+import { TreeSelect } from '@/components/Tree/index.js';
 
 export default {
   components: {
     BasicForm,
+    TreeSelect,
   },
   data() {
     return {
@@ -196,6 +203,14 @@ export default {
           field: 'field10',
           label: '字段7',
           component: 'Rate',
+        },
+        {
+          field: 'field11',
+          label: '字段11',
+          component: 'TreeSelect',
+        },
+        {
+          slot: 'tree',
         },
       ],
     };

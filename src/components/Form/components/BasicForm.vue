@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-17 10:35:12
+ * @LastEditTime: 2021-09-25 23:56:15
  * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
 -->
 <template>
@@ -350,7 +350,7 @@ export default {
 <style lang="scss" scoped>
 .antd-form {
   form {
-    overflow: hidden;
+    /* overflow: hidden; */
     ::v-deep .el-form-item {
       /* display: flex; */
       /* overflow: hidden; */

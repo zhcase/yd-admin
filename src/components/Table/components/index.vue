@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-02 15:09:51
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 17:17:59
+ * @LastEditTime: 2021-09-24 14:01:55
  * @FilePath: /yd-admin/src/components/Table/components/index.vue
 -->
 <template>
@@ -227,6 +227,8 @@ export default {
         ...this.basicTableOptions.apiParams,
       };
       parmas = this.formDataParams(parmas);
+
+      //调用查询table接口
       this.basicTableOptions.api({ ...parmas }).then((res) => {
         if (!this.basicTableOptions.apiFormat) {
           console.error('缺少apiFormat');
@@ -234,6 +236,7 @@ export default {
         }
         let data = res;
         this.$emit('update:basicTableData', res); //同步给与父组件table
+        this.$emit('queryBasicTable', parmas, res); // 查询返回参数与返回的整个查询的结果
         this.paginationConfig.total = res;
         let formatdata = this.basicTableOptions.apiFormat.split('.'); // table 数据格式
         let paginationFormat = this.basicTableOptions.paginationFormat.split(
@@ -248,7 +251,6 @@ export default {
           ];
         }
         this.tableData = data;
-
         this.tableLoading = false;
       });
     },
@@ -383,7 +385,7 @@ export default {
   }
   &__form {
     height: auto;
-    overflow: hidden;
+    /* overflow: hidden; */
     padding: 10px;
     background-color: #fff;
     &__content {

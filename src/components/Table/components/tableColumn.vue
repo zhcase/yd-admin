@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-08-23 14:22:12
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-18 13:38:15
+ * @LastEditTime: 2021-09-23 17:55:09
  * @FilePath: /yd-admin/src/components/Table/components/tableColumn.vue
 -->
 <template>
@@ -49,7 +49,8 @@
                   scope.row[scope.$index][scope.column.property]
                   ? ''
                   : scope.row[item.value],
-                scope.row
+                scope.row,
+                scope
               )
             }}
           </span>
@@ -196,14 +197,14 @@ export default {
      * @param fn 传递函数
      * @param args 传递的值
      */
-    formatter(fn, args, cloumns) {
+    formatter(fn, args, cloumns, scope) {
       if (typeof fn === 'function') {
         // console.log(fn(args));
         // console.log(cloumns);
         // this.$set(cloumns, 'author', new Date());
         // cloumns.author = new Date();
         // args = fn(args);
-        return fn(args, cloumns);
+        return fn(args, cloumns, scope);
       }
     },
     /**

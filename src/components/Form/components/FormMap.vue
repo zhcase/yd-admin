@@ -2,10 +2,11 @@
  * @Author: zeHua
  * @Date: 2021-07-01 11:47:50
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-16 10:23:49
+ * @LastEditTime: 2021-09-23 10:48:53
  * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type="jsx">
+import {TreeSelect} from '@/components/Tree/index.js'
 export default {
   data() {
     return {
@@ -14,6 +15,9 @@ export default {
         field: "Input",
       },
     };
+  },
+  components:{
+    TreeSelect
   },
 
   props: {
@@ -290,7 +294,6 @@ export default {
         <el-cascader
           v-model={this.form}
           options={attr.options}
-
           {...onChange(this.form)}
           {...schema}
           {...{ attrs: schema }}
@@ -335,6 +338,12 @@ export default {
         ></el-rate>
       );
     },
+    createTreeSelect(){
+        return (
+          <tree-select>
+          </tree-select>
+        )
+    }
   },
 };
 </script>

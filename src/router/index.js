@@ -198,7 +198,21 @@ export const constantRoutes = [
             meta: { title: '基础Tree' }
           }
         ]
-      }
+      },
+      {
+        path: 'dialog',
+        name: 'Dialog',
+        component: () => import('@/views/demo/components/dialog/index.vue'),
+        meta: { title: 'Dialog' },
+        children: [
+          {
+            path: 'basic',
+            name: 'BasicDialog',
+            component: () => import('@/views/demo/components/dialog/basicDialog.vue'),
+            meta: { title: '基础Dialog' }
+          }
+        ]
+      },
     ]
   },
 

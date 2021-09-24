@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-17 09:39:39
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-18 15:56:41
+ * @LastEditTime: 2021-09-24 10:04:57
  * @FilePath: /yd-admin/src/components/Tree/components/TreeSelect.vue
 -->
 <template>
@@ -13,12 +13,13 @@
       collapse-tags
       @clear="handleSelectClear"
       :clearable="true"
+      style="width:100%"
       @remove-tag="selectRemoveTag"
       placeholder="请选择"
       :popper-append-to-body="false"
     >
       <el-option v-model="treeDataValue" class="tree-select__options">
-        <div v-if="data[0]">
+        <div v-show="data[0]">
           <el-tree
             v-on="$listeners"
             v-bind="$attrs"
@@ -26,6 +27,7 @@
             :props="props"
             @node-click="handleNodeClick"
             :show-checkbox="multiple"
+            filterCheck="userId"
             ref="tree"
             @check="getHalfCheckedNodes"
           >
@@ -57,6 +59,9 @@ export default {
     };
   },
   props: {
+    filterCheck: {
+      type: String,
+    },
     props: {
       type: Object,
     },
@@ -67,6 +72,9 @@ export default {
     data: {
       // 构建 Tree 数据
       type: Array,
+      default: () => {
+        return [];
+      },
     },
     multiple: {
       //是否开启多选
@@ -124,7 +132,15 @@ export default {
       this.treeOptionsArray = [];
       this.treeValue = [];
       console.log(data);
+
+      let checkedNodes = data.checkedNodes.filter((item) => {
+        if (item.userId) {
+          return item;
+        }
+      });
+
       this.treeOptionsArray = data.checkedNodes;
+      console.log(checkedNodes);
       this.$nextTick(() => {
         this.treeValue = data.checkedKeys;
       });

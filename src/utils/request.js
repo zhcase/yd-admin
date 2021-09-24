@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-02 13:43:42
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-18 15:44:04
+ * @LastEditTime: 2021-09-22 17:04:59
  * @FilePath: /yd-admin/src/utils/request.js
  */
 import axios from 'axios'
@@ -27,7 +27,7 @@ service.interceptors.request.use(
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
       config.headers['X-Token'] = getToken()
-      config.headers['Authorization'] = 'Bearer ' + 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjEzZDU2NjYxLTFhNDQtNGRiZS1iZTE1LTc1MzA4ZjBjODg2YiJ9.NnWUx3PkgdL42NcFmodcT3CuZt1Q_5ewBWN7kjXNHA8W_92ttXrEjBaxbTelxv0NJSroMuA3Jjk_zwCR4JJopQ' // 让每个请求携带自定义token 请根据实际情况自行修改
+      config.headers['Authorization'] = 'Bearer ' + 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjE5YTRiMGExLWE4YzMtNDlkZC04OWVhLTViODhhNmZlNGUzMSJ9.E_2iHMk_Cgv4erwtFCyxw6D42OM0XBu6rSUKB2AdkOwoPXGqj3VOzLgEKZ_rDXoFiAaFCRx5q0Bbu834bPa6LA' // 让每个请求携带自定义token 请根据实际情况自行修改
     }
     return config
   },

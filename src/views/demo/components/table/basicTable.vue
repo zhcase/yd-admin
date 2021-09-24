@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-06 14:25:26
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-10 18:43:42
+ * @LastEditTime: 2021-09-23 18:03:42
  * @FilePath: /yd-admin/src/views/demo/components/table/basicTable.vue
 -->
 <template>
@@ -51,11 +51,12 @@ export default {
           value: 'author',
           'show-overflow-tooltip': true,
           width: 200,
-          formatter: (e) => {
-            if (e == 1) {
-              return 'hihi hi';
-            }
-            return e;
+          formatter: (e, cloumns, scope) => {
+            // console.log(cloumns);
+            // if (e == 1) {
+            //   return 'hihi hi';
+            // }
+            // return e;
             // console.log(e);
           },
         },

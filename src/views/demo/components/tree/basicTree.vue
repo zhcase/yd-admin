@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-17 09:32:35
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-18 18:09:16
+ * @LastEditTime: 2021-09-26 00:14:20
  * @FilePath: /yd-admin/src/views/demo/components/tree/basicTree.vue
 -->
 <template>
@@ -34,8 +34,8 @@
             ref="tree"
             show-checkbox
             :props="defaultProps"
+            @check-change="handleCheckChange"
             node-key="id"
-            :default-expanded-keys="[2, 3]"
           ></basic-tree>
         </div>
       </el-card>
@@ -63,9 +63,9 @@
         <div class="text item">
           <tree-select
             :data="TreeSelectData"
-            default-expand-all
             show-checkbox
             @getTreeValue="getTreeValue"
+            @node-expand="handleExpand"
             :props="defaultProps"
             ref="tree"
             :multiple="true"
@@ -73,12 +73,31 @@
             :load="loadNode"
             node-key="orgId"
             :format="['orgId', 'superiorId']"
-            :default-expanded-keys="[2, 3]"
           ></tree-select>
         </div>
       </el-card>
     </el-col>
-    <el-button type="primary" @click="handleClick">tree</el-button>
+    <el-col :span="6" style="margin-top:20px;">
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>可搜索Tree</span>
+        </div>
+
+        <div class="text item">
+          <el-input placeholder="输入关键字进行过滤" v-model="filterText">
+          </el-input>
+          <basic-tree
+            :data="data"
+            :props="defaultProps"
+            node-key="id"
+            :filter-node-method="filterNode"
+            ref="tree"
+            :default-expanded-keys="[2, 3]"
+          ></basic-tree>
+        </div>
+      </el-card>
+    </el-col>
+    <!-- <el-button type="primary" @click="handleClick">tree</el-button> -->
   </el-row>
 </template>
 
@@ -95,16 +114,18 @@ export default {
     return {
       method: null,
       node: [],
+      filterText: '',
       resolve: null,
+      isShow: false,
+      fetchData: [],
       prop: {
-        label: 'name',
-        children: 'zones',
-        isLeaf: 'leaf',
+        label: 'label',
+        children: 'children',
       },
       TreeSelectData: [],
       defaultProps: {
-        value: 'orgId',
-        label: 'orgName',
+        value: 'id',
+        label: 'label',
         children: 'children',
       },
       data: [
@@ -159,10 +180,26 @@ export default {
       ],
     };
   },
+  watch: {
+    filterText(val) {
+      console.log(this.$refs.tree.method);
+      console.log(val);
+      this.$refs.tree.method.filter(val);
+    },
+  },
 
   methods: {
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
+    handleCheckChange(data, checked, indeterminate) {
+      console.log(data, checked, indeterminate);
+    },
     handleExpand(val) {
-      // console.log(val);
+      console.log(val);
+      if (val.children && val.children.length === 0) {
+      }
       // console.log(this.node);
     },
     getTreeValue(val) {
@@ -173,23 +210,30 @@ export default {
     },
     loadNode(node, resolve, data) {
       this.resolve = resolve;
+      console.log('hello world');
+      console.log(node.level);
+      console.log(node);
 
-      if (node.level > 0 && node.level < 3) {
+      if (node.level > 0 && node.level < 4) {
         //默认展开的层级,需要默认几层就判断一下.
         return resolve(node.data.children); //核心是这里,每次展开的时候loadNode方法就会调用一次,只需要把node.data.[这里是默认的child字段]  加载到resolve方法里就可以了.就可以实现默认加载N级,之后再使用懒加载
       } else {
-        console.log(node);
-        if (node.data && node.data.children === 0) {
+        if (
+          node.data &&
+          node.data.children &&
+          node.data.children.length === 0
+        ) {
           getUserTree(node.data.orgId).then((res) => {
-            // val.children = res.data;
-            // this.$set(val, 'children', res.data);
-            // console.log(val);
-            // console.log(this.node);
-            // this.loadNode(this.node, this.resolve, res.data);
-            // resolve(res.data);
+            resolve(res.data);
           });
         } else {
-          if (node.data && node.data.length > 0) {
+          if (
+            node.data &&
+            node.data.children &&
+            node.data.children.length > 0
+          ) {
+            console.log('hello world');
+
             return resolve(node.data.children);
           }
         }
@@ -214,6 +258,9 @@ export default {
   },
   mounted() {
     // this.TreeSelectData=
+    this.$nextTick(() => {
+      this.isShow = true;
+    });
   },
 };
 </script>
