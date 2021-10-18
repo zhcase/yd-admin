@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-08-19 13:36:56
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-06 10:23:53
+ * @LastEditTime: 2021-09-28 11:10:15
  * @FilePath: /yd-admin/src/views/demo/components/table/editCellTable.vue
 -->
 <template>
@@ -47,6 +47,17 @@ export default {
           edit: true,
           'show-overflow-tooltip': true,
           width: 200,
+          formatter: (e, c, s) => {
+            // console.log(e);
+            // console.log(c);
+            // console.log();
+            if (s.$index % 2 != 0) {
+              console.log(c);
+              return 'hihi';
+            }
+
+            return c.author;
+          },
         },
         {
           label: 'title',

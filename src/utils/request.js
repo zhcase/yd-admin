@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-02 13:43:42
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-22 17:04:59
+ * @LastEditTime: 2021-10-18 11:41:50
  * @FilePath: /yd-admin/src/utils/request.js
  */
 import axios from 'axios'
@@ -14,7 +14,7 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 100000 // request timeout
 })
 
 // request interceptor
@@ -27,7 +27,8 @@ service.interceptors.request.use(
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
       config.headers['X-Token'] = getToken()
-      config.headers['Authorization'] = 'Bearer ' + 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjE5YTRiMGExLWE4YzMtNDlkZC04OWVhLTViODhhNmZlNGUzMSJ9.E_2iHMk_Cgv4erwtFCyxw6D42OM0XBu6rSUKB2AdkOwoPXGqj3VOzLgEKZ_rDXoFiAaFCRx5q0Bbu834bPa6LA' // 让每个请求携带自定义token 请根据实际情况自行修改
+      // config.headers['content-length'] = getToken()
+      config.headers['Authorization'] = 'Bearer ' + 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjEzMDRjOTZmLTcwMjctNDRmNS04NzFmLWIwNGI5NjNiZWI4ZCJ9.yYqSbkajAGSwPg6Nu59K-AcXdfK8XmZr7fddURIElipVfEnTkUB2WNvGSocPtI8dxhHIGEjnWRpbPMb0Xh9D6A' // 让每个请求携带自定义token 请根据实际情况自行修改
     }
     return config
   },
@@ -52,7 +53,11 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-
+    console.log(res)
+    if (!res.code) {
+      console.log(response)
+      return response
+    }
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000 && res.code !== 200) {
       Message({

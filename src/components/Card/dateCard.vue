@@ -33,6 +33,33 @@
         </el-col>
       </div>
     </el-card>
+
+    <el-form
+      :model="dynamicValidateForm"
+      ref="dynamicValidateForm"
+      label-width="100px"
+      class="demo-dynamic"
+    >
+      <el-form-item
+        v-for="(item, index) of formList"
+        :key="index"
+        :prop="'formModel' + index + '.email'"
+        label="邮箱"
+        :rules="[
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+        ]"
+      >
+        <el-input v-model="formModel[index][item.filename]"></el-input>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="submitForm('dynamicValidateForm')"
+          >提交</el-button
+        >
+        <el-button @click="addDomain">新增域名</el-button>
+        <el-button @click="resetForm('dynamicValidateForm')">重置</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -69,6 +96,13 @@ export default {
   },
   data() {
     return {
+      dynamicValidateForm: {},
+      formModel: [{}],
+      formList: [
+        {
+          filename: "email",
+        },
+      ],
       currentYear: 0,
     };
   },
@@ -86,11 +120,36 @@ export default {
       this.currentYear++;
       this.$emit("changeDate", this.currentYear);
     },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    removeDomain(item) {
+      var index = this.dynamicValidateForm.domains.indexOf(item);
+      if (index !== -1) {
+        this.dynamicValidateForm.domains.splice(index, 1);
+      }
+    },
+    addDomain() {
+      this.dynamicValidateForm.domains.push({
+        value: "",
+        key: Date.now(),
+      });
+    },
   },
 };
 </script>
 
-<style  lang='scss' scoped>
+<style lang="scss" scoped>
 .date-card {
   width: 500px;
   height: auto;

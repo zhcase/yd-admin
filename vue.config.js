@@ -36,6 +36,16 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    proxy: {
+      // detail: https://cli.vuejs.org/config/#devserver-proxy
+      '/api': {
+        target: `http://192.168.10.19:8081`,
+        changeOrigin: true,
+        pathRewrite: {
+          "^/api": ""
+        }
+      }
+    },
     before: require('./mock/mock-server.js')
   },
   configureWebpack: {
@@ -132,7 +142,7 @@ module.exports = {
           return `
             @import "@/assets/scss/var.scss";
             @import "@/assets/scss/mixin.scss";
-          `;
+          `
         }
       }
     }

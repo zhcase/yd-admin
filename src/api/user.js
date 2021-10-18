@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-06-30 09:40:25
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-18 16:15:18
+ * @LastEditTime: 2021-10-18 13:55:07
  * @FilePath: /yd-admin/src/api/user.js
  */
 import request from '@/utils/request'
@@ -49,3 +49,20 @@ export function getUserTree(orgId) {
   })
 }
 
+
+export function download(orgId) {
+  let data = {
+    range: orgId
+  }
+  return request({
+    url: 'http://192.168.10.19:8081/base/staffAgreement/chunkDownload',
+    method: 'post',
+    responseType: 'blob',
+    data
+    // headers: {
+    //   'data-type': 'Buffer',
+    //   'Content-Type': 'multipart/form-data'
+    // }
+
+  })
+}

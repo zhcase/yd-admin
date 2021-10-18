@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-17 09:32:35
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-26 00:14:20
+ * @LastEditTime: 2021-10-12 17:08:48
  * @FilePath: /yd-admin/src/views/demo/components/tree/basicTree.vue
 -->
 <template>
@@ -30,6 +30,7 @@
         <div class="text item">
           <basic-tree
             :data="data"
+            :default-checked-keys="[5]"
             default-expand-all
             ref="tree"
             show-checkbox
@@ -58,10 +59,20 @@
     <el-col :span="6">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>可勾选默认展开</span>
+          <span>可勾选默认展开1</span>
         </div>
         <div class="text item">
           <tree-select
+            :data="data"
+            width="100%"
+            :props="defaultProps"
+            ref="treeSelect"
+            :multiple="false"
+            :default-checked-keys="[10]"
+            node-key="id"
+          ></tree-select>
+          <el-button type="primary" @click="handleClickClear"></el-button>
+          <!-- <tree-select
             :data="TreeSelectData"
             show-checkbox
             @getTreeValue="getTreeValue"
@@ -73,7 +84,7 @@
             :load="loadNode"
             node-key="orgId"
             :format="['orgId', 'superiorId']"
-          ></tree-select>
+          ></tree-select> -->
         </div>
       </el-card>
     </el-col>
@@ -87,7 +98,7 @@
           <el-input placeholder="输入关键字进行过滤" v-model="filterText">
           </el-input>
           <basic-tree
-            :data="data"
+            :data="TreeSelectData"
             :props="defaultProps"
             node-key="id"
             :filter-node-method="filterNode"
@@ -102,10 +113,10 @@
 </template>
 
 <script>
-import { BasicTree, TreeSelect } from '@/components/Tree/index.js';
-import { getTreeList, getUserTree } from '@/api/user.js';
+import { BasicTree, TreeSelect } from "@/components/Tree/index.js";
+import { getTreeList, getUserTree } from "@/api/user.js";
 export default {
-  name: 'baseTree',
+  name: "baseTree",
   components: {
     BasicTree,
     TreeSelect,
@@ -114,36 +125,36 @@ export default {
     return {
       method: null,
       node: [],
-      filterText: '',
+      filterText: "",
       resolve: null,
       isShow: false,
       fetchData: [],
       prop: {
-        label: 'label',
-        children: 'children',
+        label: "label",
+        children: "children",
       },
       TreeSelectData: [],
       defaultProps: {
-        value: 'id',
-        label: 'label',
-        children: 'children',
+        value: "id",
+        label: "label",
+        children: "children",
       },
       data: [
         {
           id: 1,
-          label: '一级 1',
+          label: "一级 1",
           children: [
             {
               id: 4,
-              label: '二级 1-1',
+              label: "二级 1-1",
               children: [
                 {
                   id: 9,
-                  label: '三级 1-1-1',
+                  label: "三级 1-1-1",
                 },
                 {
                   id: 10,
-                  label: '三级 1-1-2',
+                  label: "三级 1-1-2",
                 },
               ],
             },
@@ -151,29 +162,29 @@ export default {
         },
         {
           id: 2,
-          label: '一级 2',
+          label: "一级 2",
           children: [
             {
               id: 5,
-              label: '二级 2-1',
+              label: "二级 2-1",
             },
             {
               id: 6,
-              label: '二级 2-2',
+              label: "二级 2-2",
             },
           ],
         },
         {
           id: 3,
-          label: '一级 3',
+          label: "一级 3",
           children: [
             {
               id: 7,
-              label: '二级 3-1',
+              label: "二级 3-1",
             },
             {
               id: 8,
-              label: '二级 3-2',
+              label: "二级 3-2",
             },
           ],
         },
@@ -189,6 +200,9 @@ export default {
   },
 
   methods: {
+    handleClickClear() {
+      this.$refs.treeSelect.clearTreeValue();
+    },
     filterNode(value, data) {
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
@@ -210,9 +224,6 @@ export default {
     },
     loadNode(node, resolve, data) {
       this.resolve = resolve;
-      console.log('hello world');
-      console.log(node.level);
-      console.log(node);
 
       if (node.level > 0 && node.level < 4) {
         //默认展开的层级,需要默认几层就判断一下.
@@ -232,7 +243,7 @@ export default {
             node.data.children &&
             node.data.children.length > 0
           ) {
-            console.log('hello world');
+            console.log("hello world");
 
             return resolve(node.data.children);
           }
@@ -252,9 +263,9 @@ export default {
     },
   },
   created() {
-    getTreeList().then((res) => {
-      this.TreeSelectData = res.data;
-    });
+    // getTreeList().then((res) => {
+    //   this.TreeSelectData = res.data;
+    // });
   },
   mounted() {
     // this.TreeSelectData=

@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-17 09:39:39
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-24 10:04:57
+ * @LastEditTime: 2021-10-12 17:04:16
  * @FilePath: /yd-admin/src/components/Tree/components/TreeSelect.vue
 -->
 <template>
@@ -13,7 +13,7 @@
       collapse-tags
       @clear="handleSelectClear"
       :clearable="true"
-      style="width:100%"
+      :style="{ width: width }"
       @remove-tag="selectRemoveTag"
       placeholder="请选择"
       :popper-append-to-body="false"
@@ -46,21 +46,27 @@
   </div>
 </template>
 <script>
-import { handleTree } from '../utils.js';
+import { handleTree } from "../utils.js";
 export default {
-  name: 'basicTree',
+  name: "basicTree",
   data() {
     return {
       method: null,
       treeValue: [], // tree选中的value 值
       treeData: [], //构建 tree的数组
-      treeDataValue: '', // 暂时未用
+      treeDataValue: "", // 暂时未用
       treeOptionsArray: [], // 生成虚拟options 对应select 做展示
     };
   },
   props: {
     filterCheck: {
       type: String,
+    },
+    width: {
+      type: String,
+      default: () => {
+        return "100%";
+      },
     },
     props: {
       type: Object,
@@ -96,15 +102,26 @@ export default {
   },
   mounted() {
     this.method = this.$refs.tree;
-    setTimeout(() => {
-      this.handleFormat();
-    }, 1000);
+    this.handleFormat();
+    // setTimeout(() => {
+
+    // }, 500);
   },
   methods: {
+    // 清空TreeValue的值
+    clearTreeValue() {
+      this.treeValue = [];
+      this.handleSelectClear();
+    },
     /**
      * 判断是否select清空 清空时 同时清空Tree的value
      */
     handleSelectClear() {
+      console.log(this.treeValue);
+      if(!this.treeValue){
+              this.$refs.tree.setCheckedKeys([]);
+        return;
+      }
       this.$refs.tree.setCheckedKeys(this.treeValue);
     },
     /**
@@ -113,8 +130,30 @@ export default {
     handleFormat() {
       if (this.format) {
         this.treeData = handleTree(this.data, ...this.format);
-        console.log(this.treeData);
+      } else {
+        this.treeData = this.data;
       }
+      // 模拟树形结构  初始化默认选中 选中对象
+      this.$nextTick(() => {
+        let TreeCheckoutObj = {
+          checkedKeys: this.$refs.tree.getCheckedKeys(),
+          checkedNodes: this.$refs.tree.getCheckedNodes(),
+        };
+        //判断是否多选 多选走多选的逻辑
+        if (this.multiple) {
+          this.getHalfCheckedNodes("", TreeCheckoutObj);
+        } else {
+          console.log(TreeCheckoutObj);
+          for (let i = 0; i < TreeCheckoutObj.checkedNodes.length; i++) {
+            if (
+              TreeCheckoutObj.checkedNodes[i].id ===
+              TreeCheckoutObj.checkedKeys[0]
+            ) {
+              this.handleNodeClick(TreeCheckoutObj.checkedNodes[i]);
+            }
+          }
+        }
+      });
     },
     /**
      * 多选的时候移除的时候同步treeselect
@@ -126,13 +165,19 @@ export default {
     /**
      * checkbox 勾选值
      * @param val 当前勾选的值
-     * @param  data 当前选中的Key 与选中的节点
+     * @param  data 当前选中的Key 与选中的节点 吧
      */
     getHalfCheckedNodes(val, data) {
+      console.log(val);
       this.treeOptionsArray = [];
-      this.treeValue = [];
+      //判断是否多选 赋值v-model类型
+      if (this.multiple) {
+        this.treeValue = [];
+      } else {
+        this.treeValue = "";
+      }
+      console.log(val);
       console.log(data);
-
       let checkedNodes = data.checkedNodes.filter((item) => {
         if (item.userId) {
           return item;
@@ -142,7 +187,11 @@ export default {
       this.treeOptionsArray = data.checkedNodes;
       console.log(checkedNodes);
       this.$nextTick(() => {
-        this.treeValue = data.checkedKeys;
+        if (this.multiple) {
+          this.treeValue = data.checkedKeys;
+        } else {
+          this.treeValue = data.checkedKeys.join();
+        }
       });
     },
     /**
@@ -150,6 +199,7 @@ export default {
      * @param 当选的值
      */
     handleNodeClick(data) {
+      console.log(data);
       if (!this.multiple) {
         this.treeOptionsArray = [];
         this.treeOptionsArray.push(data);
@@ -161,7 +211,7 @@ export default {
      *
      */
     getPropsTreeKeys() {
-      this.$emit('getTreeValue', this.treeValue);
+      this.$emit("getTreeValue", this.treeValue);
     },
   },
 };

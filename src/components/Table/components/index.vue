@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-02 15:09:51
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-24 14:01:55
+ * @LastEditTime: 2021-09-29 14:40:37
  * @FilePath: /yd-admin/src/components/Table/components/index.vue
 -->
 <template>
@@ -99,9 +99,9 @@
 </template>
 
 <script>
-import { downloadExcel } from './excel.js';
-import { BasiceForm } from '@/components/Form/index.js';
-import tableColumn from './tableColumn.vue';
+import { downloadExcel } from "./excel.js";
+import { BasiceForm } from "@/components/Form/index.js";
+import tableColumn from "./tableColumn.vue";
 export default {
   components: {
     BasiceForm,
@@ -184,7 +184,7 @@ export default {
      * 修改确认
      */
     handleEditConfirm(params) {
-      this.$emit('handleTableCellEdit', params);
+      this.$emit("handleTableCellEdit", params);
     },
 
     /**
@@ -201,7 +201,7 @@ export default {
     formatJson(filterVal) {
       return this.tableData.map((v) =>
         filterVal.map((j) => {
-          if (j === 'timestamp') {
+          if (j === "timestamp") {
             return parseTime(v[j]);
           } else {
             return v[j];
@@ -231,16 +231,16 @@ export default {
       //调用查询table接口
       this.basicTableOptions.api({ ...parmas }).then((res) => {
         if (!this.basicTableOptions.apiFormat) {
-          console.error('缺少apiFormat');
+          console.error("缺少apiFormat");
           return;
         }
         let data = res;
-        this.$emit('update:basicTableData', res); //同步给与父组件table
-        this.$emit('queryBasicTable', parmas, res); // 查询返回参数与返回的整个查询的结果
+        this.$emit("update:basicTableData", res); //同步给与父组件table
+        this.$emit("queryBasicTable", parmas, res); // 查询返回参数与返回的整个查询的结果
         this.paginationConfig.total = res;
-        let formatdata = this.basicTableOptions.apiFormat.split('.'); // table 数据格式
+        let formatdata = this.basicTableOptions.apiFormat.split("."); // table 数据格式
         let paginationFormat = this.basicTableOptions.paginationFormat.split(
-          '.'
+          "."
         ); // 分页总数table 格式
         for (let i = 0; i < formatdata.length; i++) {
           data = data[formatdata[i]];
@@ -256,7 +256,7 @@ export default {
     },
     // 重置
     handleFormReset(form) {
-      this.$emit('resetForm', form);
+      this.$emit("resetForm", form);
       this.$nextTick(() => {
         this.handleQuery(form);
       });
@@ -269,11 +269,11 @@ export default {
       if (this.$refs.form) {
         if (this.formVisible) {
           for (let i = 3; i < this.$refs.form.$children.length; i++) {
-            this.$refs.form.$children[i].$el.style = 'display:none';
+            this.$refs.form.$children[i].$el.style = "display:none";
           }
         } else {
           for (let i = 3; i < this.$refs.form.$children.length; i++) {
-            this.$refs.form.$children[i].$el.style = 'display:block';
+            this.$refs.form.$children[i].$el.style = "display:block";
           }
         }
       }
@@ -281,7 +281,7 @@ export default {
     // 刷新
     handleRefresh() {
       this.handleQuery();
-      this.$emit('getTableData');
+      this.$emit("getTableData");
     },
     //每页 ${val} 条
     handleSizeChange(val) {
@@ -310,7 +310,7 @@ export default {
      * @param arr 数组
      */
     handleSwitch(row, index, arr) {
-      this.$emit('changeSwitch', row, (res) => {
+      this.$emit("changeSwitch", row, (res) => {
         if (res) {
           for (let i = 0; i < arr.length; i++) {
             if (row[index] !== arr[i].value) {
@@ -339,11 +339,11 @@ export default {
     formDataParams(obj) {
       let params = {};
       for (let key in obj) {
-        if (typeof obj[key] !== 'number') {
+        if (typeof obj[key] !== "number") {
           if (obj[key]) {
-            params[key] = String(obj[key]).replace(/(^\s*)|(\s*$)/g, '');
+            params[key] = String(obj[key]).replace(/(^\s*)|(\s*$)/g, "");
           } else {
-            params[key] = '';
+            params[key] = "";
           }
         } else {
           if (obj[key]) {

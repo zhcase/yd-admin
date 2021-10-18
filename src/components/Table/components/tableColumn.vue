@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-08-23 14:22:12
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-23 17:55:09
+ * @LastEditTime: 2021-09-28 16:59:46
  * @FilePath: /yd-admin/src/components/Table/components/tableColumn.vue
 -->
 <template>
@@ -197,14 +197,14 @@ export default {
      * @param fn 传递函数
      * @param args 传递的值
      */
-    formatter(fn, args, cloumns, scope) {
+    formatter(fn, args, cloumns, scoped) {
       if (typeof fn === 'function') {
         // console.log(fn(args));
         // console.log(cloumns);
         // this.$set(cloumns, 'author', new Date());
         // cloumns.author = new Date();
         // args = fn(args);
-        return fn(args, cloumns, scope);
+        return fn(args, cloumns, scoped);
       }
     },
     /**
@@ -246,10 +246,11 @@ export default {
         scoped,
         index,
       };
+      console.log(scoped);
       scoped.row[index][scoped.column.property] = false;
       this.$emit('updateTableData');
-      this.$emit('updateTableData');
       this.$emit('handleTableCellEdit', params);
+      console.log(params);
     },
     /**
      * @description 取消输入框
