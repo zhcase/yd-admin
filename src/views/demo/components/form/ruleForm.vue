@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import BasicForm from '@/components/Form/components/BasicForm.vue';
+import BasicForm from "@/components/Form/components/BasicForm.vue";
 export default {
   components: {
     BasicForm,
@@ -41,135 +41,142 @@ export default {
   data() {
     return {
       formModel: {},
-      email: '',
-      activeNames: '1',
+      email: "",
+      activeNames: "1",
       basicForm: [
         {
-          field: 'field1',
-          label: '字段1',
-          component: 'Input',
-          placeholder: '字段1',
+          field: "field1",
+          label: "字段1",
+          component: "Input",
+          placeholder: "字段1",
           rules: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { required: true, message: "请输入活动名称", trigger: "blur" },
             {
               min: 3,
               max: 5,
-              message: '长度在 3 到 5 个字符',
-              trigger: 'blur',
+              message: "长度在 3 到 5 个字符",
+              trigger: "blur",
             },
           ],
         },
         {
-          slot: 'form1',
+          slot: "form1",
         },
         {
-          field: 'field2',
-          label: '带后缀',
-          component: 'Input',
-          placeholder: '字段2',
-          suffix: '天',
+          field: "field2",
+          label: "带后缀",
+          component: "Input",
+          placeholder: "字段2",
+          suffix: "天",
+          componentProps: {
+            onChange: (e) => {
+              // console.log(e);
+              // return "hello";
+              if (e) {
+                let t = e.replace(/^1[3456789]\d{9}$/, "");
+                return t;
+              }
+              // return e.replace(/[^\d]/g, "");
+              // if (Number(e) > 3) {
+              //   return e;
+              // } else {
+              //   // return "hello world";
+              // }
+              // console.log(e);
+            },
+          },
         },
         {
-          field: 'field2',
-          label: '字段3',
-          component: 'DatePicker',
-          placeholder: '请选择',
+          field: "field2",
+          label: "字段3",
+          component: "DatePicker",
+          placeholder: "请选择",
         },
         {
-          field: 'field4',
-          label: '字段4',
-          component: 'Select',
-          placeholder: '请选择',
+          field: "field4",
+          label: "字段4",
+          component: "Select",
+          placeholder: "请选择",
           clearable: true,
           componentProps: {
             options: [
               {
-                label: 'hello',
+                label: "hello",
                 value: 1,
               },
               {
-                label: 'hello2',
+                label: "hello2",
                 value: 2,
               },
             ],
           },
         },
         {
-          field: 'field5',
-          label: '字段5',
-          component: 'Checkbox',
+          field: "field5",
+          label: "字段5",
+          component: "Checkbox",
           componentProps: {
             options: [
               {
-                label: '选项1',
+                label: "选项1",
                 value: 1,
               },
               {
-                label: '选项2',
+                label: "选项2",
                 value: 2,
               },
             ],
           },
         },
         {
-          field: 'field6',
-          label: '字段6',
-          component: 'Radio',
+          field: "field6",
+          label: "字段6",
+          component: "Radio",
           componentProps: {
             options: [
               {
-                label: '选项1',
+                label: "选项1",
                 value: 1,
               },
               {
-                label: '选项2',
+                label: "选项2",
                 value: 2,
               },
             ],
           },
         },
         {
-          field: 'field7',
-          label: '字段7',
-          component: 'Switch',
+          field: "field7",
+          label: "字段7",
+          component: "Switch",
         },
         {
-          field: 'field8',
-          label: '字段8',
-          component: 'RadioButton',
+          field: "field8",
+          label: "字段8",
+          component: "RadioButton",
           componentProps: {
             options: [
               {
-                label: '选项1',
+                label: "选项1",
                 value: 1,
               },
               {
-                label: '选项2',
+                label: "选项2",
                 value: 2,
               },
             ],
           },
         },
         {
-          field: 'field9',
-          label: '字段7',
-          marks: {
-            0: '0°C',
-            8: '8°C',
-            37: '37°C',
-            50: {
-              style: {
-                color: '#1989FA',
-              },
-              label: this.$createElement('strong', '50%'),
-            },
-          },
-          component: 'Slider',
+          field: "field9",
+          label: "字段7",
+
+          component: "Slider",
         },
         {
-          field: 'field10',
-          label: '字段7',
-          component: 'Rate',
+          field: "field10",
+          label: "字段7",
+          component: "Rate",
         },
       ],
     };

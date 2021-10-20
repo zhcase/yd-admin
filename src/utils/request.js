@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-02 13:43:42
  * @LastEditors: zeHua
- * @LastEditTime: 2021-10-18 11:41:50
+ * @LastEditTime: 2021-10-19 16:29:36
  * @FilePath: /yd-admin/src/utils/request.js
  */
 import axios from 'axios'
@@ -14,7 +14,7 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 100000 // request timeout
+  timeout: 1000000 // request timeout
 })
 
 // request interceptor

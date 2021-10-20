@@ -208,7 +208,7 @@ export const constantRoutes = [
           {
             path: 'basic',
             name: 'BasicDialog',
-            component: () => import('@/views/demo/components/upload/continuing.vue'),
+            component: () => import('@/views/demo/components/upload/downloadList.vue'),
             meta: { title: '基础Dialog' }
           }
         ]

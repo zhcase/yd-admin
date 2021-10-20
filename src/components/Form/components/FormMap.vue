@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-01 11:47:50
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-23 10:48:53
+ * @LastEditTime: 2021-10-19 17:07:44
  * @FilePath: /yd-admin/src/components/Form/components/FormMap.vue
 -->
 <script type="jsx">
@@ -31,7 +31,6 @@ export default {
   watch: {
     value: {
       handler(val) {
-        console.log(val);
         this.form = val;
       },
       deep: true,
@@ -46,6 +45,11 @@ export default {
     return this["create" + this.schema.component](this.schema);
   },
   methods: {
+      // 监听 onInput 事件进行赋值操作
+    $_handleInput(e) {
+      console.log(e);
+      this.name = e.target.value
+    },
     /**
      * @description 创建一个文本显示行 占位符
      * @param schema 数据model
@@ -78,12 +82,16 @@ export default {
      */
     createInput(schema) {
       let attr = schema.componentProps;
-      let onChange = attr.onChange ? attr.onChange : () => {};
+      let onChange = attr.onChange ? attr.onChange : (e) => {};
+      if(onChange(this.form)){
+        this.form=onChange(this.form);
+      }
       return (
         <el-input
         style='height:40px'
           v-model={this.form}
           {...onChange(this.form)}
+
           {...attr}
           {...{ attrs: schema }}
         ></el-input>
@@ -95,7 +103,6 @@ export default {
      */
     createSelect(schema) {
       let attr = schema.componentProps;
-
       let onChange = attr.onChange ? attr.onChange : () => {};
       if (!attr.options) {
         console.error("Select  options未知");

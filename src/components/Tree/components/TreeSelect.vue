@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-17 09:39:39
  * @LastEditors: zeHua
- * @LastEditTime: 2021-10-12 17:04:16
+ * @LastEditTime: 2021-10-19 15:21:36
  * @FilePath: /yd-admin/src/components/Tree/components/TreeSelect.vue
 -->
 <template>
@@ -16,7 +16,7 @@
       :style="{ width: width }"
       @remove-tag="selectRemoveTag"
       placeholder="请选择"
-      :popper-append-to-body="false"
+      :popper-append-to-body="true"
     >
       <el-option v-model="treeDataValue" class="tree-select__options">
         <div v-show="data[0]">
@@ -118,8 +118,8 @@ export default {
      */
     handleSelectClear() {
       console.log(this.treeValue);
-      if(!this.treeValue){
-              this.$refs.tree.setCheckedKeys([]);
+      if (!this.treeValue) {
+        this.$refs.tree.setCheckedKeys([]);
         return;
       }
       this.$refs.tree.setCheckedKeys(this.treeValue);

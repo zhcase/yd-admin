@@ -1,3 +1,10 @@
+/*
+ * @Author: zeHua
+ * @Date: 2021-07-01 19:23:23
+ * @LastEditors: zeHua
+ * @LastEditTime: 2021-10-19 13:48:01
+ * @FilePath: /yd-admin/src/main.js
+ */
 import Vue from 'vue'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
@@ -24,8 +31,8 @@ import '@/permission' // permission control
  * please remove it before going online ! ! !
  */
 if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
+  // const { mockXHR } = require('../mock')
+  // mockXHR()
 }
 
 // set ElementUI lang to EN

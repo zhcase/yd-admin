@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-06-30 09:40:25
  * @LastEditors: zeHua
- * @LastEditTime: 2021-10-18 13:55:07
+ * @LastEditTime: 2021-10-19 15:23:51
  * @FilePath: /yd-admin/src/api/user.js
  */
 import request from '@/utils/request'
@@ -55,7 +55,7 @@ export function download(orgId) {
     range: orgId
   }
   return request({
-    url: 'http://192.168.10.19:8081/base/staffAgreement/chunkDownload',
+    url: 'http://192.168.10.10:8081/base/staffAgreement/chunkDownload',
     method: 'post',
     responseType: 'blob',
     data

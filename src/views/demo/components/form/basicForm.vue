@@ -8,6 +8,7 @@
         :schema="basicForm"
         @handleSubmit="handleSubmit"
         :span="8"
+        ref="form"
         :formModel.sync="formModel"
         :schemaAttr.sync="schemaAttr"
       >
@@ -16,8 +17,12 @@
             <tree-select style="width:250px"> </tree-select>
           </el-form-item>
         </template>
+        <!-- <template #footer>
+          <el-button type="primary" @click="handleSubmitClick">提交</el-button>
+        </template> -->
       </BasicForm>
     </el-card>
+
     <el-button type="primary" @click="handleClick">获取值</el-button>
   </div>
 </template>
@@ -38,9 +43,10 @@ export default {
         field6: 2,
         field1: 22,
       },
-      schemaAttr: {},
+      schemaAttr: [],
       activeNames: "1",
       formsss: {},
+      num: "",
       basicForm: [
         {
           field: "field1",
@@ -50,6 +56,9 @@ export default {
           },
 
           label: "字段1",
+          // style: {
+          //   width: "100px",
+          // },
           componentProps: {
             onChange: (e) => {
               console.log(e);
@@ -76,6 +85,7 @@ export default {
         {
           field: "field2",
           label: "带后缀",
+          inputRulesType: "number",
           component: "Input",
           placeholder: "字段2",
           suffix: "天",
@@ -84,6 +94,7 @@ export default {
         {
           field: "field3",
           label: "字段3",
+          isHidden: true,
           component: "DatePicker",
           style: {
             width: "200px",
@@ -186,17 +197,17 @@ export default {
         {
           field: "field9",
           label: "字段7",
-          marks: {
-            0: "0°C",
-            8: "8°C",
-            37: "37°C",
-            50: {
-              style: {
-                color: "#1989FA",
-              },
-              label: this.$createElement("strong", "50%"),
-            },
-          },
+          // marks: {
+          //   0: "0°C",
+          //   8: "8°C",
+          //   37: "37°C",
+          //   50: {
+          //     style: {
+          //       color: "#1989FA",
+          //     },
+          //     label: this.$createElement("strong", "50%"),
+          //   },
+          // },
           component: "Slider",
         },
         {
@@ -216,14 +227,24 @@ export default {
     };
   },
   created() {
+    setTimeout(() => {
+      console.log(this.schemaAttr);
+      // this.schemaAttr["field3"].isHidden = true;
+      this.$set(this.basicForm[3], "isHidden", false);
+    }, 3000);
     this.$nextTick(() => {
+      this.$refs.form.handleSubmit();
       // this.formModel.field1 = 'hello1232';
       // this.formModel.field22 = 'hello';
     });
   },
   mounted() {},
   methods: {
+    handleSubmitClick() {
+      console.log();
+    },
     handleClick(e) {
+      this.$refs.form.handleInitSchema();
       console.log(this.formModel);
     },
     handleSubmit(val) {

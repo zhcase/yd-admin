@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-09 09:07:00
  * @LastEditors: zeHua
- * @LastEditTime: 2021-10-12 11:50:01
+ * @LastEditTime: 2021-10-20 09:57:34
  * @FilePath: /yd-admin/src/components/Form/components/BasicForm.vue
 -->
 <template>
@@ -90,6 +90,8 @@ export default {
       form: {},
       // 规则
       rules: {},
+      //初始化数据备份
+      initSchema: "",
       // 表单是否显示
       formVisible: false,
       //form参数
@@ -99,7 +101,7 @@ export default {
   },
   props: {
     schemaAttr: {
-      type: Object,
+      type: Array | Object,
       default: () => {
         return {};
       },
@@ -169,6 +171,11 @@ export default {
     },
   },
   methods: {
+    /** */
+    handleInitSchema() {
+      console.log(this.schemaAttr);
+      this.$emit("update:schemaAttr", JSON.parse(this.initSchema));
+    },
     /** 重置 */
     reset() {
       this.form = {};
@@ -202,6 +209,7 @@ export default {
               // 循环判断是否用children 还是外层的 如果有children 说明目前是table 外层套了children  看后期有时间做次修改!!!
               if (this.$slots[slotArray[i]][t].componentOptions.children) {
                 if (
+                  this.$slots[slotArray[i]][t].componentOptions.children[0] &&
                   this.$slots[slotArray[i]][t].componentOptions.children[0]
                     .data &&
                   this.$slots[slotArray[i]][t].componentOptions.children[0].data
@@ -324,7 +332,7 @@ export default {
     },
     // 重构方法暴露出去给予修改schema属性与方法
     refactorSchemaAttr() {
-      console.log(this.schema);
+      this.initSchema = JSON.stringify(this.schema);
       for (let i = 0; i < this.schema.length; i++) {
         if (!this.schema[i].isHidden) {
           this.schema[i].isHidden = false;
@@ -333,6 +341,8 @@ export default {
         if (this.schema[i].field) {
           this.schemaAttr[this.schema[i].field] = this.schema[i];
         }
+        // this.initSchema[i] = {};
+        // this.initSchema[i]["isHidden"] = this.schema[i].isHidden;
       }
     },
   },
@@ -349,11 +359,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .antd-form {
+  overflow: hidden;
   .el-col {
     height: 52px;
   }
   form {
-    /* overflow: hidden; */
     ::v-deep .el-form-item {
       /* display: flex; */
       /* overflow: hidden; */
