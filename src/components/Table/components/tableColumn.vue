@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-08-23 14:22:12
  * @LastEditors: zeHua
- * @LastEditTime: 2021-09-28 16:59:46
+ * @LastEditTime: 2021-10-21 17:42:45
  * @FilePath: /yd-admin/src/components/Table/components/tableColumn.vue
 -->
 <template>
@@ -24,7 +24,7 @@
       </template>
     </template>
     <!-- {item.attr} -->
-    <template slot-scope="scope">
+    <template slot-scope="scope" slot-scoe>
       <!-- {{ formmater(item.formater) }} -->
       <!-- 直接展示 -->
       <template v-if="!item.options">
@@ -47,10 +47,12 @@
                 item.formatter,
                 scope.row[scope.$index] &&
                   scope.row[scope.$index][scope.column.property]
-                  ? ''
+                  ? ""
                   : scope.row[item.value],
                 scope.row,
-                scope
+                scope,
+                item.value,
+                item
               )
             }}
           </span>
@@ -61,7 +63,7 @@
             {{
               scope.row[scope.$index] &&
               scope.row[scope.$index][scope.column.property]
-                ? ''
+                ? ""
                 : scope.row[item.value]
             }}
           </span>
@@ -107,7 +109,7 @@
         <span
           class="edit cancel-btn el-icon-check"
           @mousemove.native="handleStopFoucs"
-          @click.stop="handleConfirm($event, scope.$index, scope)"
+          @click.stop="handleConfirm($event, scope.$index, scope, item.value)"
           v-if="
             scope.row[scope.$index] &&
               scope.row[scope.$index][scope.column.property]
@@ -136,9 +138,11 @@
 </template>
 <script>
 export default {
-  name: 'TableColumn',
+  name: "TableColumn",
   data() {
-    return {};
+    return {
+      t: 0,
+    };
   },
   props: {
     item: {
@@ -190,21 +194,30 @@ export default {
   methods: {
     // 递归触发更新table
     updateTableDataChildren() {
-      this.$emit('updateTableData');
+      this.$emit("updateTableData");
     },
     /**
      * 格式化数据
      * @param fn 传递函数
      * @param args 传递的值
      */
-    formatter(fn, args, cloumns, scoped) {
-      if (typeof fn === 'function') {
-        // console.log(fn(args));
-        // console.log(cloumns);
-        // this.$set(cloumns, 'author', new Date());
-        // cloumns.author = new Date();
-        // args = fn(args);
-        return fn(args, cloumns, scoped);
+    formatter(fn, args, cloumns, scoped, index, item) {
+      cloumns[index] = cloumns[index];
+      if (typeof fn === "function") {
+        if (
+          scoped.row[scoped.$index] &&
+          scoped.row[scoped.$index][scoped.column.property]
+        ) {
+          return cloumns[index];
+        } else {
+          if (fn(args, cloumns, scoped, index)) {
+            if (scoped.row.isTableColumnEdit) {
+              return cloumns[index];
+            }
+            cloumns[index] = fn(args, cloumns, scoped, index);
+            return cloumns[index];
+          }
+        }
       }
     },
     /**
@@ -216,7 +229,8 @@ export default {
       scoped.row[index] = {};
       scoped.row[index][scoped.column.property] = true;
       scoped.row[index].content = scoped.row[scoped.column.property];
-      this.$emit('updateTableData');
+
+      this.$emit("updateTableData");
     },
     /**
      * @description 监听输入框是否失去焦点
@@ -231,8 +245,8 @@ export default {
       };
       scoped.row[index][scoped.column.label] = false;
       // scoped.row[scoped.column.property] = scoped.row[index].content;
-      this.$emit('updateTableData');
-      this.$emit('handleTableCellEdit', params);
+      this.$emit("updateTableData");
+      this.$emit("handleTableCellEdit", params);
     },
     /**
      * 修改确认
@@ -240,17 +254,21 @@ export default {
      * @param index 索引
      * @param scoped 整行数据
      */
-    handleConfirm(e, index, scoped) {
+    handleConfirm(e, index, scoped, indexs) {
       e.preventDefault();
       let params = {
         scoped,
         index,
       };
-      console.log(scoped);
+      // console.log();
+      // console.log(e);
+      // console.log(index);
+      scoped.row[indexs] = scoped.row[indexs];
+      // scoped.row[indexs] = indexs;
       scoped.row[index][scoped.column.property] = false;
-      this.$emit('updateTableData');
-      this.$emit('handleTableCellEdit', params);
-      console.log(params);
+      scoped.row.isTableColumnEdit = true;
+      this.$emit("updateTableData");
+      this.$emit("handleTableCellEdit", params);
     },
     /**
      * @description 取消输入框
@@ -261,7 +279,7 @@ export default {
     handleCancelEdit(e, index, scoped) {
       scoped.row[index][scoped.column.property] = false;
       scoped.row[scoped.column.property] = scoped.row[index].content;
-      this.$emit('updateTableData');
+      this.$emit("updateTableData");
     },
     /**
      * @description 取消输入框
@@ -272,7 +290,7 @@ export default {
     handleCancelEdit(e, index, scoped) {
       scoped.row[index][scoped.column.property] = false;
       scoped.row[scoped.column.property] = scoped.row[index].content;
-      this.$emit('updateTableData');
+      this.$emit("updateTableData");
     },
   },
 };

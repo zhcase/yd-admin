@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-17 09:32:35
  * @LastEditors: zeHua
- * @LastEditTime: 2021-10-12 17:08:48
+ * @LastEditTime: 2021-10-21 09:27:13
  * @FilePath: /yd-admin/src/views/demo/components/tree/basicTree.vue
 -->
 <template>
@@ -67,8 +67,8 @@
             width="100%"
             :props="defaultProps"
             ref="treeSelect"
-            :multiple="false"
-            :default-checked-keys="[10]"
+            :multiple="true"
+            :default-checked-keys="[10, 8]"
             node-key="id"
           ></tree-select>
           <el-button type="primary" @click="handleClickClear"></el-button>

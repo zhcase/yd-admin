@@ -23,7 +23,7 @@
       </BasicForm>
     </el-card>
 
-    <el-button type="primary" @click="handleClick">获取值</el-button>
+    <el-button type="primary" @click="handleClick">重置属性</el-button>
   </div>
 </template>
 
@@ -245,6 +245,7 @@ export default {
     },
     handleClick(e) {
       this.$refs.form.handleInitSchema();
+      this.basicForm = this.schemaAttr;
       console.log(this.formModel);
     },
     handleSubmit(val) {

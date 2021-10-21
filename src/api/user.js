@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-06-30 09:40:25
  * @LastEditors: zeHua
- * @LastEditTime: 2021-10-19 15:23:51
+ * @LastEditTime: 2021-10-21 10:47:01
  * @FilePath: /yd-admin/src/api/user.js
  */
 import request from '@/utils/request'
@@ -64,5 +64,14 @@ export function download(orgId) {
     //   'Content-Type': 'multipart/form-data'
     // }
 
+  })
+}
+
+
+export function listBudget(query) {
+  return request({
+    url: 'http://192.168.10.13:8084/project/budget/list?projectManageId=9527',
+    method: 'get',
+    params: query
   })
 }
