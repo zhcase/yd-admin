@@ -196,6 +196,12 @@ export const constantRoutes = [
             name: 'BasicForm',
             component: () => import('@/views/demo/components/tree/basicTree.vue'),
             meta: { title: '基础Tree' }
+          },
+          {
+            path: 'origin',
+            name: 'BasicForm',
+            component: () => import('@/views/demo/components/tree/originTree.vue'),
+            meta: { title: '组织Tree' }
           }
         ]
       },

@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-09-17 09:32:35
  * @LastEditors: zeHua
- * @LastEditTime: 2021-10-21 09:27:13
+ * @LastEditTime: 2021-10-26 21:59:54
  * @FilePath: /yd-admin/src/views/demo/components/tree/basicTree.vue
 -->
 <template>
@@ -67,6 +67,7 @@
             width="100%"
             :props="defaultProps"
             ref="treeSelect"
+            @check="handleCheck"
             :multiple="true"
             :default-checked-keys="[10, 8]"
             node-key="id"
@@ -88,7 +89,7 @@
         </div>
       </el-card>
     </el-col>
-    <el-col :span="6" style="margin-top:20px;">
+    <el-col :span="6" style="margin-top: 20px">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>可搜索Tree</span>
@@ -200,6 +201,10 @@ export default {
   },
 
   methods: {
+    handleCheck(val, valArray) {
+      console.log(val);
+      console.log(valArray);
+    },
     handleClickClear() {
       this.$refs.treeSelect.clearTreeValue();
     },
