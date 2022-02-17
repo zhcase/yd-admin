@@ -32,6 +32,9 @@ module.exports = {
   devServer: {
     port: port,
     open: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
     overlay: {
       warnings: false,
       errors: true
@@ -51,6 +54,11 @@ module.exports = {
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
+    output: {
+      library: `${name}-[name]`,
+      libraryTarget: 'umd', // 把微应用打包成 umd 库格式
+      jsonpFunction: `webpackJsonp_${name}`,
+    },
     name: name,
     resolve: {
       alias: {
