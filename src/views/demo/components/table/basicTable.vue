@@ -1,115 +1,71 @@
-<!--
- * @Author: zeHua
- * @Date: 2021-07-06 14:25:26
- * @LastEditors: zeHua
- * @LastEditTime: 2021-09-23 18:03:42
- * @FilePath: /yd-admin/src/views/demo/components/table/basicTable.vue
--->
 <template>
-  <div class="app-container">
-    <BasicTable
-      :registerTable="table1"
-      v-if="demoStr"
-      :basicTableOptions="options"
-      :span-method="objectSpanMethod"
-      :basicTableData.sync="getBasicTable"
+  <div>
+    <basic-table
+      :registerTable="table"
+      :data="dataList"
       title="基础示例"
-      :border="true"
     >
-      <template slot="index"> </template>
-    </BasicTable>
+    </basic-table>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table';
-import { BasicTable } from '@/components/Table/index';
+import { BasicTable } from "@/components/Table/index";
+import { listMaintain }  from '@/api/table.js'
 export default {
-  components: {
-    BasicTable,
+  name: "Basic",
+  components:{
+    BasicTable
   },
   data() {
     return {
-      demoStr: '',
-      getBasicTable: {},
-      options: {
-        api: getList, // 调用接口地址
-        apiFormat: 'data.items',
-        apiParams: { a: 1, b: 2 },
-        paginationFormat: 'data.total',
-      },
+      dataList: [
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-01",
+          name: "王小虎",
+
+          address: "上海市普陀区金沙江路 1519 弄",
+        },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
+      ],
+
       // table 索引
-      table1: [
+      table: [
         {
-          label: 'id',
-          value: 'id',
-          width: 150,
-          sortable: true,
+          label: "日期",
+          value: "date",
         },
         {
-          label: '管理员账号',
-          value: 'author',
-          'show-overflow-tooltip': true,
-          width: 200,
-          formatter: (e, cloumns, scope) => {
-            // console.log(cloumns);
-            // if (e == 1) {
-            //   return 'hihi hi';
-            // }
-            // return e;
-            // console.log(e);
-          },
+          label: "姓名",
+          value: "name",
         },
         {
-          label: 'title',
-          value: 'title',
-          'show-overflow-tooltip': true,
-          width: 200,
-        },
-        {
-          label: '用户状态',
-          value: 'status',
-          options: [
-            {
-              label: '删除',
-              value: 'deleted',
-            },
-            { label: '发表', value: 'published' },
-          ],
+          label: "地址",
+          value: "address",
         },
       ],
     };
   },
-  created() {
-    setTimeout(() => {
-      this.demoStr = 'demoTest';
-    }, 500);
-  },
-  mounted() {
-    this.$nextTick(() => {});
-  },
-  methods: {
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-        if (rowIndex % 2 === 0) {
-          return {
-            rowspan: 2,
-            colspan: 1,
-          };
-        } else {
-          return {
-            rowspan: 0,
-            colspan: 0,
-          };
-        }
-      }
-    },
-  },
+  mounted(){
+    listMaintain().then(res=>{
+      console.log(res);
+    })
+  }
 };
 </script>
-
-<style scoped>
-.app-container {
-  height: 600px;
-}
-</style>

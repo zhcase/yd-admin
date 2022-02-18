@@ -1,93 +1,108 @@
-/*
- * @Author: zeHua
- * @Date: 2021-07-02 13:43:42
- * @LastEditors: zeHua
- * @LastEditTime: 2021-10-21 13:39:32
- * @FilePath: /yd-admin/src/utils/request.js
- */
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { Notification, MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import errorCode from '@/utils/errorCode'
+import { stringtrim } from '@/utils/stringtrim'
+axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 
-// create an axios instance
+// 请求后台模块路径映射
+const baseUrls = {
+  'stage-api':  'http://192.168.177.101:8080',
+  'system':     'http://192.168.177.101:8080',
+  'base':       'http://192.168.177.101:8081',
+  'personnel':  'http://192.168.177.101:8082',
+  'vehicle':    'http://192.168.177.101:8083',
+  'activiti':   'http://192.168.177.101:8080',
+  'tool':       'http://192.168.177.101:8080',
+  'project':    'http://192.168.177.101:8084',
+  // 'stage-api': 'https://admin.api.wintaotel.com.cn',
+  // 'system': 'https://admin.api.wintaotel.com.cn',
+  // 'base': 'https://base.api.wintaotel.com.cn',
+  // 'personnel': 'https://personnel.api.wintaotel.com.cn',
+  // 'vehicle': 'https://vehicle.api.wintaotel.com.cn',
+  // 'activiti': 'https://admin.api.wintaotel.com.cn',
+  // 'tool': 'https://admin.api.wintaotel.com.cn',
+  // 'project': 'https://project.api.wintaotel.com.cn',
+
+}
+
+// 创建axios实例
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 1000000 // request timeout
+
+  // 超时
+  timeout: 30000
+})
+// request拦截器
+service.interceptors.request.use(config => {
+  let requestUrl = config.url.split('/')
+  let arr = requestUrl[1]
+  if (baseUrls.hasOwnProperty(arr)) {
+    config.url = baseUrls[arr] + config.url
+  }
+
+  // 是否需要设置 token
+  const isToken = (config.headers || {}).isToken === false
+  if (getToken() && !isToken) {
+    config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+  }
+  //将post和put的data数据进行前后去空格处理
+  stringtrim(config.method,config.data)
+  return config
+}, error => {
+  Promise.reject(error)
 })
 
-// request interceptor
-service.interceptors.request.use(
-  config => {
-    // do something before request is sent
-
-    if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
-      // config.headers['content-length'] = getToken()
-      config.headers['Authorization'] = 'Bearer ' + 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImM4NTcwMjk3LTE1Y2UtNGJmOC1hZjBmLTIxOWQ1ODdiZDlhZSJ9.bAbn1qDRE6P4mMGpqGODb029W79BKVEHKCSAMHRNFdBMNasiPjnNNOhrmFl32v7JcURDPsp0oNbe8OxaBR_l9g' // 让每个请求携带自定义token 请根据实际情况自行修改
+// 响应拦截器
+service.interceptors.response.use(res => {
+    if(res.config.url.endsWith('project/resume/deploy/api/getRecruitWebCustomFormList')){ //外部链接获取数据的请求（自定义处理无需拦截）
+      return res.data
     }
-    return config
-  },
-  error => {
-    // do something with request error
-    console.log(error) // for debug
-    return Promise.reject(error)
-  }
-)
-
-// response interceptor
-service.interceptors.response.use(
-  /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
-
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
-  response => {
-    const res = response.data
-    console.log(res)
-    if (!res.code) {
-      console.log(response)
-      return response
-    }
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000 && res.code !== 200) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      }
-      return Promise.reject(new Error(res.message || 'Error'))
-    } else {
-      return res
-    }
-  },
-  error => {
-    console.log('err' + error) // for debug
+  // 未设置状态码则默认成功状态
+  const code = res.data.code || 200
+  // 获取错误信息
+  const msg = errorCode[code] || res.data.msg || errorCode['default']
+  if (code === 200) { // AjaxResult.success
+    return res.data
+  } else if (code === 203) { // AjaxResult.error
     Message({
-      message: error.message,
+      message: msg,
+      type: 'error',
+      duration: 2 * 1000
+    })
+    return Promise.reject('error')
+  } else if (code === 401) {
+    MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
+      confirmButtonText: '重新登录',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+    ).then(() => {
+      store.dispatch('LogOut').then(() => {
+        location.href = '/index'
+      })
+    })
+  } else {
+    Notification.error({
+      title: msg
+    })
+    return Promise.reject('error')
+  }
+},
+  error => {
+    console.log('err' + error)
+    let { message } = error
+    if (message == "Network Error") {
+      message = "后端接口连接异常"
+    }
+    else if (message.includes("timeout")) {
+      message = "系统接口请求超时"
+    }
+    else if (message.includes("Request failed with status code")) {
+      message = "系统接口" + message.substr(message.length - 3) + "异常"
+    }
+    Message({
+      message: message,
       type: 'error',
       duration: 5 * 1000
     })

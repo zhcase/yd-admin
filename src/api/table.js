@@ -7,3 +7,12 @@ export function getList(params) {
     params
   })
 }
+
+
+export function listMaintain(query) {
+  return request({
+    url: 'http://192.168.177.219:8083/vehicle/maintain/list',
+    method: 'get',
+    params: query
+  })
+}

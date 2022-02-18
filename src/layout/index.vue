@@ -1,14 +1,16 @@
 <template>
   <el-container :class="classObj">
-    <sidebar/>
+    <!-- <sidebar/>
     <el-container direction="vertical">
       <navbar />
-      <app-main />
-    </el-container>
+    </el-container> -->
+          <app-main />
+
   </el-container>
 </template>
 
 <script>
+
 import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 

@@ -42,7 +42,7 @@ module.exports = {
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       '/api': {
-        target: `http://192.168.10.19:8081`,
+        target: `http://192.168.0.137:8081`,
         changeOrigin: true,
         pathRewrite: {
           "^/api": ""

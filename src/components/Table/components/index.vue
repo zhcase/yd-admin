@@ -2,7 +2,7 @@
  * @Author: zeHua
  * @Date: 2021-07-02 15:09:51
  * @LastEditors: zeHua
- * @LastEditTime: 2021-10-21 14:03:52
+ * @LastEditTime: 2021-12-22 11:47:37
  * @FilePath: /yd-admin/src/components/Table/components/index.vue
 -->
 <template>
@@ -11,6 +11,7 @@
       <BasiceForm
         :schema="formSchema"
         :label-width="130"
+        @handleKeyEnter="handleQuery(form)"
         :formModel="form"
         ref="basicForm"
         @handleSubmit="handleQuery"
@@ -48,7 +49,6 @@
 
       <el-table
         :data="tableData"
-        :stripe="true"
         v-loading="tableLoading"
         id="table"
         height="100%"
@@ -67,12 +67,11 @@
               v-if="item.type === 'selection'"
             >
             </el-table-column>
-
             <slot v-else-if="item.slot" :name="item.slot"> </slot>
             <tableColumn
               :item="item"
               v-else
-              @handleTableCellEdit="handleEditConfirm"
+              @handleTableCellEdit="handleTableCellEdit"
               :key="item.value"
               @updateTableData="handleUpdateTableData"
             />
@@ -113,7 +112,6 @@ export default {
       formVisible: false, //
       tableData: [],
       tableLoading: false,
-
       // 分页
       paginationConfig: {
         currentPage: 1,
@@ -123,6 +121,9 @@ export default {
     };
   },
   props: {
+    data: {
+      type: Array,
+    },
     title: {
       type: String,
     },
@@ -145,7 +146,14 @@ export default {
     basicTableOptions: {
       required: false,
       type: Object,
-      default: {},
+      default:()=> {
+     return{ paginationConfig: {
+          currentPage: 1,
+          pageSize: 10,
+          total: 0,
+        },
+     }
+      },
     },
     formSchema: {
       required: false,
@@ -178,12 +186,12 @@ export default {
   },
   methods: {
     handleStopFoucs(e) {
-      e.preventDefault();
+      // e.preventDefault();
     },
     /**
      * 修改确认
      */
-    handleEditConfirm(params) {
+    handleTableCellEdit(params) {
       this.$emit("handleTableCellEdit", params);
     },
 
@@ -227,36 +235,41 @@ export default {
         ...this.basicTableOptions.apiParams,
       };
       parmas = this.formDataParams(parmas);
+      // 判断是否是直接传入数据还是 调用api
+      if (this.data) {
+        this.tableData = this.data;
+      } else {
+        //调用查询table接口
+        this.basicTableOptions.api({ ...parmas }).then((res) => {
+          if (!this.basicTableOptions.apiFormat) {
+            console.error("缺少apiFormat");
+            return;
+          }
+          let data = res;
+          this.$emit("update:basicTableData", res); //同步给与父组件table
+          this.$emit("queryBasicTable", parmas, res); // 查询返回参数与返回的整个查询的结果
+          this.paginationConfig.total = res;
+          let formatdata = this.basicTableOptions.apiFormat.split("."); // table 数据格式
+          let paginationFormat =
+            this.basicTableOptions.paginationFormat.split("."); // 分页总数table 格式
+          for (let i = 0; i < formatdata.length; i++) {
+            data = data[formatdata[i]];
+          }
+          for (let i = 0; i < paginationFormat.length; i++) {
+            this.paginationConfig.total =
+              this.paginationConfig.total[paginationFormat[i]];
+          }
+          this.tableData = data;
+        });
+      }
+      this.tableLoading = false;
 
-      //调用查询table接口
-      this.basicTableOptions.api({ ...parmas }).then((res) => {
-        if (!this.basicTableOptions.apiFormat) {
-          console.error("缺少apiFormat");
-          return;
-        }
-        let data = res;
-        this.$emit("update:basicTableData", res); //同步给与父组件table
-        this.$emit("queryBasicTable", parmas, res); // 查询返回参数与返回的整个查询的结果
-        this.paginationConfig.total = res;
-        let formatdata = this.basicTableOptions.apiFormat.split("."); // table 数据格式
-        let paginationFormat = this.basicTableOptions.paginationFormat.split(
-          "."
-        ); // 分页总数table 格式
-        for (let i = 0; i < formatdata.length; i++) {
-          data = data[formatdata[i]];
-        }
-        for (let i = 0; i < paginationFormat.length; i++) {
-          this.paginationConfig.total = this.paginationConfig.total[
-            paginationFormat[i]
-          ];
-        }
-        this.tableData = data;
-        this.tableLoading = false;
-      });
     },
     // 重置
     handleFormReset(form) {
       this.$emit("resetForm", form);
+      this.paginationConfig.currentPage = 1;
+      this.paginationConfig.pageSize = 10;
       this.$nextTick(() => {
         this.handleQuery(form);
       });
@@ -288,7 +301,7 @@ export default {
       this.paginationConfig.pageSize = val;
       this.paginationConfig.currentPage = 1;
       this.handleQuery();
-
+      this.paginationConfig.pageSize;
       /**
        * 分页注释改版
        */
@@ -334,7 +347,6 @@ export default {
         });
       }
     },
-
     // utils 参数 临时放置！！！！ 后期 移utils
     formDataParams(obj) {
       let params = {};

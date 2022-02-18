@@ -36,7 +36,7 @@ export function getTreeList() {
     treeType: 1,
   }
   return request({
-    url: 'http://192.168.10.19:8080/system/organization/lazytreeselect',
+    url: '/system/organization/lazytreeselect',
     method: 'post',
     data
   })

@@ -17,6 +17,7 @@ import '@/assets/iconfont/iconfont.css'
 import "../theme/index.css"
 import "@/assets/scss/index.scss"
 import VueRouter from 'vue-router'
+import { setToken } from '@/utils/auth'
 
 import App from './App'
 import store from './store'
@@ -41,12 +42,13 @@ if (process.env.NODE_ENV === 'production') {
 let routes = null
 let instance = null
 function render(props = {}) {
-
+  let {token}=props;
+  console.log(token);
+  setToken(token);
   instance = new Vue({
     router,
     store,
     el: '#micro-app-child',
-
     render: (h) => h(App),
   })
 
