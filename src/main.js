@@ -41,18 +41,21 @@ if (process.env.NODE_ENV === 'production') {
 // 微服务
 let routes = null
 let instance = null
+
 function render(props = {}) {
-  let {token}=props;
+  let {token,container}=props;
   console.log(token);
+  console.log(container);
   setToken(token);
   instance = new Vue({
     router,
     store,
-    el: '#micro-app-child',
+    // el: '#micro-app-child',
     render: (h) => h(App),
-  })
+  }).$mount(container ? container.querySelector('#micro-app-child') : '#micro-app-child');
 
 }
+
 
 export async function bootstrap() {
   console.log('[vue] vue app bootstraped')
@@ -63,9 +66,10 @@ export async function mount(props) {
 }
 export async function unmount() {
   instance.$destroy()
-  instance.$el.innerHTML = ''
-  instance = null
-  router = null
+  console.log('卸载咯')
+  // instance.$el.innerHTML = ''
+  // instance = null
+  // router = null
 }
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
